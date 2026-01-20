@@ -246,6 +246,53 @@ private func downsampleFrames(_ frames: [NSImage], targetCount: Int) -> [NSImage
 
 IBeam（文本光标）也有替代名称。守护进程会处理这些变体。
 
+## 光标验证与限制
+
+### 热点坐标验证
+
+**统一常量：** `MCMaxHotspotValue = 31.99` ([MCDefs.h:54](Mousecape/mousecloak/MCDefs.h#L54), [MCDefs.m:28](Mousecape/mousecloak/MCDefs.m#L28))
+
+热点坐标必须在有效范围内以防止 `CGError=1000`：
+- **有效范围：** `0 ≤ hotspot ≤ 31.99`
+- **验证位置：**
+  - `apply.m:44-60` - 注册光标时验证并钳制
+  - `EditOverlayView.swift:556-562` - UI 输入验证
+  - `EditOverlayView.swift:1410-1414` - Windows 光标导入时验证
+
+**跨语言一致性：**
+- Objective-C 和 Swift 代码使用同一常量
+- 通过 bridging header 共享定义
+- 确保所有验证逻辑统一
+
+### 动画帧数限制
+
+**系统限制：** 最大 24 帧
+
+超过 24 帧的动画会自动降采样：
+- **GIF 导入：** ([EditOverlayView.swift:1106-1116](Mousecape/Mousecape/SwiftUI/Views/EditOverlayView.swift#L1106-L1116))
+- **ANI 导入：** ([WindowsCursorConverter.swift:167-193](Mousecape/Mousecape/SwiftUI/Utilities/WindowsCursorConverter.swift#L167-L193))
+- **Cape 验证：** ([MCCursorLibrary.m](Mousecape/Mousecape/src/models/MCCursorLibrary.m))
+
+降采样时保持动画速度一致，调整帧时长补偿帧数减少。
+
+### 图像尺寸限制
+
+**最大尺寸：** 4096×4096 像素 ([WindowsCursorConverter.swift:218-227](Mousecape/Mousecape/SwiftUI/Utilities/WindowsCursorConverter.swift#L218-L227))
+
+**内存保护措施：**
+- 导入前验证图像尺寸
+- 超过限制时抛出 `imageTooLarge` 错误
+- 使用 `autoreleasepool` 处理大型动画帧
+- 防止内存溢出导致崩溃
+
+### 错误处理
+
+**GIF 帧解码失败处理：** ([EditOverlayView.swift:1071-1125](Mousecape/Mousecape/SwiftUI/Views/EditOverlayView.swift#L1071-L1125))
+- 统计失败帧数和失败率
+- 失败率 > 20% 时显示警告对话框
+- 调试日志记录每个失败的帧
+- 支持中英文本地化错误消息
+
 ## 日志系统
 
 项目包含完整的调试日志系统，仅在 DEBUG 构建中激活。
@@ -258,7 +305,12 @@ IBeam（文本光标）也有替代名称。守护进程会处理这些变体。
 └── mousecloak_YYYY-MM-DD_HH-MM-SS.log       # CLI 工具日志
 ```
 
-日志文件自动清理：保留最近 24 小时的日志。
+日志文件自动清理：保留最近 24 小时的日志，总大小限制 100MB。
+
+**清理策略：** ([DebugLogger.swift:230-283](Mousecape/Mousecape/SwiftUI/Utilities/DebugLogger.swift#L230-L283))
+1. **阶段一：** 删除 24 小时以上的日志文件
+2. **阶段二：** 如果总大小超过 100MB，删除最旧的文件直到符合限制
+3. 始终保留最新的日志文件
 
 ### 查看日志
 

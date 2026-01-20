@@ -69,7 +69,7 @@ Mousecape supports batch importing Windows cursor themes:
 2. Click the "+" button and select "Import Windows Cursors"
 3. Select the folder containing the cursor files to import
 
-If the folder contains an `install.inf` file, Mousecape will automatically parse it to map cursor files to the correct cursor types. Otherwise, it will use filename-based matching.
+If the folder contains an `*.inf` file, Mousecape will automatically parse it to map cursor files to the correct cursor types. Otherwise, it will use filename-based matching.
 
 ### Import/Export **.cape** Format Cursors
 
@@ -168,6 +168,21 @@ launchctl list | grep mouse
    launchctl list | grep mouse
    ```
 
+### Cursor Animation Only Works in Dock Area
+
+**Symptoms:** Custom cursor animations only appear when hovering over the Dock, but revert to the default system cursor elsewhere.
+
+**Cause:** macOS system settings for custom pointer colors can prevent Mousecape from successfully applying cursors globally.
+
+**Solution:** Reset the system pointer color to the default setting:
+
+1. Open **System Settings** → **Accessibility** → **Display**
+2. Find the **Pointer** section
+3. Click the **Reset Color** button
+4. Re-apply your cursor theme in Mousecape
+
+The pointer must use the default color scheme (white outline, black fill) for Mousecape to work properly.
+
 ## Donate
 
 If you like my UI remake, you can buy me an afternoon tea :)
@@ -259,7 +274,7 @@ Mousecape 支持批量导入 Windows 光标主题：
 2. 点击 "+" 按钮，选择"导入 Windows 光标"
 3. 选择包含光标文件的文件夹导入即可
 
-如果文件夹中包含 `install.inf` 文件，Mousecape 会自动解析该文件以正确映射光标类型。否则，将使用基于文件名的匹配。
+如果文件夹中包含 `*.inf` 文件，Mousecape 会自动解析该文件以正确映射光标类型。否则，将使用基于文件名的匹配。
 
 ### 导入/导出 **.cape** 格式光标
 
@@ -357,6 +372,21 @@ launchctl list | grep mouse
    ```bash
    launchctl list | grep mouse
    ```
+
+### 光标动画仅在 Dock 区域生效
+
+**症状**：自定义光标动画仅在悬停在 Dock 上时显示，移动到其他地方会恢复为系统默认光标。
+
+**原因**：macOS 系统设置中的自定义指针颜色会阻止 Mousecape 成功应用全局光标。
+
+**解决方案**：将系统指针颜色重置为默认设置：
+
+1. 打开 **系统设置** → **辅助功能** → **显示**
+2. 找到 **指针** 部分
+3. 点击 **重设颜色** 按钮
+4. 重新在 Mousecape 中应用光标主题
+
+光标必须使用默认颜色方案（白色轮廓、黑色填充），Mousecape 才能正常工作。
 
 ## 捐赠
 

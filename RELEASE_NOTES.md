@@ -4,36 +4,36 @@
 
 ## English
 
-### v1.0.1 - Native Windows Cursor Conversion
+### v1.0.2 - Bug Fixes
 
-**Major Update: Windows cursor conversion rewritten from Python to native Swift**
-
-- Replaced external Python script with pure Swift implementation. The snake has left the building
-- No longer requires bundled Python runtime, unified into single version (previously Premium version include Python). Democracy has been restored
-- Significantly reduced app size (from ~50MB to ~5MB). Your SSD will thank you
-- Faster conversion speed with optimized performance. Gotta go fast
-- Improved parsing reliability for .cur and .ani formats. We actually read the file headers now, who knew that was important
-
-**New Features:**
-
-- Add Windows install.inf parser for automatic cursor type mapping. No more manual labor, let the robots do it
-- Add support for legacy Windows cursor formats (16-bit RGB555/RGB565, 8-bit/4-bit/1-bit indexed, RLE compression). Your cursors from Windows 95 are welcome here
-- Add transparent window toggle in appearance settings. For those who like to see through things
-- Add GitHub Actions CI workflow for automated builds. The machines are taking over, but in a good way
-
-**Improvements:**
-
-- Backport to macOS 15 Sequoia with adaptive styling (Liquid Glass on macOS 26, Material on macOS 15). Thanks to @isandrel for the PR
-- Convert mousecloak helper to ARC (Automatic Reference Counting) for better memory management. No more memory leaks, probably
-- Fix transparent window background for dark mode. The void stares back, but prettier now
+**This update focuses on fixing bugs and improving stability.**
 
 **Bug Fixes:**
 
-- Fixed memory alignment crash when parsing certain cursor files. Your cursor was trying to break free from its memory prison, we stopped it
-- Fixed cape rename error when saving imported cursors. Names matter, even for cursor capes
-- Fixed dark mode transparent window showing washed-out colors. The colors have been properly hydrated
+- Fixed GIF animation import that wasn't working before
+- Fixed issues where imported Windows cursors wouldn't apply correctly
+- Fixed crashes that could happen when importing certain cursor files
+- Fixed a problem where the helper tool might stop working after updating the app
+- Fixed animation playback speed being incorrect when importing GIF or ANI files
+- Added hotspot validation on import to ensure accurate cursor positioning
 
-> *Note: The author has been playing too much Goat Simulator lately. Baaaa~*
+**Improvements:**
+
+- Improved compatibility with Windows cursor themes
+- Added memory protection to prevent crashes when importing large cursor files (max 4096×4096 pixels)
+- Faster CI builds
+- (Debug build) Optimized log file cleanup with 100MB total size limit
+
+## Important!!!
+
+### Before installing the new version, please uninstall the `Helper Tool` in the old version first to avoid compatibility issues
+
+## A Note from the Author
+
+This project was originally just modified for my own use, but I didn't expect it to receive so many stars after release. Thank you all for your support!
+Since I've been maintaining it alone (being lazy), I will slow down the update frequency after this version.
+I will only release updates if there are major bugs or new features. As for suggestions for new features, pull requests are welcome; I will check them periodically.
+I recently discovered a rather interesting `Wallpaper Engine for Mac` project next door, and I'm currently researching it there.
 
 ---
 
@@ -41,36 +41,36 @@
 
 ## 中文
 
-### v1.0.1 - 原生 Windows 光标转换
+### v1.0.2 - Bug 修复
 
-**重大更新：Windows 光标转换从 Python 重写为原生 Swift**
-
-- 使用纯 Swift 实现替代外挂 Python 脚本。蟒蛇已经离开了建筑
-- 不再需要内置 Python 环境，统一为单一版本（此前 Premium 版本内置 Python）。民主已经恢复
-- 大幅减小应用体积（从约 50MB 降至约 5MB）。你的硬盘会感谢你的
-- 优化性能，转换速度更快。要快，非常快
-- 提升 .cur 和 .ani 格式的解析可靠性。我们现在真的会读文件头了，谁知道这很重要呢
-
-**新功能：**
-
-- 添加 Windows install.inf 解析器，自动识别光标类型映射。不再需要手动劳作，让机器人来干活
-- 支持旧版 Windows 光标格式（16 位 RGB555/RGB565、8/4/1 位索引色、RLE 压缩）。欢迎你的 Windows 95 光标来此安家
-- 在外观设置中添加透明窗口开关。给那些喜欢透视的人准备的
-- 添加 GitHub Actions CI 工作流，实现自动化构建。机器正在接管，但是是好的那种
-
-**改进：**
-
-- 向下兼容 macOS 15 Sequoia，支持自适应样式（macOS 26 使用液态玻璃，macOS 15 使用 Material）。感谢 @isandrel 的 PR 贡献
-- 将 mousecloak 辅助程序转换为 ARC（自动引用计数），改善内存管理。不再有内存泄漏了，大概吧
-- 修复深色模式下透明窗口背景。虚空在凝视着你，但现在更好看了
+**本次更新主要修复了若干 bug 并提升稳定性。**
 
 **Bug 修复：**
 
-- 修复解析某些光标文件时的内存对齐崩溃问题。你的光标试图从内存监狱中逃脱，我们阻止了它
-- 修复导入光标保存时的 cape 重命名错误。名字很重要，即使是对光标披风来说
-- 修复深色模式透明窗口显示颜色失真问题。颜色已经被适当地补水了
+- 修复了 GIF 动画导入无法正常工作的问题
+- 修复导入的 Windows 光标无法正确应用的问题
+- 修复导入某些光标文件时可能崩溃的问题
+- 修复更新应用后辅助工具可能失效的问题
+- 修复导入 GIF 或 ANI 文件时动画播放速度不正确的问题
+- 热点验证导入，确保光标位置准确
 
-> *注：作者最近《模拟山羊》玩多了。咩～*
+**改进：**
+
+- 改进与 Windows 光标主题的兼容性
+- 添加内存保护，防止导入大型光标文件时崩溃（最大 4096×4096 像素）
+- 加快 CI 构建速度
+- （Debug版）优化日志文件清理，总大小限制 100MB
+
+## 强烈建议！！！
+
+### 覆盖安装新版本前，为避免兼容问题，麻烦先在旧版本内卸载 `辅助工具` ，再安装新版本
+
+## 作者的话
+
+这个项目本来只是改来自己使用，没想到发出来以后收获了这么多 Star，感谢大家的支持！
+由于一直都是我（懒狗）独自维护，发布完这个版本以后，我将放缓更新频率。
+如出现重大bug或新功能，我才会发布更新。至于新功能建议，也欢迎提 PR，我将不定期查看。
+最近在隔壁发现个 `Wallpaper Engine for Mac` 项目挺有意思的，目前在那边研究。
 
 ---
 
@@ -79,4 +79,3 @@
 - **Original Author | 原作者:** Alex Zielenski (2013-2025)
 - **SwiftUI Redesign | SwiftUI 重构:** sdmj76 (2025)
 - **Coding Assistant | 编程协助:** Claude Code (Opus)
-- **macOS 15 Backport | macOS 15 向下兼容:** @isandrel

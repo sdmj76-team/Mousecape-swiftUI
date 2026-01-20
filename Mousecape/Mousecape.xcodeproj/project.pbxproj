@@ -541,7 +541,6 @@
 				FAC69F5D189D603C00BC829D /* Sources */,
 				FAC69F5F189D603C00BC829D /* Resources */,
 				FAC69F5E189D603C00BC829D /* Frameworks */,
-				FA359841189DAAF900288163 /* Build Number */,
 				FAE5D57D1952734F007620DE /* Copy Tool */,
 				FAE5D57F1952737F007620DE /* Copy Helper */,
 			);
@@ -649,24 +648,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		FA359841189DAAF900288163 /* Build Number */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 8;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Build Number";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\n\nbuildPlist=${INFOPLIST_FILE}\nCFBundleVersion=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" $buildPlist)\nBuildNumberINCR=$((CFBundleVersion + 1))\n\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $BuildNumberINCR\" $buildPlist\n/usr/libexec/PlistBuddy -c \"Set :CFBundleShortVersionString $BuildNumberINCR\" $buildPlist\n\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		FAC69F5D189D603C00BC829D /* Sources */ = {
@@ -836,7 +817,7 @@
 					"$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST))",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_SWIFT_FLAGS = "-DENABLE_WINDOWS_IMPORT";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sdmj76.Mousecape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -990,7 +971,7 @@
 					"$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST))",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_SWIFT_FLAGS = "-DENABLE_WINDOWS_IMPORT";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sdmj76.Mousecape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1191,7 +1172,7 @@
 					"$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST))",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sdmj76.Mousecape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1223,7 +1204,7 @@
 					"$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST))",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sdmj76.Mousecape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
