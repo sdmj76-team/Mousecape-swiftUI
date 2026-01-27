@@ -31,11 +31,14 @@ A free macOS cursor manager that allows you to easily replace Mac system pointer
 <br/>使用 SwiftUI 构建，全面适配液态玻璃设计语言，完整支持 macOS Tahoe。**
 <br/>
 <br/>
-**[English](#english) | [中文](#中文)**
+**[English](#english-section) | [中文](#chinese-section)**
 </div>
 
-<a id="english"></a>
-## English
+<a id="english-section"></a>
+
+# English
+
+## Interface Display
 
 <div align="center" style="display: flex; gap: 20px; justify-content: center; align-items: flex-start;">
   <img src="Screenshot/Home.gif" width="48%" style="height: auto;" />
@@ -46,7 +49,8 @@ A free macOS cursor manager that allows you to easily replace Mac system pointer
 > The cursor theme "Kiriko" shown in the screenshots is created by [ArakiCC](https://space.bilibili.com/14913641), available in the example files.
 
 ## Features
-**System Requirements: macOS Sequoia (15) or later**
+
+**System Requirements:** macOS Sequoia (15) or later
 
 - Customize Mac system cursors, supporting both static and animated cursors
 - One-click import of Windows cursor formats (.cur / .ani)
@@ -57,30 +61,22 @@ A free macOS cursor manager that allows you to easily replace Mac system pointer
 
 Download the latest version from the [Releases](https://github.com/sdmj76/Mousecape/releases) section of this GitHub page.
 
-### Build from Source
+If you encounter any problems, we recommend that you first check the [Troubleshooting](#Troubleshooting_en) section.
 
-To build from source, open `Mousecape/Mousecape.xcodeproj` in Xcode and select Scheme `Mousecape`.
+### System Requirements
 
-### Supported Architectures
-
-| Configuration | Architectures | Description |
-|:--------------|:--------------|:------------|
-| Release | arm64 + x86_64 | Universal Binary, supports Intel and Apple Silicon |
-| Debug | Current arch only | Builds only for the current development machine |
-
-The Release build produces a Universal Binary that runs natively on both Intel and Apple Silicon Macs.
+- macOS Sequoia (15) or later
+- Support Architectures: runs on both Intel and Apple Silicon Macs
 
 ## Example Cursors
 
 This repository includes an example Kiriko.cape file, available for [download here](Example/Kiriko.cape).
 
-This is a cursor set created by [ArakiCC](https://space.bilibili.com/14913641), featuring 15 pointer styles. Licensed for public use by [sdmj76](https://space.bilibili.com/224661756).
+**License:** CC BY-NC-ND 4.0 (Attribution-NonCommercial-NoDerivs 4.0)
 
-## How It Works
+This cursor set was created by [ArakiCC](https://space.bilibili.com/14913641).
 
-Mousecape works by calling the private API that Apple uses to initialize system cursors, and registers a daemon that automatically reapplies cursors at login and when cursors are unregistered.
-
-It runs silently in the background without interfering with normal system usage.
+To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/4.0/
 
 ## Getting Started
 
@@ -99,6 +95,14 @@ Mousecape supports batch importing Windows cursor themes:
 
 If the folder contains an `*.inf` file, Mousecape will automatically parse it to map cursor files to the correct cursor types. Otherwise, it will use filename-based matching.
 
+### Create Custom Cursor Sets
+
+1. Click the "+" button to add a new cursor set
+2. Click the "+" button to add pointers to customize
+3. Drag and drop image or cursor files into the edit window
+4. Adjust hotspot position and other parameters for each cursor
+5. Save and apply your theme
+
 ### Import/Export **.cape** Format Cursors
 
 - Click the "Import" button, then select the **.cape** format cursor file in the Finder window
@@ -106,49 +110,31 @@ If the folder contains an `*.inf` file, Mousecape will automatically parse it to
 
 > **.cape** is Mousecape's proprietary cursor format, containing a complete set of cursors in one file
 
-### Create New Cursor
-
-1. Click the "+" button to add a new cursor set
-2. Click the "+" button to add a pointer to customize
-3. Drag and drop image or cursor files into the edit window
-4. Adjust hotspot position and other parameters
-5. Save and apply
-
-### Create Custom Cursors
-
-1. Click the "+" button to add a cursor to customize
-2. Drag and drop your cursor image into the provided field
-3. Set size, hotspot, and other parameters
-4. Save and apply your theme
-
 ### Supported Image Formats
 
 - **Standard image formats**: PNG, JPEG, TIFF, GIF
 - **Windows cursor formats**: .cur (static), .ani (animated)
 
-### Custom Windows Cursor Mapping
+### Cursor Limitations
 
-Mousecape reads the `[Scheme.Reg]` section from Windows cursor INF files for automatic cursor type detection. The position order in `[Scheme.Reg]` follows the Windows registry standard format (positions 0-16):
+Due to macOS system limitations, Mousecape has the following restrictions:
 
-| Position | Windows Cursor Type | macOS Cursor |
-|:---------|:-------------------|:-------------|
-| 0 | Normal Select | Arrow |
-| 1 | Help Select | Help |
-| 2 | Working in Background | Wait |
-| 3 | Busy | Busy |
-| 4 | Precision Select | Crosshair |
-| 5 | Text Select | IBeam |
-| 6 | Handwriting | Open |
-| 7 | Unavailable | Forbidden |
-| 8 | Vertical Resize | Resize N-S, Window N-S |
-| 9 | Horizontal Resize | Resize W-E, Window W-E |
-| 10 | Diagonal Resize 1 | Window NW-SE |
-| 11 | Diagonal Resize 2 | Window NE-SW |
-| 12 | Move | Move |
-| 13 | Alternate Select | Alias |
-| 14 | Link Select | Pointing, Link |
-| 15 | Location Select | (No macOS equivalent) |
-| 16 | Person Select | (No macOS equivalent) |
+**Image Size Limit**
+
+- Maximum import size: **512×512 pixels** (larger images will be rejected)
+- All cursor images are automatically scaled to **64×64 pixels** at 1x resolution
+- If the imported image is larger than 64×64 (up to 512×512), it will be automatically scaled down
+- If the imported image is smaller than 64×64, it will be scaled up (may result in lower quality)
+
+**Animation Frame Limit**
+
+- Maximum **24 frames** per animated cursor
+- Animated cursors with more than 24 frames will be automatically downsampled
+- The downsampling preserves animation timing by adjusting frame duration
+
+**Example:** A 32-frame GIF animation will be downsampled to 24 frames, and the frame duration will be increased to maintain the original animation speed.
+
+<a id="Troubleshooting_en"></a>
 
 ## Troubleshooting
 
@@ -204,6 +190,39 @@ launchctl list | grep mouse
 
 The pointer must use the default color scheme (white outline, black fill) for Mousecape to work properly.
 
+### Animated Cursor Import Failed
+
+**Symptoms:** Animated cursor files (.ani or .gif) fail to import or are rejected.
+
+**Cause:** Animated cursors with more than 24 frames exceed macOS system limits and require automatic downsampling.
+
+**Solution:**
+- Mousecape automatically downsamples animations with more than 24 frames
+- The animation speed is preserved by adjusting frame duration
+- If import still fails, ensure the file is not corrupted and try re-downloading
+
+### Chinese Cursor Theme Display Issues
+
+**Symptoms:** Chinese or other non-English cursor themes show garbled filenames or incorrect names.
+
+**Cause:** INF file encoding not detected correctly.
+
+**Solution:**
+- Mousecape supports multiple encodings: UTF-8, UTF-16 LE/BE, GBK, GB18030, Big5, Shift_JIS, EUC-KR, ISO-8859-1
+- Ensure the INF file is saved in a supported encoding
+- If issues persist, try resaving the INF file as UTF-8
+
+### Cursor Image Too Large
+
+**Symptoms:** Large cursor images are rejected during import.
+
+**Cause:** Image exceeds the maximum supported size of 512×512 pixels.
+
+**Solution:**
+- Resize images to 512×512 pixels or smaller before importing
+- All imported images are automatically scaled to 64×64 pixels
+- Images larger than 512×512 will be rejected with an error message
+
 ## Donate
 
 If you like my UI remake, you can buy me an afternoon tea :)
@@ -230,8 +249,11 @@ This is just a tool, and I've polished its UI. But what matters most is your cur
 
 ---
 
-<a id="中文"></a>
-## 中文
+<a id="chinese-section"></a>
+
+# 中文
+
+## 界面展示
 
 <div align="center" style="display: flex; gap: 20px; justify-content: center; align-items: flex-start;">
   <img src="Screenshot/Home.gif" width="48%" style="height: auto;" />
@@ -241,7 +263,8 @@ This is just a tool, and I've polished its UI. But what matters most is your cur
 > 截图中展示的光标主题 "Kiriko" 由 [ArakiCC](https://space.bilibili.com/14913641) 制作，在示例文件中提供。
 
 ## 功能特性
-**系统要求：macOS Sequoia (15) 或更高版本**
+
+**系统要求：** macOS Sequoia (15) 或更高版本
 
 - 自定义 Mac 系统光标，支持静态和动画光标
 - 一键导入 Windows 格式指针（.cur / .ani）
@@ -252,30 +275,22 @@ This is just a tool, and I've polished its UI. But what matters most is your cur
 
 在本 GitHub 页面的 [Releases](https://github.com/sdmj76/Mousecape/releases) 部分下载最新版本。
 
-### 自行构建
+如果遇到问题，建议优先查看[故障排除](#Troubleshooting_cn)章节。
 
-如需自行构建，请在 Xcode 中打开 `Mousecape/Mousecape.xcodeproj`，选择 Scheme `Mousecape` 构建。
+### 系统要求
 
-### 支持的架构
-
-| 配置 | 架构 | 说明 |
-|:----|:----|:----|
-| Release | arm64 + x86_64 | Universal Binary，支持 Intel 和 Apple Silicon |
-| Debug | 仅当前架构 | 仅为当前开发机器构建 |
-
-Release 构建会生成 Universal Binary，可在 Intel 和 Apple Silicon Mac 上原生运行。
+- macOS Sequoia (15) 或更高版本
+- 支持架构：同时支持 Intel 和 Apple Silicon Mac
 
 ## 示例光标
 
-本仓库包含的示例 Kiriko.cape 文件，可在[此处下载](Example/Kiriko.cape)。
+本仓库包含示例 Kiriko.cape 文件，可在[此处下载](Example/Kiriko.cape)。
 
-这是 [ArakiCC](https://space.bilibili.com/14913641) 自制的光标，一共15个指针样式。已由 [sdmj76](https://space.bilibili.com/224661756) 购买授权供大家使用。
+**许可证：** CC BY-NC-ND 4.0（署名-非商业性-禁止演绎 4.0）
 
-## 工作原理
+此光标由 [ArakiCC](https://space.bilibili.com/14913641) 制作。
 
-Mousecape 通过调用 Apple 用于初始化系统光标的私有 API 来工作，并注册一个守护进程，在登录时和光标被取消注册时自动重新应用光标。
-
-它在后台静默运行，不会干扰系统正常使用。
+查看许可证副本：https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh
 
 ## 快速开始
 
@@ -294,6 +309,14 @@ Mousecape 支持批量导入 Windows 光标主题：
 
 如果文件夹中包含 `*.inf` 文件，Mousecape 会自动解析该文件以正确映射光标类型。否则，将使用基于文件名的匹配。
 
+### 创建自定义光标套装
+
+1. 点击 "+" 按钮添加新光标套装
+2. 点击 "+" 按钮添加要自定义的指针
+3. 将图片或光标文件拖放到编辑窗口中
+4. 调整热点位置和其他参数
+5. 保存并应用你的主题
+
 ### 导入/导出 **.cape** 格式光标
 
 - 点击 "导入" 按键，在弹出的finder窗口，选择要导入的 **.cape** 格式光标
@@ -301,49 +324,31 @@ Mousecape 支持批量导入 Windows 光标主题：
 
 > **.cape** 为 Mousecape 专用光标格式，文件内包含了一整套光标的内容
 
-### 新建光标
-
-1. 点击 "+" 按钮添加新光标套装
-2. 点击 "+" 按钮添加要自定义的指针
-3. 将图片或光标文件拖放到编辑窗口中
-4. 调整热点位置和其他参数
-5. 保存并应用
-
-### 创建自定义光标
-
-1. 点击 "+" 按钮添加要自定义的光标
-2. 将光标图片拖放到提供的字段中
-3. 设置尺寸、热点等参数
-4. 保存并应用你的主题
-
 ### 支持的图片格式
 
 - **常规图片格式**：PNG、JPEG、TIFF、GIF
 - **Windows 光标格式**：.cur（静态）、.ani（动画）
 
-### 自定义 Windows 光标映射
+### 光标限制
 
-Mousecape 通过读取 Windows 光标 INF 文件中的 `[Scheme.Reg]` 段来自动识别光标类型。`[Scheme.Reg]` 中的位置顺序遵循 Windows 注册表标准格式（位置 0-16）：
+由于 macOS 系统限制，Mousecape 有以下限制：
 
-| 位置 | Windows 光标类型 | macOS 光标 |
-|:----|:----------------|:----------|
-| 0 | Normal Select | Arrow |
-| 1 | Help Select | Help |
-| 2 | Working in Background | Wait |
-| 3 | Busy | Busy |
-| 4 | Precision Select | Crosshair |
-| 5 | Text Select | IBeam |
-| 6 | Handwriting | Open |
-| 7 | Unavailable | Forbidden |
-| 8 | Vertical Resize | Resize N-S, Window N-S |
-| 9 | Horizontal Resize | Resize W-E, Window W-E |
-| 10 | Diagonal Resize 1 | Window NW-SE |
-| 11 | Diagonal Resize 2 | Window NE-SW |
-| 12 | Move | Move |
-| 13 | Alternate Select | Alias |
-| 14 | Link Select | Pointing, Link |
-| 15 | Location Select | （无 macOS 对应） |
-| 16 | Person Select | （无 macOS 对应） |
+**图像尺寸限制**
+
+- 最大导入尺寸：**512×512 像素**（超过此尺寸的图像将被拒绝）
+- 所有光标图像会自动缩放至 **64×64 像素**（1x 分辨率）
+- 如果导入的图像大于 64×64（最大 512×512），会自动缩小
+- 如果导入的图像小于 64×64，会自动放大（可能导致质量下降）
+
+**动画帧数限制**
+
+- 每个动画光标最多支持 **24 帧**
+- 超过 24 帧的动画光标会自动降采样
+- 降采样会通过调整帧时长来保持动画速度一致
+
+**示例：** 32 帧的 GIF 动画会被降采样到 24 帧，帧时长会增加以保持原始动画速度。
+
+<a id="Troubleshooting_cn"></a>
 
 ## 故障排除
 
@@ -398,6 +403,39 @@ launchctl list | grep mouse
 4. 重新在 Mousecape 中应用光标主题
 
 光标必须使用默认颜色方案（白色轮廓、黑色填充），Mousecape 才能正常工作。
+
+### 动画光标导入失败
+
+**症状**：动画光标文件（.ani 或 .gif）无法导入或被拒绝。
+
+**原因**：超过 24 帧的动画光标超出了 macOS 系统限制，需要自动降采样。
+
+**解决方案**：
+- Mousecape 会自动对超过 24 帧的动画进行降采样
+- 动画速度会通过调整帧时长来保持一致
+- 如果仍然无法导入，请确保文件未损坏，尝试重新下载
+
+### 中文光标主题显示乱码
+
+**症状**：中文或其他非英文光标主题显示乱码或名称不正确。
+
+**原因**：INF 文件编码检测不正确。
+
+**解决方案**：
+- Mousecape 支持多种编码：UTF-8、UTF-16 LE/BE、GBK、GB18030、Big5、Shift_JIS、EUC-KR、ISO-8859-1
+- 确保 INF 文件使用支持的编码保存
+- 如果问题持续，尝试将 INF 文件另存为 UTF-8 编码
+
+### 光标图像过大
+
+**症状**：大型光标图像在导入时被拒绝。
+
+**原因**：图像超过了最大支持的 512×512 像素尺寸。
+
+**解决方案**：
+- 在导入前将图像调整为 512×512 像素或更小
+- 所有导入的图像会自动缩放到 64×64 像素
+- 超过 512×512 的图像将被拒绝并显示错误消息
 
 ## 捐赠
 

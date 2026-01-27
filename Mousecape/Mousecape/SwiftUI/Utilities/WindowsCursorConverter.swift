@@ -37,7 +37,7 @@ enum WindowsCursorError: LocalizedError {
         case .imageDecodeFailed:
             return "Failed to decode image data"
         case .imageTooLarge(let width, let height):
-            return "Image too large (\(width)x\(height)). Maximum supported size is 4096x4096 pixels."
+            return "Image too large (\(width)x\(height)). Maximum supported size is 512x512 pixels."
         }
     }
 }

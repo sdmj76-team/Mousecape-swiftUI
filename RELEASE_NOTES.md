@@ -4,78 +4,82 @@
 
 ## English
 
-### v1.0.2 - Bug Fixes
+### v1.0.3 - Bug Fix
 
-**This update focuses on fixing bugs and improving stability.**
+**This update fixes Windows animated cursor import issues and improves encoding support.**
 
 **Bug Fixes:**
 
-- Fixed GIF animation import that wasn't working before
-- Fixed issues where imported Windows cursors wouldn't apply correctly
-- Fixed crashes that could happen when importing certain cursor files
-- Fixed a problem where the helper tool might stop working after updating the app
-- Fixed animation playback speed being incorrect when importing GIF or ANI files
-- Added hotspot validation on import to ensure accurate cursor positioning
+- Fixed animated cursor (.ani) files being rejected due to incorrect size validation
+- Fixed multi-frame animated cursors (94, 140, 206 frames) not being imported properly
+- Fixed GBK encoding detection for Chinese Windows cursor themes
 
 **Improvements:**
 
-- Improved compatibility with Windows cursor themes
-- Added memory protection to prevent crashes when importing large cursor files (max 4096×4096 pixels)
-- Faster CI builds
-- (Debug build) Optimized log file cleanup with 100MB total size limit
+- Automatic downsampling now works correctly for all animated cursors with >24 frames
+- Multi-encoding support for INF files: UTF-8, UTF-16 LE/BE, GBK, GB18030, Big5, Shift_JIS, EUC-KR, ISO-8859-1
+- Cleaner code: removed redundant validation that served no purpose
 
-## Important!!!
-
-### Before installing the new version, please uninstall the `Helper Tool` in the old version first to avoid compatibility issues
-
-## A Note from the Author
-
-This project was originally just modified for my own use, but I didn't expect it to receive so many stars after release. Thank you all for your support!
-Since I've been maintaining it alone (being lazy), I will slow down the update frequency after this version.
-I will only release updates if there are major bugs or new features. As for suggestions for new features, pull requests are welcome; I will check them periodically.
-I recently discovered a rather interesting `Wallpaper Engine for Mac` project next door, and I'm currently researching it there.
+**PS: This project does not provide support for `any non-compliant third-party cursors`. If you encounter any of these issues, please contact the cursor author for assistance.**
 
 ---
+
+### Known Limitations
+
+Due to macOS system limitations, Mousecape has the following restrictions:
+
+- **Image Size:** Maximum import size is 512×512 pixels. All images are automatically scaled to 64×64 pixels.
+- **Animation Frames:** Maximum 24 frames per animated cursor. Animations with more frames are automatically downsampled.
+
+---
+
+### Version Selection Guide
+
+The Debug version has no functional differences from the regular version, it only includes logging for error tracking.
+For normal use, download the regular version.
 
 <a id="中文"></a>
 
 ## 中文
 
-### v1.0.2 - Bug 修复
+### v1.0.3 - Bug 修复
 
-**本次更新主要修复了若干 bug 并提升稳定性。**
+**本次更新修复了 Windows 动画光标导入问题，并改进了编码支持。**
 
 **Bug 修复：**
 
-- 修复了 GIF 动画导入无法正常工作的问题
-- 修复导入的 Windows 光标无法正确应用的问题
-- 修复导入某些光标文件时可能崩溃的问题
-- 修复更新应用后辅助工具可能失效的问题
-- 修复导入 GIF 或 ANI 文件时动画播放速度不正确的问题
-- 热点验证导入，确保光标位置准确
+- 修复了动画光标 (.ani) 文件因尺寸验证错误而被拒绝的问题
+- 修复了多帧动画光标（94、140、206 帧）无法正确导入的问题
+- 修复了中文 Windows 光标主题的 GBK 编码检测问题
 
 **改进：**
 
-- 改进与 Windows 光标主题的兼容性
-- 添加内存保护，防止导入大型光标文件时崩溃（最大 4096×4096 像素）
-- 加快 CI 构建速度
-- （Debug版）优化日志文件清理，总大小限制 100MB
+- 自动降采样现在对所有超过 24 帧的动画光标都能正常工作
+- INF 文件多编码支持：UTF-8、UTF-16 LE/BE、GBK、GB18030、Big5、Shift_JIS、EUC-KR、ISO-8859-1
+- 代码更简洁：移除了没有实际作用的冗余验证
 
-## 强烈建议！！！
+**PS：本项目不会提供对 `任何不符合规范的第三方光标` 提供支持，如有以上问题，麻烦联系光标作者解决**
 
-### 覆盖安装新版本前，为避免兼容问题，麻烦先在旧版本内卸载 `辅助工具` ，再安装新版本
+---
 
-## 作者的话
+### 已知限制
 
-这个项目本来只是改来自己使用，没想到发出来以后收获了这么多 Star，感谢大家的支持！
-由于一直都是我（懒狗）独自维护，发布完这个版本以后，我将放缓更新频率。
-如出现重大bug或新功能，我才会发布更新。至于新功能建议，也欢迎提 PR，我将不定期查看。
-最近在隔壁发现个 `Wallpaper Engine for Mac` 项目挺有意思的，目前在那边研究。
+由于 macOS 系统限制，Mousecape 有以下限制：
+
+- **图像尺寸：** 最大导入尺寸为 512×512 像素。所有图像会自动缩放到 64×64 像素。
+- **动画帧数：** 每个动画光标最多 24 帧。超过此帧数的动画会自动降采样。
+
+---
+
+### 版本选择建议
+
+Debug版本与普通版本无功能上的差异，只是加入了日志记录功能用于记录错误。
+正常使用时，下载普通版本即可。
 
 ---
 
 ## Credits | 致谢
 
-- **Original Author | 原作者:** Alex Zielenski (2013-2025)
-- **SwiftUI Redesign | SwiftUI 重构:** sdmj76 (2025)
+- **Original Author | 原作者:** @AlexZielenski (2013-2025)
+- **SwiftUI Redesign | SwiftUI 重构:** @sdmj76 (2025)
 - **Coding Assistant | 编程协助:** Claude Code (Opus)

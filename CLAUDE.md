@@ -135,6 +135,16 @@ Cape 是二进制 plist 文件（`.cape` 扩展名），包含：
 
 Windows 光标主题通过 `[Scheme.Reg]` 段定义光标位置顺序（固定 0-16 位），这是 Windows 注册表的标准格式：
 
+**编码支持：**
+
+INF 解析器自动检测文件编码，支持多种编码格式：
+- **Unicode**: UTF-8, UTF-16 LE, UTF-16 BE
+- **中文**: GBK (0x0631), GB18030, Big5
+- **亚洲**: Shift_JIS, EUC-KR
+- **西文**: ISO-8859-1
+
+使用 `CFStringCreateWithBytes` API 直接支持非 Unicode 编码（如 GBK），并通过内容验证（替换字符检测、控制字符比例、中文字符检测）确保选择正确的编码。
+
 | 位置 | Windows 光标 | macOS CursorType |
 |-----|-------------|------------------|
 | 0 | Normal Select | `.arrow`, `.arrowCtx` |
@@ -248,6 +258,31 @@ IBeam（文本光标）也有替代名称。守护进程会处理这些变体。
 
 ## 光标验证与限制
 
+### 图像尺寸限制
+
+**标准光标尺寸：** 64×64 像素（1x 分辨率）
+
+所有导入的光标图像会自动缩放到 64×64 像素：
+- **大于 64×64（最大 512×512）：** 自动缩小
+- **小于 64×64：** 自动放大（可能降低质量）
+- **使用 "aspect fit" 缩放：** 保持宽高比，居中并填充透明边距
+
+**最大导入尺寸：** 512×512 像素
+
+超过此尺寸的图像会被拒绝导入，抛出 `imageTooLarge` 错误：
+- **验证位置：** [WindowsCursorConverter.swift:231](Mousecape/Mousecape/SwiftUI/Utilities/WindowsCursorConverter.swift#L231)
+- **错误消息：** "Image too large (width×height). Maximum supported size is 512x512 pixels."
+
+**缩放函数：**
+- `AppState.swift:984` - `scaleImageToStandardSize(_:)` - 静态图像缩放
+- `EditOverlayView.swift:1303` - `scaleImageToStandardSize(_:)` - 静态图像缩放
+- `EditOverlayView.swift:1229` - `scaleGIFSpriteSheet(_:)` - GIF 动画缩放
+- `AppState.swift:1041` / `EditOverlayView.swift:1458` - `scaleWindowsSpriteSheet(_:)` - Windows 动画缩放
+
+**逻辑尺寸：** 32×32 points
+- 在 2x HiDPI 显示器上等于 64×64 像素
+- 定义位置：[EditOverlayView.swift:1420](Mousecape/Mousecape/SwiftUI/Views/EditOverlayView.swift#L1420)
+
 ### 热点坐标验证
 
 **统一常量：** `MCMaxHotspotValue = 31.99` ([MCDefs.h:54](Mousecape/mousecloak/MCDefs.h#L54), [MCDefs.m:28](Mousecape/mousecloak/MCDefs.m#L28))
@@ -274,10 +309,6 @@ IBeam（文本光标）也有替代名称。守护进程会处理这些变体。
 - **Cape 验证：** ([MCCursorLibrary.m](Mousecape/Mousecape/src/models/MCCursorLibrary.m))
 
 降采样时保持动画速度一致，调整帧时长补偿帧数减少。
-
-### 图像尺寸限制
-
-**最大尺寸：** 4096×4096 像素 ([WindowsCursorConverter.swift:218-227](Mousecape/Mousecape/SwiftUI/Utilities/WindowsCursorConverter.swift#L218-L227))
 
 **内存保护措施：**
 - 导入前验证图像尺寸
