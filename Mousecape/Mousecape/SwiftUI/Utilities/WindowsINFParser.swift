@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreFoundation
 
 /// Represents a parsed install.inf file with cursor mappings
 struct WindowsINFMapping {
@@ -82,15 +83,58 @@ struct WindowsINFParser {
             return .failure(.fileNotFound(url.lastPathComponent))
         }
 
-        // Read file as ASCII, replacing invalid characters
-        guard let data = try? Data(contentsOf: url),
-              let content = String(data: data, encoding: .ascii) else {
-            debugLog("Error: Failed to read INF file (encoding error)")
+        // 针对中文 Windows 光标主题优化的编码检测顺序
+        // 使用 CFStringConvertEncodingToNSStringEncoding 支持 Swift 原生不支持的编码
+        guard let data = try? Data(contentsOf: url) else {
+            debugLog("Error: Failed to read INF file (I/O error)")
             return .failure(.encodingError(url.lastPathComponent))
         }
 
-        debugLog("Read with ASCII encoding")
-        return parseContent(content)
+        let encodings: [(CFStringEncoding, String)] = [
+            (0x08000100, "UTF-8"),              // kCFStringEncodingUTF8
+            (0x0C000101, "UTF-16 LE"),          // kCFStringEncodingUTF16LE
+            (0x0C000102, "UTF-16 BE"),          // kCFStringEncodingUTF16BE
+            (0x0631, "GBK"),                    // kCFStringEncodingGBK_95 (corrected: was 0x0636)
+            (0x01000931, "GB18030"),            // kCFStringEncodingGB_18030_2000
+            (0x0A03, "Big5"),                  // kCFStringEncodingBig5
+            (0x0621, "Shift_JIS"),             // kCFStringEncodingShiftJIS
+            (0x0628, "EUC-KR"),                // kCFStringEncodingEUC_KR
+            (0x0201, "ISO-8859-1"),            // kCFStringEncodingISOLatin1
+        ]
+
+        for (cfEncoding, name) in encodings {
+            // 尝试使用 CFString 解码（支持非 Unicode 编码如 GBK）
+            var content: String?
+
+            data.withUnsafeBytes { bytes in
+                guard let baseAddress = bytes.baseAddress else { return }
+
+                if let cfString = CFStringCreateWithBytes(
+                    kCFAllocatorDefault,
+                    baseAddress.assumingMemoryBound(to: UInt8.self),
+                    data.count,
+                    cfEncoding,
+                    false
+                ) {
+                    content = cfString as String
+                }
+            }
+
+            if let validContent = content {
+                debugLog("Trying \(name): decoded \(validContent.count) chars")
+                // 验证解码质量
+                if isValidDecodedContent(validContent) {
+                    debugLog("✓ Read INF with \(name) encoding (\(data.count) bytes)")
+                    return parseContent(validContent)
+                }
+                debugLog("✗ \(name) failed validation, trying next encoding...")
+            } else {
+                debugLog("✗ \(name) failed to decode (CFStringCreateWithBytes returned nil)")
+            }
+        }
+
+        debugLog("Error: Failed to decode INF file (tried: \(encodings.map { $0.1 }.joined(separator: ", ")))")
+        return .failure(.encodingError(url.lastPathComponent))
     }
 
     /// Parse INF content string
@@ -265,6 +309,68 @@ struct WindowsINFParser {
         guard !key.isEmpty && !value.isEmpty else { return nil }
 
         return (key, value)
+    }
+
+    /// 验证解码后的内容是否有效
+    /// - Parameter content: 解码后的 INF 文件内容
+    /// - Returns: 如果内容有效返回 true，否则返回 false
+    private static func isValidDecodedContent(_ content: String) -> Bool {
+        // 1. 检查替换字符（说明解码失败）
+        if content.contains("�") {
+            return false
+        }
+
+        // 2. 检查控制字符比例（除 \r\n\t 外）
+        let controlChars = content.unicodeScalars.filter {
+            CharacterCategory($0.value) == .control &&
+            $0.value != 13 && $0.value != 10 && $0.value != 9
+        }
+        if controlChars.count > content.count / 4 {
+            return false  // 超过25%是控制字符，说明解码错误
+        }
+
+        // 3. 验证包含必需的 [Scheme.Reg] 段
+        guard content.contains("[Scheme.Reg]") || content.contains("[scheme.reg]") else {
+            return false
+        }
+
+        // 4. 检查中文字符（使用 Unicode 范围）
+        let hasChineseChars = content.unicodeScalars.contains {
+            $0.value >= 0x4E00 && $0.value <= 0x9FFF  // CJK 统一汉字
+        }
+
+        // 5. 对于 ISO-8859-1 编码，检查是否有大量高位字节字符（0x80-0xFF）
+        // 这些通常是多字节编码（如 GBK）的误解析
+        let highByteChars = content.unicodeScalars.filter {
+            $0.value >= 0x80 && $0.value <= 0xFF  // Latin-1 补充范围
+        }
+
+        debugLog("  Validation: chinese=\(hasChineseChars), highByte=\(highByteChars.count)/\(content.count) (\(highByteChars.count * 100 / content.count)%)")
+
+        // 如果有大量高位字节字符（>10%）且没有中文字符，可能是错误的编码
+        if highByteChars.count > content.count / 10 && !hasChineseChars {
+            return false  // 可能是 GBK 等多字节编码被错误解析为 ISO-8859-1
+        }
+
+        // 如果包含中文，说明可能是正确的中文字符集
+        // 如果不包含中文，也可能是纯英文 INF 文件
+
+        return true
+    }
+
+    /// Character category helper for validation
+    private enum CharacterCategory {
+        case control
+        case other
+
+        init(_ unicodeValue: UInt32) {
+            // Control characters are in the range 0-31 and 127
+            if (unicodeValue <= 31 || unicodeValue == 127) {
+                self = .control
+            } else {
+                self = .other
+            }
+        }
     }
 
     /// Get macOS cursor types for a position index
