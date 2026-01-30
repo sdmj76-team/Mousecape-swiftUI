@@ -457,6 +457,12 @@ struct CursorListView: View {
         .listStyle(.sidebar)
         .scrollContentBackground(.hidden)
         .id(appState.cursorListRefreshTrigger)  // Force list refresh when trigger changes
+        .onChange(of: selection) { _, newValue in
+            // When user selects a cursor, dismiss the cape info view
+            if newValue != nil && appState.showCapeInfo {
+                appState.showCapeInfo = false
+            }
+        }
     }
 
     private func duplicateCursor() {
