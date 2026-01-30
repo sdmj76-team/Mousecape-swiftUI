@@ -243,7 +243,14 @@ private let localizationStrings: [AppLanguage: [String: String]] = [
         // Operation Result Messages
         "has been exported.": "has been exported.",
         "has been imported.": "has been imported.",
-        "Failed to export cape.": "Failed to export cape."
+        "Failed to export cape.": "Failed to export cape.",
+
+        // Menu Bar Commands
+        "Settings...": "Settings...",
+        "Reset to Default": "Reset to Default",
+        "Import from Windows...": "Import from Windows...",
+        "Import Cape...": "Import Cape...",
+        "Export Cape...": "Export Cape..."
     ],
 
     .chinese: [
@@ -445,7 +452,14 @@ private let localizationStrings: [AppLanguage: [String: String]] = [
         // Operation Result Messages
         "has been exported.": "已成功导出。",
         "has been imported.": "已成功导入。",
-        "Failed to export cape.": "导出 Cape 失败。"
+        "Failed to export cape.": "导出 Cape 失败。",
+
+        // Menu Bar Commands
+        "Settings...": "设置...",
+        "Reset to Default": "重置为默认",
+        "Import from Windows...": "从 Windows 导入...",
+        "Import Cape...": "导入 Cape...",
+        "Export Cape...": "导出 Cape..."
     ]
 ]
 
