@@ -133,20 +133,21 @@ struct CursorZoomOverlay: View {
 
     @State private var showDetails = false
     @State private var showAnimatedCursor = false
+    @State private var isVisible = false
 
     var body: some View {
         ZStack {
             // Dimmed background - click to dismiss
-            Color.black.opacity(0.6)
+            Color.black.opacity(isVisible ? 0.6 : 0)
                 .ignoresSafeArea()
                 .onTapGesture {
-                    onDismiss()
+                    dismiss()
                 }
 
             // Centered zoomed cursor with matched geometry
             VStack(spacing: 16) {
                 ZStack {
-                    // Static view for transition (hidden after transition completes)
+                    // Static view for transition (used for enter animation)
                     StaticCursorFrameView(cursor: cursor, scale: 3)
                         .frame(width: 128, height: 128)
                         .matchedGeometryEffect(id: cursor.id, in: namespace)
@@ -181,13 +182,19 @@ struct CursorZoomOverlay: View {
             .padding(24)
             .adaptiveGlass(in: RoundedRectangle(cornerRadius: 16))
             .shadow(radius: 20)
+            .opacity(isVisible ? 1 : 0)
+            .scaleEffect(isVisible ? 1 : 0.8)
         }
         .contentShape(Rectangle())
         .onKeyPress(.escape) {
-            onDismiss()
+            dismiss()
             return .handled
         }
         .onAppear {
+            // Fade in on appear
+            withAnimation(.easeOut(duration: 0.25)) {
+                isVisible = true
+            }
             // Switch to animated cursor after transition completes
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                 showAnimatedCursor = true
@@ -196,6 +203,15 @@ struct CursorZoomOverlay: View {
             withAnimation(.easeOut(duration: 0.3).delay(0.2)) {
                 showDetails = true
             }
+        }
+    }
+
+    private func dismiss() {
+        withAnimation(.easeOut(duration: 0.2)) {
+            isVisible = false
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            onDismiss()
         }
     }
 }
