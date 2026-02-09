@@ -8,15 +8,20 @@
 
 #ifndef Mousecape_create_h
 #define Mousecape_create_h
-extern NSError *createCape(NSString *input, NSString *output, BOOL convert);
 
-extern NSDictionary *processedCapeWithIdentifier(NSString *identifier);
+NS_ASSUME_NONNULL_BEGIN
+
+extern NSError * _Nullable createCape(NSString *input, NSString *output, BOOL convert);
+
+extern NSDictionary * _Nullable processedCapeWithIdentifier(NSString *identifier);
 extern BOOL dumpCursorsToFile(NSString *path, BOOL (^progress)(NSUInteger current, NSUInteger total));
 extern BOOL dumpCursorsToFolder(NSString *path, BOOL (^progress)(NSUInteger current, NSUInteger total));
 
-extern NSDictionary *createCapeFromDirectory(NSString *path);
-extern NSDictionary *createCapeFromMightyMouse(NSDictionary *mightyMouse, NSDictionary *metadata);
+extern NSDictionary * _Nullable createCapeFromDirectory(NSString *path);
+extern NSDictionary * _Nullable createCapeFromMightyMouse(NSDictionary *mightyMouse, NSDictionary *metadata);
 
 extern void exportCape(NSDictionary *cape, NSString *destination);
+
+NS_ASSUME_NONNULL_END
 
 #endif

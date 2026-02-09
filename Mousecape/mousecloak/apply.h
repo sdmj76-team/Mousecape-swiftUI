@@ -9,9 +9,13 @@
 #ifndef Mousecape_apply_h
 #define Mousecape_apply_h
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern BOOL applyCursorForIdentifier(NSUInteger frameCount, CGFloat frameDuration, CGPoint hotSpot, CGSize size, NSArray *images, NSString *ident, NSUInteger repeatCount);
 extern BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL restore);
 extern BOOL applyCape(NSDictionary *dictionary);
 extern BOOL applyCapeAtPath(NSString *path);
+
+NS_ASSUME_NONNULL_END
 
 #endif

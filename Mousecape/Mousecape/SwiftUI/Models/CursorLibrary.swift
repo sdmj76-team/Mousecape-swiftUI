@@ -30,17 +30,17 @@ final class CursorLibrary: Identifiable, Hashable {
     // MARK: - Properties (bridged from ObjC)
 
     var name: String {
-        get { objcLibrary.name ?? "Untitled" }
+        get { objcLibrary.name }
         set { objcLibrary.name = newValue }
     }
 
     var author: String {
-        get { objcLibrary.author ?? "Unknown" }
+        get { objcLibrary.author }
         set { objcLibrary.author = newValue }
     }
 
     var identifier: String {
-        get { objcLibrary.identifier ?? UUID().uuidString }
+        get { objcLibrary.identifier }
         set { objcLibrary.identifier = newValue }
     }
 

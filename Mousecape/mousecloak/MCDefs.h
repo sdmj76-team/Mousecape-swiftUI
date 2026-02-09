@@ -38,6 +38,8 @@ extern NSString *defaultCursors[];
 extern NSString *MCErrorDomain;
 extern NSDictionary *cursorNameMap;
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, MCErrorCode) {
     MCErrorInvalidCapeCode = -1,
     MCErrorWriteFailCode   = -2,
@@ -84,9 +86,9 @@ extern NSString *nameForCursorIdentifier(NSString *identifier);
 extern NSString *cursorIdentifierForName(NSString *name);
 
 extern NSString *UUID(void);
-extern NSDictionary *capeWithIdentifier(NSString *identifier);
+extern NSDictionary * _Nullable capeWithIdentifier(NSString *identifier);
 extern void CGImageWriteToFile(CGImageRef image, CFStringRef path);
-extern NSData *pngDataForImage(id image);
+extern NSData * _Nullable pngDataForImage(id image);
 extern NSString *MMGet(NSString *prompt);
 
 extern CGError MCIsCursorRegistered(CGSConnectionID cid, char *cursorName, bool *registered);
@@ -96,4 +98,7 @@ extern BOOL MCCursorIsPointer(NSString *identifier);
 extern NSArray<NSString *> *MCArrowSynonyms(void);
 // Returns all known names the system may use for the I-beam (text) cursor on this OS version
 extern NSArray<NSString *> *MCIBeamSynonyms(void);
+
+NS_ASSUME_NONNULL_END
+
 #endif

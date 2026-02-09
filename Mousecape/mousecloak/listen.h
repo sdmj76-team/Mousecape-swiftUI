@@ -9,7 +9,11 @@
 #ifndef Mousecape_listen_h
 #define Mousecape_listen_h
 
-extern NSString *appliedCapePathForUser(NSString *user);
+NS_ASSUME_NONNULL_BEGIN
+
+extern NSString * _Nullable appliedCapePathForUser(NSString *user);
 extern void listener(void);
+
+NS_ASSUME_NONNULL_END
 
 #endif

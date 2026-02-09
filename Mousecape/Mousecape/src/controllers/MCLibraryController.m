@@ -11,6 +11,7 @@
 #import "restore.h"
 #import "create.h"
 #import "MCLogger.h"
+#import "MCPrefs.h"
 
 @interface MCLibraryController ()
 @property (nonatomic, readwrite, strong) NSUndoManager *undoManager;
@@ -51,7 +52,7 @@
     self.capes = [NSMutableSet set];
     NSString *capesPath = self.libraryURL.path;
     NSArray  *contents  = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:capesPath error:NULL];
-    NSString *applied   = [NSUserDefaults.standardUserDefaults stringForKey:MCPreferencesAppliedCursorKey];
+    NSString *applied   = MCDefault(MCPreferencesAppliedCursorKey);
 
     for (NSString *filename in contents) {
         // Ignore hidden files like .DS_Store
