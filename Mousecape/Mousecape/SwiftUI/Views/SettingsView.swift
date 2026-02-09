@@ -223,6 +223,8 @@ struct AppearanceSettingsView: View {
 struct AdvancedSettingsView: View {
     @State private var showResetConfirmation = false
     @State private var isExportingLogs = false
+    @State private var showResetCursorSuccess = false
+    @State private var showResetOrderSuccess = false
     @Environment(AppState.self) private var appState
     @Environment(LocalizationManager.self) private var localization
 
@@ -244,6 +246,12 @@ struct AdvancedSettingsView: View {
                 HStack {
                     Button(localization.localized("Reset System Cursor")) {
                         appState.resetToDefault()
+                        showResetCursorSuccess = true
+                    }
+
+                    Button(localization.localized("Reset Sidebar Order")) {
+                        appState.resetCapeOrder()
+                        showResetOrderSuccess = true
                     }
 
                     Button(localization.localized("Restore Default Settings"), role: .destructive) {
@@ -340,6 +348,22 @@ struct AdvancedSettingsView: View {
         .formStyle(.grouped)
         .scrollContentBackground(.hidden)
         .navigationTitle(localization.localized("Advanced"))
+        .alert(
+            localization.localized("Reset System Cursor"),
+            isPresented: $showResetCursorSuccess
+        ) {
+            Button(localization.localized("OK"), role: .cancel) { }
+        } message: {
+            Text(localization.localized("System cursor has been reset to default."))
+        }
+        .alert(
+            localization.localized("Reset Sidebar Order"),
+            isPresented: $showResetOrderSuccess
+        ) {
+            Button(localization.localized("OK"), role: .cancel) { }
+        } message: {
+            Text(localization.localized("Sidebar order has been reset to alphabetical."))
+        }
     }
 
     private func resetToDefaults() {

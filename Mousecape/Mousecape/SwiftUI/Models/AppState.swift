@@ -151,7 +151,7 @@ final class AppState: @unchecked Sendable {
         // Load capes from the ObjC controller
         if let objcCapes = controller.capes as? Set<MCCursorLibrary> {
             capes = objcCapes.map { CursorLibrary(objcLibrary: $0) }
-            capes.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+            applyCapeOrder()
         }
 
         // Restore selections by finding wrappers for the same ObjC objects
@@ -165,6 +165,58 @@ final class AppState: @unchecked Sendable {
         } else if let appliedObjc = appliedObjc {
             appliedCape = capes.first { $0.underlyingLibrary === appliedObjc }
         }
+    }
+
+    // MARK: - Cape Order Management
+
+    /// Apply saved cape order or use alphabetical order as default
+    private func applyCapeOrder() {
+        let savedOrder = UserDefaults.standard.stringArray(forKey: "capeListOrder") ?? []
+
+        if savedOrder.isEmpty {
+            // No saved order, use alphabetical order as default
+            capes.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        } else {
+            // Sort by saved order, new capes go to end (alphabetically)
+            capes.sort { cape1, cape2 in
+                let index1 = savedOrder.firstIndex(of: cape1.identifier)
+                let index2 = savedOrder.firstIndex(of: cape2.identifier)
+
+                switch (index1, index2) {
+                case let (i1?, i2?):
+                    return i1 < i2
+                case (nil, _?):
+                    return false  // cape1 is new, put at end
+                case (_?, nil):
+                    return true   // cape2 is new, put at end
+                case (nil, nil):
+                    // Both are new, sort alphabetically
+                    return cape1.name.localizedCaseInsensitiveCompare(cape2.name) == .orderedAscending
+                }
+            }
+        }
+
+        // Sync save: clean up deleted capes, add new ones
+        saveCapeOrder()
+    }
+
+    /// Save current cape order to UserDefaults
+    private func saveCapeOrder() {
+        let order = capes.map { $0.identifier }
+        UserDefaults.standard.set(order, forKey: "capeListOrder")
+    }
+
+    /// Move cape from source index to destination index (for drag and drop)
+    func moveCape(from source: IndexSet, to destination: Int) {
+        capes.move(fromOffsets: source, toOffset: destination)
+        saveCapeOrder()
+    }
+
+    /// Reset cape order to alphabetical order
+    func resetCapeOrder() {
+        UserDefaults.standard.removeObject(forKey: "capeListOrder")
+        capes.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        saveCapeOrder()
     }
 
     private func loadPreferences() {

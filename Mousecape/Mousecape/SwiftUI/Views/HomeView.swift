@@ -283,6 +283,7 @@ struct EmptyStateView: View {
 
 struct CapeIconGridView: View {
     @Environment(AppState.self) private var appState
+    @State private var draggingCapeId: String?
 
     private let columns = [
         GridItem(.adaptive(minimum: 64, maximum: 80), spacing: 12)
@@ -294,14 +295,56 @@ struct CapeIconGridView: View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(appState.capes) { cape in
-                    CapeIconCell(cape: cape, onSelect: {
-                        appState.selectedCape = cape
-                    }, onDoubleClick: {
-                        handleDoubleClick(cape)
-                    })
+                    CapeIconCell(
+                        cape: cape,
+                        isDragging: draggingCapeId == cape.identifier,
+                        onSelect: {
+                            appState.selectedCape = cape
+                        },
+                        onDoubleClick: {
+                            handleDoubleClick(cape)
+                        }
+                    )
+                    .draggable(cape.identifier) {
+                        // Drag preview - without selection border
+                        CapeIconCell(
+                            cape: cape,
+                            isDragging: false,
+                            showSelection: false,
+                            onSelect: {},
+                            onDoubleClick: {}
+                        )
+                        .opacity(0.8)
+                        .onAppear {
+                            draggingCapeId = cape.identifier
+                        }
+                    }
+                    .dropDestination(for: String.self) { items, _ in
+                        guard let draggedId = items.first,
+                              let fromIndex = appState.capes.firstIndex(where: { $0.identifier == draggedId }),
+                              let toIndex = appState.capes.firstIndex(where: { $0.identifier == cape.identifier })
+                        else { return false }
+
+                        if fromIndex != toIndex {
+                            withAnimation(.spring(duration: 0.3, bounce: 0.2)) {
+                                appState.moveCape(
+                                    from: IndexSet(integer: fromIndex),
+                                    to: toIndex > fromIndex ? toIndex + 1 : toIndex
+                                )
+                            }
+                        }
+                        draggingCapeId = nil
+                        return true
+                    }
                 }
             }
             .padding()
+            .animation(.spring(duration: 0.3, bounce: 0.2), value: appState.capes.map { $0.identifier })
+        }
+        .onDrop(of: [.text], isTargeted: nil) { _ in
+            // Reset dragging state when drop ends outside valid targets
+            draggingCapeId = nil
+            return false
         }
     }
 
@@ -322,6 +365,8 @@ struct CapeIconGridView: View {
 
 struct CapeIconCell: View {
     let cape: CursorLibrary
+    var isDragging: Bool = false
+    var showSelection: Bool = true
     let onSelect: () -> Void
     let onDoubleClick: () -> Void
     @Environment(AppState.self) private var appState
@@ -329,7 +374,7 @@ struct CapeIconCell: View {
     @State private var lastClickTime: Date?
 
     private var isSelected: Bool {
-        appState.selectedCape?.id == cape.id
+        showSelection && appState.selectedCape?.id == cape.id
     }
 
     private var isApplied: Bool {
@@ -377,8 +422,10 @@ struct CapeIconCell: View {
             RoundedRectangle(cornerRadius: 10)
                 .strokeBorder(isSelected ? Color.accentColor : .clear, lineWidth: 2)
         )
-        .scaleEffect(isHovered ? 1.05 : 1.0)
+        .scaleEffect(isDragging ? 1.05 : (isHovered ? 1.05 : 1.0))
+        .opacity(isDragging ? 0.5 : 1.0)
         .animation(.spring(duration: 0.2), value: isHovered)
+        .animation(.spring(duration: 0.2), value: isDragging)
         .onHover { isHovered = $0 }
         .contentShape(Rectangle())
         .onTapGesture {
