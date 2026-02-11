@@ -3,14 +3,14 @@ name: Build Mousecape
 on:
   # 推送触发
   push:
-    branches: [master, develop, feature]
+    branches: [main, develop, feature]
     paths-ignore:
       - '**.md'
       - 'docs/**'
 
   # PR 触发
   pull_request:
-    branches: [master, develop, feature]
+    branches: [main, develop, feature]
 
   # 手动触发
   workflow_dispatch:
