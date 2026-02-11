@@ -160,6 +160,7 @@
       "shouldTranslate" : false
     },
     "%lld files, %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -224,6 +225,7 @@
       }
     },
     "~/Library/Logs/Mousecape" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -594,6 +596,7 @@
       }
     },
     "Clear All Logs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -704,6 +707,7 @@
       }
     },
     "Debug" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -983,6 +987,7 @@
       }
     },
     "Export All Logs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1023,6 +1028,7 @@
       }
     },
     "Export Debug Logs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1466,6 +1472,7 @@
       }
     },
     "Log Files" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1476,6 +1483,7 @@
       }
     },
     "Log Folder" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1486,6 +1494,7 @@
       }
     },
     "Logs are automatically deleted after 24 hours. Logs contain debug information for troubleshooting cursor issues." : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1544,6 +1553,7 @@
       }
     },
     "Mousecape v1.0.3" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1552,6 +1562,9 @@
           }
         }
       }
+    },
+    "Mousecape v1.0.4" : {
+
     },
     "Name" : {
       "localizations" : {
@@ -1660,6 +1673,7 @@
       }
     },
     "Open Log Folder" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

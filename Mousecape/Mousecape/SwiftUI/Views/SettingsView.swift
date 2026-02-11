@@ -300,7 +300,7 @@ struct AdvancedSettingsView: View {
                        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
                         Text("Mousecape v\(version) (\(build))")
                     } else {
-                        Text("Mousecape v1.0.3")
+                        Text("Mousecape v1.0.4")
                     }
                 }
                 LabeledContent("System Requirements") {
