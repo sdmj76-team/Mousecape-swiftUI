@@ -62,6 +62,7 @@ struct EditDetailContent: View {
 
             // Main action buttons group
             ToolbarItemGroup {
+                if editMode == 1 {
                 Button(action: {
                     appState.showAddCursorSheet = true
                 }) {
@@ -78,6 +79,7 @@ struct EditDetailContent: View {
                 .help("Delete Cursor")
                 .accessibilityLabel("Delete cursor")
                 .disabled(appState.editingSelectedCursor == nil)
+                }
 
                 Button(action: {
                     appState.showCapeInfo.toggle()
