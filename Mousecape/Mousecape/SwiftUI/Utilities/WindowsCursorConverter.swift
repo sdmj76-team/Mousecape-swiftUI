@@ -45,6 +45,11 @@ enum WindowsCursorError: LocalizedError {
 // MARK: - Converter
 
 /// Converts Windows cursor files (.cur, .ani) to Mousecape format
+///
+/// @unchecked Sendable is safe because:
+/// 1. Singleton with no mutable state
+/// 2. All conversion operations use TaskGroup for parallel processing
+/// 3. No shared mutable state between concurrent tasks
 final class WindowsCursorConverter: @unchecked Sendable {
 
     /// Shared instance
