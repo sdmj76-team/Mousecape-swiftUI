@@ -106,8 +106,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		7A5B757C0780EA0A10BF1469 /* main.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = main.swift; path = mousecloak/main.swift; sourceTree = "<group>"; };
-		CF122E4B298E5744EE9F0578 /* mousecloak-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "mousecloak-Bridging-Header.h"; path = "mousecloak/mousecloak-Bridging-Header.h"; sourceTree = "<group>"; };
+		7A5B757C0780EA0A10BF1469 /* main.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = main.swift; path = Mousecape/mousecloak/main.swift; sourceTree = "<group>"; };
+		CF122E4B298E5744EE9F0578 /* mousecloak-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "mousecloak-Bridging-Header.h"; path = "Mousecape/mousecloak/mousecloak-Bridging-Header.h"; sourceTree = "<group>"; };
 		DE3661E82EFAAAB600D94521 /* AnimatingCursorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatingCursorView.swift; sourceTree = "<group>"; };
 		DE3661E92EFAAAB600D94521 /* GlassEffectContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassEffectContainer.swift; sourceTree = "<group>"; };
 		DE3661EB2EFAAAB600D94521 /* AppEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnums.swift; sourceTree = "<group>"; };
@@ -189,6 +189,12 @@
 		FAC69FC9189D609B00BC829D /* CGSWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSWorkspace.h; sourceTree = "<group>"; };
 		FAC69FCA189D609B00BC829D /* MCDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCDefs.h; sourceTree = "<group>"; };
 		FAC69FCB189D609B00BC829D /* NSCursor_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCursor_Private.h; sourceTree = "<group>"; };
+		FAC69FCE189D609B00BC829D /* GBCommandLineParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBCommandLineParser.h; sourceTree = "<group>"; };
+		FAC69FCF189D609B00BC829D /* GBCommandLineParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBCommandLineParser.m; sourceTree = "<group>"; };
+		FAC69FD0189D609B00BC829D /* GBOptionsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBOptionsHelper.h; sourceTree = "<group>"; };
+		FAC69FD1189D609B00BC829D /* GBOptionsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBOptionsHelper.m; sourceTree = "<group>"; };
+		FAC69FD2189D609B00BC829D /* GBSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBSettings.h; sourceTree = "<group>"; };
+		FAC69FD3189D609B00BC829D /* GBSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBSettings.m; sourceTree = "<group>"; };
 		FAC69FD7189D623C00BC829D /* Mousecape-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mousecape-Prefix.pch"; sourceTree = "<group>"; };
 		FAC69FDB189D636700BC829D /* MCDefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCDefs.m; sourceTree = "<group>"; };
 		FAEE651618A047E8003AA182 /* MCLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCLibraryController.h; sourceTree = "<group>"; };
@@ -198,25 +204,6 @@
 		FAEE651F18A047E8003AA182 /* MCCursorLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCCursorLibrary.h; sourceTree = "<group>"; };
 		FAEE652018A047E8003AA182 /* MCCursorLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCCursorLibrary.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-/* Begin XCRemoteSwiftPackageReference section */
-		F57CF9778ACF426B973D8948 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-argument-parser";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-/* Begin XCSwiftPackageProductDependency section */
-		86D2A987242A45FBB21AE949 /* ArgumentParser */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F57CF9778ACF426B973D8948 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
-			productName = ArgumentParser;
-		};
-/* End XCSwiftPackageProductDependency section */
-
-
 
 /* Begin PBXFrameworksBuildPhase section */
 		FAC69F5E189D603C00BC829D /* Frameworks */ = {
@@ -456,6 +443,10 @@
 			children = (
 				FAC69FCE189D609B00BC829D /* GBCommandLineParser.h */,
 				FAC69FCF189D609B00BC829D /* GBCommandLineParser.m */,
+				FAC69FD0189D609B00BC829D /* GBOptionsHelper.h */,
+				FAC69FD1189D609B00BC829D /* GBOptionsHelper.m */,
+				FAC69FD2189D609B00BC829D /* GBSettings.h */,
+				FAC69FD3189D609B00BC829D /* GBSettings.m */,
 			);
 			path = GBCli;
 			sourceTree = "<group>";
@@ -520,10 +511,6 @@
 			productName = mousecloak;
 			productReference = FAC69FAD189D608900BC829D /* mousecloak */;
 			productType = "com.apple.product-type.tool";
-			packageProductDependencies = (
-				86D2A987242A45FBB21AE949 /* ArgumentParser */,
-			);
-
 		};
 /* End PBXNativeTarget section */
 
@@ -560,10 +547,6 @@
 				FAC69F60189D603C00BC829D /* Mousecape */,
 				FAC69FAC189D608900BC829D /* mousecloak */,
 			);
-			packageReferences = (
-				F57CF9778ACF426B973D8948 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
-			);
-
 		};
 /* End PBXProject section */
 
@@ -629,12 +612,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA8FF76E189D66CB00750E51 /* backup.m in Sources */,
+				FAC69FD6189D609B00BC829D /* GBSettings.m in Sources */,
 				FA359852189E035900288163 /* listen.m in Sources */,
+				FAC69FD5189D609B00BC829D /* GBOptionsHelper.m in Sources */,
 				FA35983F189DA3BC00288163 /* MCPrefs.m in Sources */,
 				FAAEF957189F4ED300145DF8 /* scale.m in Sources */,
 				FA8FF76B189D664400750E51 /* restore.m in Sources */,
 				FA8FF771189D66D800750E51 /* apply.m in Sources */,
 				FAC69FDD189D636700BC829D /* MCDefs.m in Sources */,
+				FAC69FD4189D609B00BC829D /* GBCommandLineParser.m in Sources */,
 				DEBC96002F16577D004E6C07 /* MCLogger.m in Sources */,
 				FA8FF774189D67B100750E51 /* create.m in Sources */,
 				FABA44D421D9D7D0009B10D9 /* NSBitmapImageRep+ColorSpace.m in Sources */,
@@ -863,7 +849,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "mousecloak/mousecloak-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Mousecape/mousecloak/mousecloak-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -891,7 +877,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "mousecloak/mousecloak-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Mousecape/mousecloak/mousecloak-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
