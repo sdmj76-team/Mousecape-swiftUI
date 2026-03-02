@@ -205,15 +205,6 @@ struct CursorListView: View {
             List(cape.cursors, id: \.id, selection: $selection) { cursor in
                 CursorListRow(cursor: cursor, currentIdentifier: cursor.identifier)
                     .tag(cursor)
-                    .contextMenu {
-                        Button("Duplicate") {
-                            duplicateCursor()
-                        }
-                        Divider()
-                        Button("Delete", role: .destructive) {
-                            appState.showDeleteCursorConfirmation = true
-                        }
-                    }
             }
             .listStyle(.sidebar)
             .scrollContentBackground(.hidden)
@@ -236,7 +227,7 @@ struct CursorListView: View {
         }
     }
 
-    /// Find the primary cursor for a group, or return nil
+    /// Find the primary cursor for a group, or create one if none exists
     private func findOrCreatePrimaryCursor(for group: WindowsCursorGroup) -> Cursor? {
         // Prioritize the primaryType cursor
         if let primaryType = group.primaryType,
@@ -249,7 +240,13 @@ struct CursorListView: View {
                 return existing
             }
         }
-        // No cursor exists for this group yet
+        // No cursor exists for this group yet - create the primary cursor
+        if let primaryType = group.primaryType {
+            let newCursor = Cursor(identifier: primaryType.rawValue)
+            cape.addCursor(newCursor)
+            appState.markAsChanged()
+            return newCursor
+        }
         return nil
     }
 
