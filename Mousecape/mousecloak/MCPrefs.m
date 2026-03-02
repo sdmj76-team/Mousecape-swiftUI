@@ -10,12 +10,8 @@
 #import "MCDefs.h"
 
 NSString *MCPreferencesAppliedCursorKey          = @"MCAppliedCursor";
-NSString *MCPreferencesAppliedClickActionKey     = @"MCLibraryClickAction";
 NSString *MCPreferencesCursorScaleKey            = @"MCCursorScale";
-NSString *MCPreferencesDoubleActionKey           = @"MCDoubleAction";
 NSString *MCPreferencesHandednessKey             = @"MCHandedness";
-NSString *MCSuppressDeleteLibraryConfirmationKey = @"MCSuppressDeleteLibraryConfirmationKey";
-NSString *MCSuppressDeleteCursorConfirmationKey  = @"MCSuppressDeleteCursorConfirmationKey";
 
 id MCDefaultFor(NSString *key, NSString *user, NSString *host) {
     NSString *value = (__bridge_transfer NSString *)CFPreferencesCopyValue((__bridge CFStringRef)key, (__bridge CFStringRef)kMCDomain, (__bridge CFStringRef)user, (__bridge CFStringRef)host);

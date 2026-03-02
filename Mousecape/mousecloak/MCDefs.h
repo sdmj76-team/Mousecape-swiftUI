@@ -83,7 +83,6 @@ extern const NSString *MCCursorDictionaryRepresentationsKey;
 
 extern NSDictionary *cursorMap(void);
 extern NSString *nameForCursorIdentifier(NSString *identifier);
-extern NSString *cursorIdentifierForName(NSString *name);
 
 extern NSString *UUID(void);
 extern NSDictionary * _Nullable capeWithIdentifier(NSString *identifier);

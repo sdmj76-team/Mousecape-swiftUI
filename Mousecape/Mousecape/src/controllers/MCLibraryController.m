@@ -9,7 +9,6 @@
 #import "MCLibraryController.h"
 #import "apply.h"
 #import "restore.h"
-#import "create.h"
 #import "MCLogger.h"
 #import "MCPrefs.h"
 
@@ -180,11 +179,6 @@
     self.appliedCape = nil;
 }
 
-- (NSSet *)capesWithIdentifier:(NSString *)identifier {
-    NSPredicate *pred = [NSPredicate predicateWithFormat:@"identifier == %@", identifier];
-    return [self.capes filteredSetUsingPredicate:pred];
-}
-
 - (void)willSaveNotification:(NSNotification *)note {
     MCCursorLibrary *cape = note.object;
     NSURL *oldURL = cape.fileURL;
@@ -202,22 +196,6 @@
             }
         }
     }
-}
-
-- (BOOL)dumpCursorsWithProgressBlock:(BOOL (^)(NSUInteger current, NSUInteger total))block {
-    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:
-                      [NSString stringWithFormat: @"%@ (%f).cape",
-                       NSLocalizedString(@"Mousecape Dump", @"Mousecape dump cursor file name"),
-                       NSDate.date.timeIntervalSince1970]];
-    if (dumpCursorsToFile(path, block)) {
-        __weak MCLibraryController *weakSelf = self;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf importCapeAtURL:[NSURL fileURLWithPath:path]];
-        });
-        return YES;
-    }
-
-    return NO;
 }
 
 @end

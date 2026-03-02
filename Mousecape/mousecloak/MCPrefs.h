@@ -14,12 +14,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *MCPreferencesAppliedCursorKey;
-extern NSString *MCPreferencesAppliedClickActionKey;
 extern NSString *MCPreferencesCursorScaleKey;
-extern NSString *MCPreferencesDoubleActionKey;
 extern NSString *MCPreferencesHandednessKey;
-extern NSString *MCSuppressDeleteLibraryConfirmationKey;
-extern NSString *MCSuppressDeleteCursorConfirmationKey;
 extern id _Nullable MCDefaultFor(NSString *key, NSString *user, NSString *host);
 extern id _Nullable MCDefault(NSString *key);
 #define MCFlag(key) [MCDefault(key) boolValue]
@@ -29,5 +25,4 @@ extern void MCSetDefaultFor(id _Nullable value, NSString *key, NSString *user, N
 NS_ASSUME_NONNULL_END
 
 #define MCSetDefault(value, key) MCSetDefaultFor(value, key, (__bridge NSString *)kCFPreferencesCurrentUser, (__bridge NSString *)kCFPreferencesCurrentHost)
-#define MCSetFlag(value, key) MCSetDefault(@(value), key)
 #endif

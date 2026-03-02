@@ -31,24 +31,8 @@ NSString *const MCLibraryDidSaveNotificationName = @"MCLibraryDidSave";
 @implementation MCCursorLibrary
 @dynamic dirty;
 
-+ (MCCursorLibrary *)cursorLibraryWithContentsOfFile:(NSString *)path {
-    return [[MCCursorLibrary alloc] initWithContentsOfFile:path];
-}
-
 + (MCCursorLibrary *)cursorLibraryWithContentsOfURL:(NSURL *)URL {
     return [[MCCursorLibrary alloc] initWithContentsOfURL:URL];
-}
-
-+ (MCCursorLibrary *)cursorLibraryWithDictionary:(NSDictionary *)dictionary {
-    return [[MCCursorLibrary alloc] initWithDictionary:dictionary];
-}
-
-+ (MCCursorLibrary *)cursorLibraryWithCursors:(NSSet *)cursors {
-    return [[MCCursorLibrary alloc] initWithCursors:cursors];
-}
-
-- (instancetype)initWithContentsOfFile:(NSString *)path {
-    return [self initWithContentsOfURL:[NSURL fileURLWithPath:path]];
 }
 
 - (instancetype)initWithContentsOfURL:(NSURL *)URL {
@@ -103,14 +87,6 @@ NSString *const MCLibraryDidSaveNotificationName = @"MCLibraryDidSave";
     lib.identifier       = [self.identifier stringByAppendingFormat:@".%f", [NSDate timeIntervalSinceReferenceDate]];
 
     return lib;
-}
-
-+ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
-    NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-    if ([key isEqualToString:@"dirty"]) {
-        keyPaths = [keyPaths setByAddingObjectsFromArray: @[@"changeCount", @"lastChangeCount"]];
-    }
-    return keyPaths;
 }
 
 - (BOOL)_readFromDictionary:(NSDictionary *)dictionary {
@@ -221,11 +197,6 @@ const char MCCursorPropertiesContext;
     }
 }
 
-- (NSSet *)cursorsWithIdentifier:(NSString *)identifier {
-    NSPredicate *filter = [NSPredicate predicateWithFormat:@"identifier == %@", identifier];
-    return [self.cursors filteredSetUsingPredicate:filter];
-}
-
 - (void)addCursor:(MCCursor *)cursor {
     if ([self.cursors containsObject:cursor]) {
         // Don't unnecessarily add a cursor/register observers with it because the
@@ -249,11 +220,6 @@ const char MCCursorPropertiesContext;
     [self.cursors removeObject:cursor];
     [self stopObservingCursor:cursor];
     [self didChangeValueForKey:@"cursors" withSetMutation:NSKeyValueMinusSetMutation usingObjects:change];
-}
-
-- (void)removeCursorsWithIdentifier:(NSString *)identifier {
-  for (MCCursor *cursor in [self cursorsWithIdentifier:identifier])
-      [self removeCursor: cursor];
 }
 
 - (NSDictionary *)dictionaryRepresentation {
