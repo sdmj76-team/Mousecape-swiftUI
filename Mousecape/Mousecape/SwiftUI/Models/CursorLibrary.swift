@@ -459,12 +459,12 @@ extension CursorLibrary {
 
     /// Current change count
     var changeCount: Int {
-        Int(objcLibrary.changeCount)
+        (objcLibrary.value(forKey: "changeCount") as? NSNumber)?.intValue ?? 0
     }
 
     /// Last saved change count
     var lastChangeCount: Int {
-        Int(objcLibrary.lastChangeCount)
+        (objcLibrary.value(forKey: "lastChangeCount") as? NSNumber)?.intValue ?? 0
     }
 
     /// Update change count
