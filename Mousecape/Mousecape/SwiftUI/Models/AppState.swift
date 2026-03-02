@@ -547,10 +547,9 @@ final class AppState: @unchecked Sendable {
         // Recreate a lightweight appliedCape for menu bar display (no cursor data)
         if let appliedId = appliedIdentifier, let appliedName = appliedCapeName {
             // Create a minimal CursorLibrary with just metadata for menu bar display
-            let lightweightLibrary = MCCursorLibrary(cursors: Set())
-            lightweightLibrary.name = appliedName
+            let lightweightLibrary = CursorLibrary(name: appliedName, author: "")
             lightweightLibrary.identifier = appliedId
-            appliedCape = CursorLibrary(objcLibrary: lightweightLibrary)
+            appliedCape = lightweightLibrary
             debugLog("Recreated lightweight appliedCape for menu bar: \(appliedName)")
         } else {
             appliedCape = nil
