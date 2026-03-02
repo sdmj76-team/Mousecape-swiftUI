@@ -11,6 +11,12 @@ import Combine
 import UniformTypeIdentifiers
 
 /// Main application state - ObservableObject for SwiftUI
+///
+/// @unchecked Sendable is safe because:
+/// 1. All access is @MainActor isolated (enforced by compiler)
+/// 2. ObjC objects (libraryController, MCCursor, MCCursorLibrary) are accessed only from main thread
+/// 3. Closures in undo/redo stacks are @MainActor closures, executed on main thread
+/// 4. No concurrent access possible due to @MainActor isolation
 @Observable @MainActor
 final class AppState: @unchecked Sendable {
 
@@ -576,7 +582,9 @@ final class AppState: @unchecked Sendable {
         var info = mach_task_basic_info()
         var count = mach_msg_type_number_t(MemoryLayout<mach_task_basic_info>.size) / 4
         let kerr: kern_return_t = withUnsafeMutablePointer(to: &info) {
-            $0.withMemoryRebound(to: integer_t.self, capacity: 1) {
+            // Calculate correct capacity for rebinding mach_task_basic_info to integer_t array
+            let capacity = MemoryLayout<mach_task_basic_info>.size / MemoryLayout<integer_t>.size
+            return $0.withMemoryRebound(to: integer_t.self, capacity: capacity) {
                 task_info(mach_task_self_, task_flavor_t(MACH_TASK_BASIC_INFO), $0, &count)
             }
         }

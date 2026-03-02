@@ -10,6 +10,11 @@ import Foundation
 import AppKit
 
 /// Debug version log manager
+///
+/// @unchecked Sendable is safe because:
+/// 1. All mutable state (logFileHandle, logFilePath) is protected by serial DispatchQueue
+/// 2. All file operations are dispatched to the queue, ensuring thread-safe access
+/// 3. No concurrent access to mutable state possible
 final class DebugLogger: @unchecked Sendable {
     static let shared = DebugLogger()
 
