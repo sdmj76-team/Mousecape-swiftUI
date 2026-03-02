@@ -198,13 +198,19 @@ extension MousecloakCLI {
         @Argument(help: "Input cape file path")
         var inputPath: String
 
-        @Argument(help: "Output directory path")
-        var output: String
+        @Option(name: .shortAndLong, help: "Output directory path")
+        var output: String?
 
         @OptionGroup var options: MousecloakCLI.Options
 
         func run() throws {
             printHeader(suppressCopyright: options.suppressCopyright)
+
+            guard let outputDir = output else {
+                printError("You must specify an output directory with -o!")
+                printFooter(suppressCopyright: options.suppressCopyright)
+                return
+            }
 
             guard let cape = NSDictionary(contentsOfFile: inputPath) else {
                 printError("Failed to read cape file at \(inputPath)")
@@ -212,7 +218,7 @@ extension MousecloakCLI {
                 return
             }
 
-            exportCape(cape as! [AnyHashable: Any], output)
+            exportCape(cape as! [AnyHashable: Any], outputDir)
 
             printFooter(suppressCopyright: options.suppressCopyright)
         }
