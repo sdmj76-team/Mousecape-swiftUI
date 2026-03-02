@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3880F07FA545B9BB6BE5CF5F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535A16BA02A965F8471C30A3 /* main.swift */; };
+		9CB312EE7052700D9F29C682 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5B757C0780EA0A10BF1469 /* main.swift */; };
 		DE3661FD2EFAAAB600D94521 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661F52EFAAAB600D94521 /* MainView.swift */; };
 		DE3661FE2EFAAAB600D94521 /* EditOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661F32EFAAAB600D94521 /* EditOverlayView.swift */; };
 		DE3661FF2EFAAAB600D94521 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661EC2EFAAAB600D94521 /* AppState.swift */; };
@@ -106,8 +106,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		29659AFC6FCE1AE2905B5470 /* mousecloak-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "mousecloak-Bridging-Header.h"; path = "Mousecape/mousecloak/mousecloak-Bridging-Header.h"; sourceTree = "<group>"; };
-		535A16BA02A965F8471C30A3 /* main.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = main.swift; path = Mousecape/mousecloak/main.swift; sourceTree = "<group>"; };
+		7A5B757C0780EA0A10BF1469 /* main.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = main.swift; path = Mousecape/mousecloak/main.swift; sourceTree = "<group>"; };
+		CF122E4B298E5744EE9F0578 /* mousecloak-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "mousecloak-Bridging-Header.h"; path = "Mousecape/mousecloak/mousecloak-Bridging-Header.h"; sourceTree = "<group>"; };
 		DE3661E82EFAAAB600D94521 /* AnimatingCursorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatingCursorView.swift; sourceTree = "<group>"; };
 		DE3661E92EFAAAB600D94521 /* GlassEffectContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassEffectContainer.swift; sourceTree = "<group>"; };
 		DE3661EB2EFAAAB600D94521 /* AppEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnums.swift; sourceTree = "<group>"; };
@@ -393,8 +393,8 @@
 				FAC69FB2189D608900BC829D /* Supporting Files */,
 				FABA44D221D9D7D0009B10D9 /* NSBitmapImageRep+ColorSpace.h */,
 				FABA44D321D9D7D0009B10D9 /* NSBitmapImageRep+ColorSpace.m */,
-				535A16BA02A965F8471C30A3 /* main.swift */,
-				29659AFC6FCE1AE2905B5470 /* mousecloak-Bridging-Header.h */,
+				7A5B757C0780EA0A10BF1469 /* main.swift */,
+				CF122E4B298E5744EE9F0578 /* mousecloak-Bridging-Header.h */,
 			);
 			path = mousecloak;
 			sourceTree = "<group>";
@@ -624,7 +624,7 @@
 				DEBC96002F16577D004E6C07 /* MCLogger.m in Sources */,
 				FA8FF774189D67B100750E51 /* create.m in Sources */,
 				FABA44D421D9D7D0009B10D9 /* NSBitmapImageRep+ColorSpace.m in Sources */,
-				3880F07FA545B9BB6BE5CF5F /* main.swift in Sources */,
+				9CB312EE7052700D9F29C682 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
