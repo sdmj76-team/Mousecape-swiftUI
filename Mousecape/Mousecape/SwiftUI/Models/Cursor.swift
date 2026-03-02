@@ -261,12 +261,9 @@ final class Cursor: Identifiable, Hashable {
         // Convert all representations to TIFF data (LZW compression)
         var tiffData: [Data] = []
         for scale in CursorScale.allCases {
-            if let rep = representation(for: scale) as? NSBitmapImageRep {
-                // Ensure sRGB color space before saving
-                let ensuredRep = rep.ensuredSRGBSpace()
-                if let tiff = ensuredRep.tiffRepresentation(using: NSBitmapImageRep.TIFFCompression.lzw, factor: 1.0) {
-                    tiffData.append(tiff)
-                }
+            if let rep = representation(for: scale) as? NSBitmapImageRep,
+               let tiff = rep.tiffRepresentation(using: NSBitmapImageRep.TIFFCompression.lzw, factor: 1.0) {
+                tiffData.append(tiff)
             }
         }
 
@@ -287,10 +284,7 @@ final class Cursor: Identifiable, Hashable {
         // Set logical size
         rep.size = NSSize(width: size.width, height: size.height * CGFloat(frameCount))
 
-        // Retag color space
-        let retaggedRep = rep.retaggedSRGBSpace()
-
-        setRepresentation(retaggedRep, for: scale)
+        setRepresentation(rep, for: scale)
     }
 
     /// Get image data for a specific scale
@@ -301,11 +295,8 @@ final class Cursor: Identifiable, Hashable {
             return nil
         }
 
-        // Ensure sRGB color space
-        let ensuredRep = rep.ensuredSRGBSpace()
-
         // Return TIFF data with LZW compression
-        return ensuredRep.tiffRepresentation(using: NSBitmapImageRep.TIFFCompression.lzw, factor: 1.0)
+        return rep.tiffRepresentation(using: NSBitmapImageRep.TIFFCompression.lzw, factor: 1.0)
     }
 
     // MARK: - ObjC Bridge
