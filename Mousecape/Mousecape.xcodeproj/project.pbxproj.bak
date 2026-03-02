@@ -106,8 +106,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		7A5B757C0780EA0A10BF1469 /* main.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = main.swift; path = mousecloak/main.swift; sourceTree = "<group>"; };
-		CF122E4B298E5744EE9F0578 /* mousecloak-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "mousecloak-Bridging-Header.h"; path = "mousecloak/mousecloak-Bridging-Header.h"; sourceTree = "<group>"; };
+		7A5B757C0780EA0A10BF1469 /* main.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = main.swift; path = Mousecape/mousecloak/main.swift; sourceTree = "<group>"; };
+		CF122E4B298E5744EE9F0578 /* mousecloak-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "mousecloak-Bridging-Header.h"; path = "Mousecape/mousecloak/mousecloak-Bridging-Header.h"; sourceTree = "<group>"; };
 		DE3661E82EFAAAB600D94521 /* AnimatingCursorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatingCursorView.swift; sourceTree = "<group>"; };
 		DE3661E92EFAAAB600D94521 /* GlassEffectContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassEffectContainer.swift; sourceTree = "<group>"; };
 		DE3661EB2EFAAAB600D94521 /* AppEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnums.swift; sourceTree = "<group>"; };
@@ -863,7 +863,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "mousecloak/mousecloak-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Mousecape/mousecloak/mousecloak-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -891,7 +891,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "mousecloak/mousecloak-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Mousecape/mousecloak/mousecloak-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
