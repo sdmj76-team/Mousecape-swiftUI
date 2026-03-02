@@ -487,6 +487,7 @@ final class AppState: @unchecked Sendable {
         // Save essential state before clearing
         let selectedIdentifier = selectedCape?.identifier
         let appliedIdentifier = appliedCape?.identifier
+        let appliedCapeName = appliedCape?.name  // Save name for menu bar display
 
         debugLog("Clearing \(capes.count) capes with total \(capes.reduce(0) { $0 + $1.cursorCount }) cursors")
 
@@ -502,7 +503,7 @@ final class AppState: @unchecked Sendable {
         // This releases all MCCursorLibrary and MCCursor objects and their image data
         capes.removeAll()
         selectedCape = nil
-        appliedCape = nil
+        // Don't clear appliedCape yet - we need to recreate a lightweight version for menu bar
 
         // Clear ALL edit state to release view references
         isEditing = false
@@ -542,6 +543,18 @@ final class AppState: @unchecked Sendable {
         // This is the key to releasing the 27+ MB of CFData held by MCLibraryController
         libraryController = nil
         debugLog("LibraryController released")
+
+        // Recreate a lightweight appliedCape for menu bar display (no cursor data)
+        if let appliedId = appliedIdentifier, let appliedName = appliedCapeName {
+            // Create a minimal CursorLibrary with just metadata for menu bar display
+            let lightweightLibrary = MCCursorLibrary(cursors: Set())
+            lightweightLibrary.name = appliedName
+            lightweightLibrary.identifier = appliedId
+            appliedCape = CursorLibrary(objcLibrary: lightweightLibrary)
+            debugLog("Recreated lightweight appliedCape for menu bar: \(appliedName)")
+        } else {
+            appliedCape = nil
+        }
 
         // Force refresh triggers to update views
         capeListRefreshTrigger += 1

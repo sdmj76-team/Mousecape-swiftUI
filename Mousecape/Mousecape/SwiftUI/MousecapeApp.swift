@@ -131,9 +131,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         AppDelegate.shared = self
 
         // If launched at login, start hidden (menu bar only)
+        // Detect background launch: check if app was activated by user or system
         let launchAtLogin = UserDefaults.standard.bool(forKey: "launchAtLogin")
-        if launchAtLogin && NSApp.currentEvent == nil {
+        let isBackgroundLaunch = !NSRunningApplication.current.isActive
+
+        if launchAtLogin && isBackgroundLaunch {
             NSApp.setActivationPolicy(.accessory)
+            debugLog("Launched at login - starting in accessory mode")
+        } else {
+            debugLog("Launched manually - will show main window")
         }
 
         // Intercept file open events BEFORE SwiftUI creates new windows
@@ -178,7 +184,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @MainActor
     func showMainWindow() {
         debugLog("Exiting accessory mode - showing main window")
-        NSApp.setActivationPolicy(.regular)
 
         // Restore state if capes were cleared (window was destroyed)
         if AppState.shared.capes.isEmpty {
@@ -188,10 +193,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // 优先用保存的引用，fallback 到 NSApp.windows 搜索
         let window = mainWindow ?? NSApp.windows.first(where: { $0.canBecomeMain })
         if let window = window {
+            // 先显示窗口（在 accessory 模式下）
             window.orderFrontRegardless()
             window.makeKey()
         }
-        NSApp.activate(ignoringOtherApps: true)
+
+        // 然后异步切换 policy（延迟到下一个 RunLoop 周期）
+        DispatchQueue.main.async {
+            NSApp.setActivationPolicy(.regular)
+            NSApp.activate(ignoringOtherApps: true)
+            debugLog("Policy switched to regular, window activated")
+        }
+
         // Resume timer polling and animations when window is shown
         windowDelegate?.startObservingDirtyState()
         AppState.shared.isWindowVisible = true
