@@ -9,6 +9,8 @@
 #ifndef mousecloak_Bridging_Header_h
 #define mousecloak_Bridging_Header_h
 
+#import <Foundation/Foundation.h>
+
 #import "apply.h"
 #import "restore.h"
 #import "create.h"

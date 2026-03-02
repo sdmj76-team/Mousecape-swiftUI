@@ -11,7 +11,6 @@ import ArgumentParser
 
 // MARK: - Main CLI Structure
 
-@main
 struct MousecloakCLI: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "mousecloak",
@@ -199,7 +198,7 @@ extension MousecloakCLI {
         @Argument(help: "Input cape file path")
         var inputPath: String
 
-        @Option(name: .shortAndLong, help: "Output directory path", required: true)
+        @Argument(help: "Output directory path")
         var output: String
 
         @OptionGroup var options: MousecloakCLI.Options
@@ -291,3 +290,6 @@ private func printError(_ message: String) {
 private func printSuccess(_ message: String) {
     print("\u{001B}[1m\u{001B}[32m\(message)\u{001B}[0m")
 }
+
+// Entry point
+MousecloakCLI.main()
