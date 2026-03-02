@@ -17,6 +17,9 @@
 #import "MCCursor.h"
 #import "MCCursorLibrary.h"
 
+// Extensions
+#import "NSBitmapImageRep+ColorSpace.h"
+
 // Controllers
 #import "MCLibraryController.h"
 

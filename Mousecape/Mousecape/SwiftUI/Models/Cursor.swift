@@ -161,6 +161,55 @@ final class Cursor: Identifiable, Hashable {
         self.init(objcCursor: cursor)
     }
 
+    /// Initialize from dictionary (for .cape file deserialization)
+    /// - Parameters:
+    ///   - dictionary: Dictionary containing cursor data
+    ///   - version: Cape file version (should be >= 2.0)
+    /// - Returns: nil if dictionary is invalid or version is unsupported
+    convenience init?(dictionary: [String: Any], version: CGFloat) {
+        // We only support version 2.0+
+        guard version >= 2.0 else { return nil }
+
+        // Extract required keys
+        guard let frameCount = dictionary["FrameCount"] as? NSNumber,
+              let frameDuration = dictionary["FrameDuration"] as? NSNumber,
+              let hotSpotX = dictionary["HotSpotX"] as? NSNumber,
+              let hotSpotY = dictionary["HotSpotY"] as? NSNumber,
+              let pointsWide = dictionary["PointsWide"] as? NSNumber,
+              let pointsHigh = dictionary["PointsHigh"] as? NSNumber,
+              let reps = dictionary["Representations"] as? [Data] else {
+            return nil
+        }
+
+        // Create empty cursor
+        let cursor = MCCursor()
+        cursor.frameCount = frameCount.uintValue
+        cursor.frameDuration = frameDuration.doubleValue
+        cursor.hotSpot = NSPoint(x: hotSpotX.doubleValue, y: hotSpotY.doubleValue)
+        cursor.size = NSSize(width: pointsWide.doubleValue, height: pointsHigh.doubleValue)
+
+        // Parse representations (TIFF data)
+        for data in reps {
+            guard let rep = NSBitmapImageRep(data: data) else { continue }
+
+            // Set logical size (points, not pixels)
+            rep.size = NSSize(width: cursor.size.width, height: cursor.size.height * CGFloat(cursor.frameCount))
+
+            // Calculate scale from pixel dimensions
+            let scale = CGFloat(rep.pixelsWide) / pointsWide.doubleValue
+            let mcScale = MCCursorScale(rawValue: UInt(scale * 100))
+
+            // Retag color space to sRGB
+            let retaggedRep = rep.retaggedSRGBSpace()
+
+            if let mcScale = mcScale {
+                cursor.setRepresentation(retaggedRep, for: mcScale)
+            }
+        }
+
+        self.init(objcCursor: cursor)
+    }
+
     // MARK: - Copy
 
     func copy(withIdentifier newIdentifier: String) -> Cursor {
@@ -193,6 +242,70 @@ final class Cursor: Identifiable, Hashable {
             }
         }
         return newCursor
+    }
+
+    // MARK: - Serialization
+
+    /// Convert cursor to dictionary representation (for .cape file serialization)
+    /// - Returns: Dictionary compatible with ObjC MCCursor format
+    func toDictionary() -> [String: Any] {
+        var dict: [String: Any] = [:]
+
+        dict["FrameCount"] = NSNumber(value: frameCount)
+        dict["FrameDuration"] = NSNumber(value: frameDuration)
+        dict["HotSpotX"] = NSNumber(value: hotSpot.x)
+        dict["HotSpotY"] = NSNumber(value: hotSpot.y)
+        dict["PointsWide"] = NSNumber(value: size.width)
+        dict["PointsHigh"] = NSNumber(value: size.height)
+
+        // Convert all representations to TIFF data (LZW compression)
+        var tiffData: [Data] = []
+        for scale in CursorScale.allCases {
+            if let rep = representation(for: scale) as? NSBitmapImageRep {
+                // Ensure sRGB color space before saving
+                let ensuredRep = rep.ensuredSRGBSpace()
+                if let tiff = ensuredRep.tiffRepresentation(using: NSBitmapImageRep.TIFFCompression.lzw, factor: 1.0) {
+                    tiffData.append(tiff)
+                }
+            }
+        }
+
+        dict["Representations"] = tiffData
+
+        return dict
+    }
+
+    // MARK: - Direct Image Data Access
+
+    /// Set image data for a specific scale
+    /// - Parameters:
+    ///   - data: TIFF or PNG image data
+    ///   - scale: Target scale
+    func setImageData(_ data: Data, for scale: CursorScale) {
+        guard let rep = NSBitmapImageRep(data: data) else { return }
+
+        // Set logical size
+        rep.size = NSSize(width: size.width, height: size.height * CGFloat(frameCount))
+
+        // Retag color space
+        let retaggedRep = rep.retaggedSRGBSpace()
+
+        setRepresentation(retaggedRep, for: scale)
+    }
+
+    /// Get image data for a specific scale
+    /// - Parameter scale: Target scale
+    /// - Returns: TIFF data (LZW compressed) or nil if no representation exists
+    func imageData(for scale: CursorScale) -> Data? {
+        guard let rep = representation(for: scale) as? NSBitmapImageRep else {
+            return nil
+        }
+
+        // Ensure sRGB color space
+        let ensuredRep = rep.ensuredSRGBSpace()
+
+        // Return TIFF data with LZW compression
+        return ensuredRep.tiffRepresentation(using: NSBitmapImageRep.TIFFCompression.lzw, factor: 1.0)
     }
 
     // MARK: - ObjC Bridge

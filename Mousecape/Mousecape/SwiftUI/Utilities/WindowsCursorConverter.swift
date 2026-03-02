@@ -297,21 +297,4 @@ extension WindowsCursorResult {
     func createBitmapImageRep() -> NSBitmapImageRep? {
         return NSBitmapImageRep(cgImage: image)
     }
-
-    /// Create MCCursor from the result
-    func createMCCursor(identifier: String) -> MCCursor? {
-        guard let bitmap = createBitmapImageRep() else { return nil }
-
-        let cursor = MCCursor()
-        cursor.identifier = identifier
-        cursor.frameCount = UInt(frameCount)
-        cursor.frameDuration = frameDuration
-        cursor.size = NSSize(width: CGFloat(width), height: CGFloat(height))
-        cursor.hotSpot = NSPoint(x: CGFloat(hotspotX), y: CGFloat(hotspotY))
-
-        // Set representation for 2x scale (standard HiDPI)
-        cursor.setRepresentation(bitmap, for: MCCursorScale(rawValue: 200)!)
-
-        return cursor
-    }
 }
