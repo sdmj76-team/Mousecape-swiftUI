@@ -25,7 +25,10 @@ class CursorState: ObservableObject {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.refresh()
+            guard let self = self else { return }
+            Task { @MainActor [weak self] in
+                self?.refresh()
+            }
         }
 
         // Also listen for CFPreferences changes

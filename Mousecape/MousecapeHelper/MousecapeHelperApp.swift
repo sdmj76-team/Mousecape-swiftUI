@@ -28,7 +28,9 @@ struct MousecapeHelperApp: App {
 class HelperAppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Initialize logging
+        #if DEBUG
         MCLoggerInit()
+        #endif
         debugLog("MousecapeHelper started")
 
         // Start session monitoring to keep cursors persistent
@@ -38,6 +40,8 @@ class HelperAppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ notification: Notification) {
         debugLog("MousecapeHelper terminating")
+        #if DEBUG
         MCLoggerClose()
+        #endif
     }
 }
