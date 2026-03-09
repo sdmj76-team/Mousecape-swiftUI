@@ -15,10 +15,20 @@
   - Quick actions: "Apply Cursor", "Reset Cursor", and "Open Mousecape"
   - More reliable startup behavior and better system integration
 
-- **Simple/Advanced Edit Modes** — Choose your editing style
-  - Simple Mode: Edit cursors by Windows cursor groups (15 groups), changes apply to all related macOS cursor types automatically
-  - Advanced Mode: Edit each macOS cursor type individually for full control
-  - Switch between modes anytime via the toolbar
+- **Improved Windows Cursor Conversion** — Significantly expanded cursor type mapping
+  - Now maps 44 out of 52 macOS cursor types (85% coverage, up from 20 types in previous versions)
+  - Most previously unmapped cursors now work correctly after import
+  - Better compatibility with Windows cursor themes
+
+- **Simple/Advanced Modes** — Choose your editing and preview style
+  - **Edit Mode:** Switch between Simple (15 Windows cursor groups) and Advanced (52 individual macOS cursor types)
+    - Simple Mode: Edit one cursor and automatically apply to all related cursor types
+    - Advanced Mode: Full control over each individual cursor type
+    - Switch anytime via the toolbar
+  - **Preview Mode:** Choose how cursors are displayed on the home screen
+    - Simple Mode: Shows one cursor per group (15 main cursors) with localized names
+    - Advanced Mode: Shows all cursors in the cape
+    - Configure in Settings > Appearance > Preview Panel
 
 - **Double-click to Open** — Double-click `.cape` files in Finder to open them directly in Mousecape
 
@@ -219,10 +229,20 @@ For normal use, download the regular version.
   - 快速操作："应用光标"、"重置光标"和"打开 Mousecape"
   - 更可靠的启动行为和更好的系统集成
 
-- **简易/高级编辑模式** — 选择你喜欢的编辑方式
-  - 简易模式：按 Windows 光标分组编辑（15 组），修改会自动应用到所有相关的 macOS 光标类型
-  - 高级模式：逐个编辑每个 macOS 光标类型，完全控制
-  - 随时通过工具栏切换模式
+- **改进 Windows 光标转换** — 大幅扩展光标类型映射
+  - 现在映射 52 个 macOS 光标类型中的 44 个（85% 覆盖率，旧版仅 20 个）
+  - 大部分之前不生效的光标现在导入后可以正常工作
+  - 更好的 Windows 光标主题兼容性
+
+- **简易/高级模式** — 选择你的编辑和预览方式
+  - **编辑模式：** 在简易模式（15 个 Windows 光标分组）和高级模式（52 个独立 macOS 光标类型）之间切换
+    - 简易模式：编辑一个光标后自动应用到所有相关光标类型
+    - 高级模式：完全控制每个独立的光标类型
+    - 随时通过工具栏切换
+  - **预览模式：** 选择首页光标的显示方式
+    - 简易模式：每组显示一个代表光标（15 个主要光标），使用本地化名称
+    - 高级模式：显示 Cape 中所有光标
+    - 在设置 > 外观 > 预览面板中配置
 
 - **双击打开** — 在访达中双击 `.cape` 文件即可直接在 Mousecape 中打开
 

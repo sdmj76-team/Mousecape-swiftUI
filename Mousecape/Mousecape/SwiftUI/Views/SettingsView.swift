@@ -106,7 +106,6 @@ struct GeneralSettingsView: View {
                 VStack(alignment: .leading) {
                     Text("\(String(localized:"Global Scale:")) \(cursorScale, specifier: "%.1f")x")
                     Slider(value: $cursorScale, in: 0.5...2.0, step: 0.1) {
-                        Text("Scale")
                     } minimumValueLabel: {
                         Text("0.5x")
                     } maximumValueLabel: {
@@ -165,6 +164,7 @@ struct AppearanceSettingsView: View {
     @AppStorage("showPreviewAnimations") private var showPreviewAnimations = true
     @AppStorage("showAuthorInfo") private var showAuthorInfo = true
     @AppStorage("previewGridColumns") private var previewGridColumns = 0
+    @AppStorage("previewDisplayMode") private var previewDisplayMode = 0
     @AppStorage("transparentWindow") private var transparentWindow = false
 
     private var isDarkMode: Bool {
@@ -195,6 +195,11 @@ struct AppearanceSettingsView: View {
             }
 
             Section("Preview Panel") {
+                Picker("Display Mode", selection: $previewDisplayMode) {
+                    Text("Simple (Windows Style)").tag(0)
+                    Text("Advanced (macOS Style)").tag(1)
+                }
+
                 Picker("Preview Grid Columns", selection: $previewGridColumns) {
                     Text("Auto (based on window size)").tag(0)
                     Text("4 \(String(localized:"columns"))").tag(4)

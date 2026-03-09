@@ -20,9 +20,40 @@ struct CapePreviewPanel: View {
     @State private var cachedCursors: [Cursor] = []
     @Namespace private var cursorNamespace
     @AppStorage("showAuthorInfo") private var showAuthorInfo = true
+    @AppStorage("previewDisplayMode") private var previewDisplayMode = 0
 
     private var isApplied: Bool {
         appState.appliedCape?.id == cape.id
+    }
+
+    /// Cursors to display based on preview display mode
+    private var displayCursors: [Cursor] {
+        guard previewDisplayMode == 0 else {
+            return cachedCursors.filter { $0.hasAnyRepresentation }
+        }
+        // Simple mode: one cursor per WindowsCursorGroup
+        var result: [Cursor] = []
+        for group in WindowsCursorGroup.allCases {
+            for cursorType in group.cursorTypes {
+                if let cursor = cachedCursors.first(where: { $0.identifier == cursorType.rawValue && $0.hasAnyRepresentation }) {
+                    result.append(cursor)
+                    break
+                }
+            }
+        }
+        return result
+    }
+
+    /// Display name overrides for Simple mode (use group's localized name)
+    private var displayNameOverrides: [String: String] {
+        guard previewDisplayMode == 0 else { return [:] }
+        var overrides: [String: String] = [:]
+        for group in WindowsCursorGroup.allCases {
+            for cursorType in group.cursorTypes {
+                overrides[cursorType.rawValue] = group.displayName
+            }
+        }
+        return overrides
     }
 
     var body: some View {
@@ -55,9 +86,10 @@ struct CapePreviewPanel: View {
                 // Middle: Cursor preview grid (auto-wrapping)
                 ScrollView {
                     CursorFlowGrid(
-                        cursors: cachedCursors,
+                        cursors: displayCursors,
                         zoomedCursor: zoomedCursor,
-                        namespace: cursorNamespace
+                        namespace: cursorNamespace,
+                        displayNameOverrides: displayNameOverrides
                     ) { cursor in
                         zoomTrigger += 1
                         withAnimation(.spring(duration: 0.4, bounce: 0.2)) {
@@ -69,7 +101,8 @@ struct CapePreviewPanel: View {
 
                 // Bottom: Cursor count
                 HStack {
-                    Text("\(cape.cursorCount) \(cape.cursorCount == 1 ? String(localized:"cursor") : String(localized:"cursors"))")
+                    let count = displayCursors.count
+                    Text("\(count) \(count == 1 ? String(localized:"cursor") : String(localized:"cursors"))")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Spacer()
@@ -81,12 +114,14 @@ struct CapePreviewPanel: View {
             if let cursor = zoomedCursor {
                 CursorZoomOverlay(
                     cursor: cursor,
-                    namespace: cursorNamespace
-                ) {
-                    withAnimation(.spring(duration: 0.4, bounce: 0.2)) {
-                        zoomedCursor = nil
-                    }
-                }
+                    namespace: cursorNamespace,
+                    onDismiss: {
+                        withAnimation(.spring(duration: 0.4, bounce: 0.2)) {
+                            zoomedCursor = nil
+                        }
+                    },
+                    displayNameOverride: displayNameOverrides[cursor.identifier]
+                )
                 .id(zoomTrigger) // Force view recreation on each tap
             }
         }
@@ -98,6 +133,9 @@ struct CapePreviewPanel: View {
         }
         .onChange(of: appState.capeListRefreshTrigger) { _, _ in
             refreshCursors()
+        }
+        .onChange(of: previewDisplayMode) { _, _ in
+            zoomedCursor = nil
         }
     }
 
@@ -127,6 +165,7 @@ struct CursorZoomOverlay: View {
     let namespace: Namespace.ID
     let onDismiss: () -> Void
     var showHotspot: Bool = false
+    var displayNameOverride: String? = nil
 
     @State private var showDetails = false
     @State private var showAnimatedCursor = false
@@ -160,7 +199,7 @@ struct CursorZoomOverlay: View {
                 // Details fade in after the cursor arrives
                 if showDetails {
                     VStack(spacing: 4) {
-                        Text(cursor.displayName)
+                        Text(displayNameOverride ?? cursor.displayName)
                             .font(.title3.bold())
 
                         Text(cursor.identifier)
@@ -219,6 +258,7 @@ struct CursorFlowGrid: View {
     let cursors: [Cursor]
     let zoomedCursor: Cursor?
     let namespace: Namespace.ID
+    var displayNameOverrides: [String: String] = [:]
     var onCursorTap: ((Cursor) -> Void)?
     @AppStorage("previewGridColumns") private var previewGridColumns = 0
 
@@ -226,11 +266,13 @@ struct CursorFlowGrid: View {
         cursors: [Cursor],
         zoomedCursor: Cursor? = nil,
         namespace: Namespace.ID,
+        displayNameOverrides: [String: String] = [:],
         onCursorTap: ((Cursor) -> Void)? = nil
     ) {
         self.cursors = cursors
         self.zoomedCursor = zoomedCursor
         self.namespace = namespace
+        self.displayNameOverrides = displayNameOverrides
         self.onCursorTap = onCursorTap
     }
 
@@ -250,7 +292,8 @@ struct CursorFlowGrid: View {
                 CursorPreviewCell(
                     cursor: cursor,
                     isZoomed: zoomedCursor?.id == cursor.id,
-                    namespace: namespace
+                    namespace: namespace,
+                    displayNameOverride: displayNameOverrides[cursor.identifier]
                 ) {
                     onCursorTap?(cursor)
                 }
@@ -265,6 +308,7 @@ struct CursorPreviewCell: View {
     let cursor: Cursor
     let isZoomed: Bool
     let namespace: Namespace.ID
+    var displayNameOverride: String? = nil
     var onTap: (() -> Void)?
     @State private var isHovered = false
 
@@ -272,11 +316,13 @@ struct CursorPreviewCell: View {
         cursor: Cursor,
         isZoomed: Bool = false,
         namespace: Namespace.ID,
+        displayNameOverride: String? = nil,
         onTap: (() -> Void)? = nil
     ) {
         self.cursor = cursor
         self.isZoomed = isZoomed
         self.namespace = namespace
+        self.displayNameOverride = displayNameOverride
         self.onTap = onTap
     }
 
@@ -302,7 +348,7 @@ struct CursorPreviewCell: View {
             }
 
             if !isZoomed {
-                Text(cursor.displayName)
+                Text(displayNameOverride ?? cursor.displayName)
                     .font(.caption2)
                     .lineLimit(1)
                     .truncationMode(.tail)

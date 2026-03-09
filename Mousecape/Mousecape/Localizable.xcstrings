@@ -389,6 +389,16 @@
         }
       }
     },
+    "Advanced (macOS Style)" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高级（macOS 样式）"
+          }
+        }
+      }
+    },
     "All Cursor Groups Added" : {
       "localizations" : {
         "zh-Hans" : {
@@ -902,6 +912,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "沿对角线调整大小 ↗↙"
+          }
+        }
+      }
+    },
+    "Display Mode" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示模式"
           }
         }
       }
@@ -1651,13 +1671,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No valid install.inf file found."
+            "value" : "No valid inf install file found."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未找到有效的 install.inf 文件。"
+            "value" : "未找到有效的 inf安装文件。"
           }
         }
       }
@@ -1866,10 +1886,16 @@
     },
     "No valid install.inf file found." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No valid inf install file found."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未找到有效的install.inf文件。"
+            "value" : "未找到有效的 inf安装文件。"
           }
         }
       }
@@ -2085,6 +2111,7 @@
       }
     },
     "Scale" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2200,6 +2227,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "简易"
+          }
+        }
+      }
+    },
+    "Simple (Windows Style)" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "简易（Windows 样式）"
           }
         }
       }

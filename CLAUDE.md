@@ -196,6 +196,16 @@ MousecapeHelper/（独立后台助手）
 
 **高级模式（Advanced）：** 逐个 macOS 光标类型编辑，保留完整控制。
 
+### 首页预览显示模式
+
+首页预览面板支持两种显示模式，通过设置 > 外观 > 预览面板切换，使用 `@AppStorage("previewDisplayMode")` 持久化（0=简易，1=高级，默认简易）。
+
+**简易模式（Simple）：** 每个 WindowsCursorGroup 只显示一个代表光标（最多 15 个），名称使用分组的本地化名称（`WindowsCursorGroup.displayName`）。过滤掉无图像数据的空光标。
+
+**高级模式（Advanced）：** 显示 cape 中所有光标，名称使用 `CursorType.displayName`。同样过滤掉无图像数据的空光标。
+
+该设置独立于编辑模式（`cursorEditMode`），使用不同的 `@AppStorage` key。
+
 #### WindowsCursorGroup 枚举（AppEnums.swift）
 
 15 个分组对应 Windows 光标位置 0-14，复用 `WindowsINFParser.schemeRegPositionMapping` 映射到 macOS CursorType。
