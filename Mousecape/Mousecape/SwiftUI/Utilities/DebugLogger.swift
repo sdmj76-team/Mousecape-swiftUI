@@ -10,6 +10,11 @@ import Foundation
 import AppKit
 
 /// Debug version log manager
+///
+/// @unchecked Sendable is safe because:
+/// 1. All mutable state (logFileHandle, logFilePath) is protected by serial DispatchQueue
+/// 2. All file operations are dispatched to the queue, ensuring thread-safe access
+/// 3. No concurrent access to mutable state possible
 final class DebugLogger: @unchecked Sendable {
     static let shared = DebugLogger()
 
@@ -81,7 +86,7 @@ final class DebugLogger: @unchecked Sendable {
         // Log user preferences
         log("--- User Preferences ---")
         let defaults = UserDefaults.standard
-        log("  applyLastCapeOnLaunch: \(defaults.bool(forKey: "applyLastCapeOnLaunch"))")
+        log("  launchAtLogin: \(defaults.bool(forKey: "launchAtLogin"))")
         log("  doubleClickAction: \(defaults.integer(forKey: "doubleClickAction"))")
         log("  language: \(defaults.string(forKey: "appLanguage") ?? "system")")
         log("  transparentBackground: \(defaults.bool(forKey: "transparentBackground"))")
@@ -89,7 +94,7 @@ final class DebugLogger: @unchecked Sendable {
         // Read mousecloak preferences from CFPreferences
         if let appliedCursor = CFPreferencesCopyValue(
             "MCAppliedCursor" as CFString,
-            "com.alexzielenski.Mousecape" as CFString,
+            "com.sdmj76.Mousecape" as CFString,
             kCFPreferencesCurrentUser,
             kCFPreferencesCurrentHost
         ) as? String {
@@ -100,7 +105,7 @@ final class DebugLogger: @unchecked Sendable {
 
         if let cursorScale = CFPreferencesCopyValue(
             "MCCursorScale" as CFString,
-            "com.alexzielenski.Mousecape" as CFString,
+            "com.sdmj76.Mousecape" as CFString,
             kCFPreferencesCurrentUser,
             kCFPreferencesCurrentHost
         ) as? Double {

@@ -269,6 +269,14 @@ struct WindowsCursorParser {
         }
 
         // Read image data
+        let offset = bestEntry.imageOffset
+        let size = bestEntry.imageSize
+        guard offset >= 0 && size >= 0 else {
+            throw WindowsCursorParserError.invalidFormat("Invalid image offset or size")
+        }
+        guard offset <= data.count && size <= data.count - offset else {
+            throw WindowsCursorParserError.invalidFormat("Image data (offset: \(offset), size: \(size)) exceeds file size \(data.count)")
+        }
         try reader.seek(to: bestEntry.imageOffset)
         let imageData = try reader.readBytes(bestEntry.imageSize)
 
@@ -314,6 +322,14 @@ struct WindowsCursorParser {
         while reader.remaining >= 8 {
             let chunkID = try reader.readBytes(4)
             let chunkSize = Int(try reader.readUInt32())
+
+            // Validate chunk size to prevent infinite loop (chunkSize=0) and out-of-bounds reads
+            guard chunkSize > 0 else {
+                throw WindowsCursorParserError.invalidFormat("Invalid chunk size: 0")
+            }
+            guard chunkSize <= reader.remaining else {
+                throw WindowsCursorParserError.invalidFormat("Chunk size \(chunkSize) exceeds remaining data \(reader.remaining)")
+            }
 
             if chunkID == Data("anih".utf8) {
                 anihData = try parseANIHChunk(reader: &reader, size: chunkSize)
@@ -604,6 +620,13 @@ struct WindowsCursorParser {
         // Actual height is half (top half is XOR, bottom half is AND)
         let actualHeight = abs(bmpHeight) / 2
         let actualWidth = bmpWidth > 0 ? bmpWidth : width
+
+        // Validate dimensions to prevent OOM from malicious files
+        let maxDimension = CursorImageScaler.maxImportSize  // 512
+        guard actualWidth > 0 && actualWidth <= maxDimension &&
+              actualHeight > 0 && actualHeight <= maxDimension else {
+            throw WindowsCursorParserError.invalidFormat("BMP dimensions \(actualWidth)×\(actualHeight) exceed maximum \(maxDimension)×\(maxDimension)")
+        }
 
         // Calculate actual palette size
         let paletteSize: Int

@@ -6,7 +6,7 @@
 //  Copyright © 2018 Alex Zielenski. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

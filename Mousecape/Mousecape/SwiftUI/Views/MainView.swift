@@ -12,16 +12,21 @@ struct MainView: View {
     @Environment(AppState.self) private var appState
     var body: some View {
         ZStack {
-            switch appState.currentPage {
-            case .home:
-                HomeView()
-            case .settings:
-                SettingsView()
-            }
+            if appState.isWindowVisible {
+                switch appState.currentPage {
+                case .home:
+                    HomeView()
+                case .settings:
+                    SettingsView()
+                }
 
-            // Loading overlay
-            if appState.isLoading {
-                LoadingOverlayView(message: appState.loadingMessage)
+                // Loading overlay
+                if appState.isLoading {
+                    LoadingOverlayView(message: appState.loadingMessage)
+                }
+            } else {
+                // Empty view when window is hidden - releases all child views and their caches
+                Color.clear
             }
         }
         .alert(

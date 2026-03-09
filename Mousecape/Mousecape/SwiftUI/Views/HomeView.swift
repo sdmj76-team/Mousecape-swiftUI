@@ -138,6 +138,7 @@ struct HomeView: View {
                         .navigationTitle(cape.name)
                 } else if let cape = appState.selectedCape {
                     CapePreviewPanel(cape: cape)
+                        .id(cape.id)
                         .toolbar {
                             homeToolbarContent
                         }

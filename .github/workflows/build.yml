@@ -46,8 +46,14 @@ jobs:
         run: |
           # 列出可用的 Xcode 版本
           ls /Applications/ | grep Xcode
-          # 选择 Xcode 26
-          sudo xcode-select -s /Applications/Xcode_26.1.app
+          # 选择最新的 Xcode 26.x
+          XCODE_PATH=$(ls -d /Applications/Xcode_26.*.app 2>/dev/null | sort -V | tail -1)
+          echo "Selected: $XCODE_PATH"
+          sudo xcode-select -s "$XCODE_PATH"
+          # 移除默认 Xcode.app 符号链接，避免 toolchain 路径冲突
+          if [ -e /Applications/Xcode.app ]; then
+            sudo mv /Applications/Xcode.app /Applications/Xcode_default_backup.app
+          fi
           xcodebuild -version
 
       - name: Build Mousecape (${{ matrix.configuration }})

@@ -55,7 +55,8 @@ A free macOS cursor manager that allows you to easily replace Mac system pointer
 - Customize Mac system cursors, supporting both static and animated cursors
 - One-click import of Windows cursor formats (.cur / .ani)
 - Uses private, non-intrusive CoreGraphics API, safe and reliable
-- Runs silently in the background without interfering with the system
+- Background helper with menu bar icon for quick access and cursor management
+- Optional launch at login to automatically apply your cursor theme
 
 ## Download & Installation
 
@@ -80,10 +81,17 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by-nc
 
 ## Getting Started
 
-### Install Helper Tool (Required for persistence after restart, otherwise manual application is needed)
+### Set Up Launch at Login (Optional, for automatic cursor application after restart)
 
 1. Download and open the Mousecape app
-2. Click **Settings → Mousecape Helper Tool** to install the daemon
+2. Go to **Settings → General** and enable **Launch at Login**
+
+When enabled, MousecapeHelper starts in the background at login and automatically applies your last cursor theme. The helper provides a menu bar icon that you can use to:
+- Open the main Mousecape app
+- Apply or reset cursor themes
+- Quit the helper
+
+The main Mousecape app can be closed independently, while the helper continues running in the background to maintain your cursor theme.
 
 ### Import Windows Format Cursors
 
@@ -148,40 +156,14 @@ Due to macOS system limitations, Mousecape has the following restrictions:
 
 If you encounter issues, please check the common solutions below first. For more help, please [submit an Issue](https://github.com/sdmj76/Mousecape/issues).
 
-### Helper Tool Not Running
+### Migrating from Older Versions
 
-If you previously installed an older version of Mousecape, you may need to unload the old daemon first.
+If you previously installed an older version of Mousecape with a separate helper daemon, the new version will automatically unregister the old `com.sdmj76.mousecloakhelper` LaunchAgent on first launch. No manual action is needed.
 
-**Check daemon status:**
+If you still see the old daemon running, you can manually remove it:
 ```bash
-launchctl list | grep mouse
+launchctl bootout gui/$(id -u)/com.sdmj76.mousecloakhelper
 ```
-
-**Normal output when running:**
-```
-12345   0   com.sdmj76.mousecloakhelper
-```
-- First column: PID (Process ID)
-- Second column: Exit code (`0` = running normally, `78` = configuration error)
-
-**If the daemon shows exit code 78 or is not running:**
-
-1. Unload the old daemon:
-   ```bash
-   launchctl bootout gui/$(id -u)/com.sdmj76.mousecloakhelper
-   ```
-
-2. Verify it has been removed:
-   ```bash
-   launchctl list | grep mouse
-   ```
-
-3. Open Mousecape, click **Mousecape → Install Helper Tool**
-
-4. Verify the daemon is running:
-   ```bash
-   launchctl list | grep mouse
-   ```
 
 ### Cursor Animation Only Works in Dock Area
 
@@ -277,7 +259,8 @@ This is just a tool, and I've polished its UI. But what matters most is your cur
 - 自定义 Mac 系统光标，支持静态和动画光标
 - 一键导入 Windows 格式指针（.cur / .ani）
 - 使用私有、非侵入式的 CoreGraphics API，安全可靠
-- 后台静默运行，不干扰系统
+- 后台助手提供菜单栏图标，快速访问和光标管理
+- 可选开机启动，自动应用光标主题
 
 ## 下载安装
 
@@ -302,10 +285,17 @@ This is just a tool, and I've polished its UI. But what matters most is your cur
 
 ## 快速开始
 
-### 安装守护程序（用于重启后应用，否则需要手动应用）
+### 设置开机启动（可选，用于重启后自动应用光标）
 
 1. 下载并打开 Mousecape 应用
-2. 点击 **设置 → Mousecape辅助程序** 安装守护进程
+2. 进入 **设置 → 通用**，开启 **Launch at Login**
+
+开启后，MousecapeHelper 会在登录时后台启动并自动应用上次使用的光标主题。Helper 提供菜单栏图标，你可以通过它：
+- 打开主 Mousecape 应用
+- 应用或重置光标主题
+- 退出 Helper
+
+主 Mousecape 应用可以独立关闭，而 Helper 会继续在后台运行以维持你的光标主题。
 
 ### 导入 Windows 格式光标
 
@@ -370,40 +360,14 @@ Mousecape 支持批量导入 Windows 光标主题：
 
 如果遇到问题，请先查看以下常见解决方案。更多帮助请[提交 Issue](https://github.com/sdmj76/Mousecape/issues)。
 
-### 守护进程未运行
+### 从旧版本迁移
 
-如果你之前安装过旧版本的 Mousecape，可能需要先注销旧的守护进程。
+如果你之前安装过带有独立守护进程的旧版 Mousecape，新版本会在首次启动时自动注销旧的 `com.sdmj76.mousecloakhelper` LaunchAgent，无需手动操作。
 
-**检查守护进程状态：**
+如果旧守护进程仍在运行，可以手动移除：
 ```bash
-launchctl list | grep mouse
+launchctl bootout gui/$(id -u)/com.sdmj76.mousecloakhelper
 ```
-
-**正常运行时的输出：**
-```
-12345   0   com.sdmj76.mousecloakhelper
-```
-- 第一列：PID（进程 ID）
-- 第二列：退出码（`0` = 正常运行，`78` = 配置错误）
-
-**如果守护进程显示退出码 78 或未运行：**
-
-1. 注销旧的守护进程：
-   ```bash
-   launchctl bootout gui/$(id -u)/com.sdmj76.mousecloakhelper
-   ```
-
-2. 验证是否已移除：
-   ```bash
-   launchctl list | grep mouse
-   ```
-
-3. 打开 Mousecape，点击 **Mousecape → Install Helper Tool**
-
-4. 验证守护进程是否正在运行：
-   ```bash
-   launchctl list | grep mouse
-   ```
 
 ### 光标动画仅在 Dock 区域生效
 

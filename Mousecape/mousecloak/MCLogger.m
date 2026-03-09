@@ -75,7 +75,7 @@ void MCLoggerInit(void) {
         // Read MCAppliedCursor from CFPreferences
         CFStringRef appliedCursor = CFPreferencesCopyValue(
             CFSTR("MCAppliedCursor"),
-            CFSTR("com.alexzielenski.Mousecape"),
+            CFSTR("com.sdmj76.Mousecape"),
             kCFPreferencesCurrentUser,
             kCFPreferencesCurrentHost
         );
@@ -89,7 +89,7 @@ void MCLoggerInit(void) {
         // Read MCCursorScale from CFPreferences
         CFPropertyListRef cursorScale = CFPreferencesCopyValue(
             CFSTR("MCCursorScale"),
-            CFSTR("com.alexzielenski.Mousecape"),
+            CFSTR("com.sdmj76.Mousecape"),
             kCFPreferencesCurrentUser,
             kCFPreferencesCurrentHost
         );

@@ -131,6 +131,9 @@
       },
       "shouldTranslate" : false
     },
+    "%lf" : {
+      "shouldTranslate" : false
+    },
     "%lld" : {
       "localizations" : {
         "zh-Hans" : {
@@ -160,7 +163,6 @@
       "shouldTranslate" : false
     },
     "%lld files, %@" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -172,6 +174,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$lld 个文件，%2$@"
+          }
+        }
+      }
+    },
+    "%lld frames" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld frames"
+          }
+        }
+      }
+    },
+    "%lld types" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 个类型"
           }
         }
       }
@@ -225,7 +247,6 @@
       }
     },
     "~/Library/Logs/Mousecape" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -338,6 +359,16 @@
         }
       }
     },
+    "Add cursor" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加光标"
+          }
+        }
+      }
+    },
     "Add Cursor" : {
       "localizations" : {
         "zh-Hans" : {
@@ -354,6 +385,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "高级"
+          }
+        }
+      }
+    },
+    "All Cursor Groups Added" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有光标组已添加"
           }
         }
       }
@@ -378,12 +419,52 @@
         }
       }
     },
+    "Alternate Select" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "候选"
+          }
+        }
+      }
+    },
+    "Animated cursor preview" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "动画光标预览"
+          }
+        }
+      }
+    },
     "Animation" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "动画"
+          }
+        }
+      }
+    },
+    "Animation frame count" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "动画帧数"
+          }
+        }
+      }
+    },
+    "Animation speed in frames per second" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "动画速度（帧/秒）"
           }
         }
       }
@@ -418,32 +499,22 @@
         }
       }
     },
+    "Apply at Login" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开机自动应用"
+          }
+        }
+      }
+    },
     "Apply Cape" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "应用Cape"
-          }
-        }
-      }
-    },
-    "Apply Last Cape on Launch" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启动时应用上次的Cape"
-          }
-        }
-      }
-    },
-    "Approval Required" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "需要批准"
           }
         }
       }
@@ -488,6 +559,16 @@
         }
       }
     },
+    "Busy" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "忙碌"
+          }
+        }
+      }
+    },
     "by" : {
       "localizations" : {
         "zh-Hans" : {
@@ -519,6 +600,16 @@
       }
     },
     "Cape Info" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cape信息"
+          }
+        }
+      }
+    },
+    "Cape information" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -596,7 +687,6 @@
       }
     },
     "Clear All Logs" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -636,6 +726,16 @@
         }
       }
     },
+    "Continue" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "继续"
+          }
+        }
+      }
+    },
     "Create a new cape or import an existing one to get started." : {
       "localizations" : {
         "zh-Hans" : {
@@ -646,12 +746,32 @@
         }
       }
     },
+    "Current Cursor: %@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前光标：%@"
+          }
+        }
+      }
+    },
     "cursor" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "个光标"
+          }
+        }
+      }
+    },
+    "Cursor image drop zone" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "光标图像放置区"
           }
         }
       }
@@ -707,7 +827,6 @@
       }
     },
     "Debug" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -737,6 +856,16 @@
         }
       }
     },
+    "Delete cursor" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除光标"
+          }
+        }
+      }
+    },
     "Delete Cursor" : {
       "localizations" : {
         "zh-Hans" : {
@@ -753,6 +882,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "删除光标？"
+          }
+        }
+      }
+    },
+    "Diagonal Resize ↖↘" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沿对角线调整大小 ↖↘"
+          }
+        }
+      }
+    },
+    "Diagonal Resize ↗↙" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沿对角线调整大小 ↗↙"
           }
         }
       }
@@ -797,6 +946,16 @@
         }
       }
     },
+    "Done editing" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑完成"
+          }
+        }
+      }
+    },
     "Double-click Action" : {
       "localizations" : {
         "zh-Hans" : {
@@ -827,12 +986,22 @@
         }
       }
     },
-    "Duplicate" : {
+    "Drop an image file or click to replace" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "复制"
+            "value" : "拖放图像文件或点击替换"
+          }
+        }
+      }
+    },
+    "Drop an image file or click to select" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拖放图像文件或单击选择"
           }
         }
       }
@@ -879,6 +1048,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "编辑Cape"
+          }
+        }
+      }
+    },
+    "Empty" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "空白"
           }
         }
       }
@@ -987,7 +1166,6 @@
       }
     },
     "Export All Logs" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1028,7 +1206,6 @@
       }
     },
     "Export Debug Logs" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1074,6 +1251,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "导出 Cape 失败。"
+          }
+        }
+      }
+    },
+    "Failed to import Windows cursor: %@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入 Windows 光标失败：%@"
           }
         }
       }
@@ -1184,22 +1371,6 @@
         }
       }
     },
-    "gif_decode_warning_title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GIF Import Warning"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GIF 导入警告"
-          }
-        }
-      }
-    },
     "GitHub" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1216,6 +1387,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "全局缩放："
+          }
+        }
+      }
+    },
+    "Handwriting" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手写"
           }
         }
       }
@@ -1240,22 +1421,22 @@
         }
       }
     },
-    "Helper registered but may not be running. Please restart the app or reinstall the helper." : {
+    "Help Select" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "辅助程序已注册但可能未运行。请重启应用或重新安装辅助程序。"
+            "value" : "帮助选择"
           }
         }
       }
     },
-    "Helper Tool" : {
+    "Horizontal Resize" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "辅助工具"
+            "value" : "水平调整大小"
           }
         }
       }
@@ -1270,12 +1451,62 @@
         }
       }
     },
+    "Hotspot position" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "热点位置"
+          }
+        }
+      }
+    },
+    "Hotspot X coordinate" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "热点 X 坐标"
+          }
+        }
+      }
+    },
+    "Hotspot Y coordinate" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "热点 Y 坐标"
+          }
+        }
+      }
+    },
     "Image Adjusted" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "图像已调整"
+          }
+        }
+      }
+    },
+    "Image is not square (%d×%d). It will be scaled to fit and centered." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "图片不是正方形（%d×%d）。将自动缩放并居中。"
+          }
+        }
+      }
+    },
+    "Image loaded" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "图片已加载"
           }
         }
       }
@@ -1431,32 +1662,22 @@
         }
       }
     },
-    "Install" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "安装"
-          }
-        }
-      }
-    },
-    "Installed and running" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已安装并运行"
-          }
-        }
-      }
-    },
     "Light" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "浅色"
+          }
+        }
+      }
+    },
+    "Link Select" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "链接选择"
           }
         }
       }
@@ -1471,8 +1692,27 @@
         }
       }
     },
+    "Loading image" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在加载图片"
+          }
+        }
+      }
+    },
+    "Loading..." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加载中..."
+          }
+        }
+      }
+    },
     "Log Files" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1483,7 +1723,6 @@
       }
     },
     "Log Folder" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1493,8 +1732,17 @@
         }
       }
     },
+    "Login Item Error" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录项错误"
+          }
+        }
+      }
+    },
     "Logs are automatically deleted after 24 hours. Logs contain debug information for troubleshooting cursor issues." : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1514,27 +1762,8 @@
         }
       }
     },
-    "Mousecape Dump" : {
-      "comment" : "Mousecape dump cursor file name",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mousecape Dump"
-          }
-        }
-      },
+    "Mousecape" : {
       "shouldTranslate" : false
-    },
-    "Mousecape Helper" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mousecape 辅助程序"
-          }
-        }
-      }
     },
     "Mousecape v%@ (%@)" : {
       "localizations" : {
@@ -1552,19 +1781,18 @@
         }
       }
     },
-    "Mousecape v1.0.3" : {
-      "extractionState" : "stale",
+    "Mousecape v1.1.0" : {
+      "shouldTranslate" : false
+    },
+    "Move" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mousecape v1.0.3"
+            "value" : "移动"
           }
         }
       }
-    },
-    "Mousecape v1.0.4" : {
-
     },
     "Name" : {
       "localizations" : {
@@ -1606,6 +1834,26 @@
         }
       }
     },
+    "No cursors in this cape" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前cape里没有光标"
+          }
+        }
+      }
+    },
+    "No cursors yet" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂无光标"
+          }
+        }
+      }
+    },
     "No valid cursor files found in the selected folder." : {
       "localizations" : {
         "zh-Hans" : {
@@ -1626,28 +1874,12 @@
         }
       }
     },
-    "Not installed" : {
+    "Normal Select" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未安装"
-          }
-        }
-      }
-    },
-    "ok" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "确定"
+            "value" : "正常选择"
           }
         }
       }
@@ -1662,23 +1894,22 @@
         }
       }
     },
-    "Once installed, the helper tool will automatically apply cursors at system startup without manually applying them." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "安装后，辅助工具将在系统启动时自动应用光标，无需手动操作。"
-          }
-        }
-      }
-    },
     "Open Log Folder" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "打开日志文件夹"
+          }
+        }
+      }
+    },
+    "Open Mousecape" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开 Mousecape"
           }
         }
       }
@@ -1693,12 +1924,22 @@
         }
       }
     },
-    "Please approve Mousecape in System Settings > General > Login Items to enable the helper." : {
+    "Overwrite Alias Cursors?" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请在系统设置 > 通用 > 登录项中批准 Mousecape 以启用辅助程序。"
+            "value" : "覆盖别名光标？"
+          }
+        }
+      }
+    },
+    "Precision Select" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "精确选择"
           }
         }
       }
@@ -1719,6 +1960,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "预览面板"
+          }
+        }
+      }
+    },
+    "Quit Mousecape" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出 Mousecape"
           }
         }
       }
@@ -1759,6 +2010,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "重置"
+          }
+        }
+      }
+    },
+    "Reset Cursors" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重置光标"
           }
         }
       }
@@ -1933,6 +2194,16 @@
         }
       }
     },
+    "Simple" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "简易"
+          }
+        }
+      }
+    },
     "Speed" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1959,6 +2230,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "启动"
+          }
+        }
+      }
+    },
+    "Static" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "静止"
           }
         }
       }
@@ -2023,32 +2304,22 @@
         }
       }
     },
+    "Text Select" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文本选择"
+          }
+        }
+      }
+    },
     "The destination, %@, is not writable." : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "目标路径 %@ 不可写入。"
-          }
-        }
-      }
-    },
-    "The Mousecape helper was successfully installed." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mousecape辅助程序已成功安装。"
-          }
-        }
-      }
-    },
-    "The Mousecape helper was successfully uninstalled." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mousecape辅助程序已成功卸载。"
           }
         }
       }
@@ -2073,12 +2344,32 @@
         }
       }
     },
+    "This cape already contains all cursor groups." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此Cape已包含所有光标组。"
+          }
+        }
+      }
+    },
     "This cape already contains all standard cursor types." : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "此Cape已包含所有标准光标类型。"
+          }
+        }
+      }
+    },
+    "This group contains alias cursors with different settings. Editing in Simple mode will overwrite all aliases with the primary cursor's settings." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此分组包含设置不同的别名光标。在简易模式下编辑将用主光标的设置覆盖所有别名。"
           }
         }
       }
@@ -2133,277 +2424,22 @@
         }
       }
     },
+    "Unavailable" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不可用"
+          }
+        }
+      }
+    },
     "Undo" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "撤销"
-          }
-        }
-      }
-    },
-    "undo.action.addCursor" : {
-      "comment" : "Add Cursor Undo Title",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add Cursor"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加光标"
-          }
-        }
-      }
-    },
-    "undo.action.prefix" : {
-      "comment" : "Undo Change Prefix",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Change "
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "更改"
-          }
-        }
-      }
-    },
-    "undo.action.removeCursor" : {
-      "comment" : "Remove Cursor Undo Title",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove Cursor"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "移除光标"
-          }
-        }
-      }
-    },
-    "undo.property.author" : {
-      "comment" : "Undo change cape author suffix",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "author"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "作者"
-          }
-        }
-      }
-    },
-    "undo.property.cursorType" : {
-      "comment" : "Undo change cursor type suffix",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "cursor type"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "光标类型"
-          }
-        }
-      }
-    },
-    "undo.property.dimensions" : {
-      "comment" : "Undo change cursor image dimensions suffix",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "dimensions"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "尺寸"
-          }
-        }
-      }
-    },
-    "undo.property.frameCount" : {
-      "comment" : "Undo change cursor frame count suffix",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "frame count"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "帧数"
-          }
-        }
-      }
-    },
-    "undo.property.frameDuration" : {
-      "comment" : "Undo change cursor frame duraiton suffix",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "frame duration"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "帧时长"
-          }
-        }
-      }
-    },
-    "undo.property.hidpi" : {
-      "comment" : "Undo change cape hidpi suffix",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "hiDPI"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "hiDPI"
-          }
-        }
-      }
-    },
-    "undo.property.hotspot" : {
-      "comment" : "Undo change cursor hotspot suffix",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "hotspot"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "热点"
-          }
-        }
-      }
-    },
-    "undo.property.identifier" : {
-      "comment" : "Undo change cape identifier suffix",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "identifier"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "标识符"
-          }
-        }
-      }
-    },
-    "undo.property.name" : {
-      "comment" : "Undo change cape name suffix",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "name"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "名称"
-          }
-        }
-      }
-    },
-    "undo.property.rep1x" : {
-      "comment" : "Undo change cursor 1x rep suffix",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1x Representation"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1x 表示"
-          }
-        }
-      }
-    },
-    "undo.property.rep2x" : {
-      "comment" : "Undo change cursor 10x rep suffix\nUndo change cursor 2x rep suffix\nUndo change cursor 5x rep suffix",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "2x Rep"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "2x 表示"
-          }
-        }
-      }
-    },
-    "undo.property.version" : {
-      "comment" : "Undo change cape version suffix",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "version"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "版本"
-          }
-        }
-      }
-    },
-    "Uninstall" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "卸载"
           }
         }
       }
@@ -2603,12 +2639,12 @@
         }
       }
     },
-    "Warning" : {
+    "Vertical Resize" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "警告"
+            "value" : "垂直调整大小"
           }
         }
       }
@@ -2619,6 +2655,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "双击Cape时"
+          }
+        }
+      }
+    },
+    "Working in Background" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "后台运行"
           }
         }
       }
@@ -2642,6 +2688,17 @@
           }
         }
       }
+    },
+    "X: %lld, Y: %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "X: %1$lld, Y: %2$lld"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "Y" : {
       "localizations" : {

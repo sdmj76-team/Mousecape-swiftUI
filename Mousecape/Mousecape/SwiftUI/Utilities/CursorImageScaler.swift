@@ -146,6 +146,7 @@ enum CursorImageScaler {
     // MARK: - Sprite Sheet Creation
 
     /// Create a vertical sprite sheet from individual frames
+    /// Uses CGContext for thread safety (no NSGraphicsContext dependency)
     static func createSpriteSheet(
         from frames: [NSBitmapImageRep],
         frameWidth: Int,
@@ -153,46 +154,29 @@ enum CursorImageScaler {
     ) -> NSBitmapImageRep? {
         let sheetHeight = frameHeight * frames.count
 
-        guard let spriteSheet = NSBitmapImageRep(
-            bitmapDataPlanes: nil,
-            pixelsWide: frameWidth,
-            pixelsHigh: sheetHeight,
-            bitsPerSample: 8,
-            samplesPerPixel: 4,
-            hasAlpha: true,
-            isPlanar: false,
-            colorSpaceName: .deviceRGB,
+        guard let context = CGContext(
+            data: nil,
+            width: frameWidth,
+            height: sheetHeight,
+            bitsPerComponent: 8,
             bytesPerRow: frameWidth * 4,
-            bitsPerPixel: 32
+            space: CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
         ) else {
             return nil
         }
 
-        NSGraphicsContext.saveGraphicsState()
-        guard let context = NSGraphicsContext(bitmapImageRep: spriteSheet) else {
-            NSGraphicsContext.restoreGraphicsState()
-            return nil
-        }
-        NSGraphicsContext.current = context
-
-        // Clear to transparent
-        NSColor.clear.setFill()
-        NSRect(x: 0, y: 0, width: frameWidth, height: sheetHeight).fill()
-
         // Draw each frame
-        // Note: NSGraphicsContext uses bottom-left origin coordinate system
+        // CGContext uses bottom-left origin coordinate system
         // Frame 0 should be at the TOP of the sprite sheet (highest Y in bottom-left coords)
         for (index, frame) in frames.enumerated() {
-            let sourceImage = NSImage(size: NSSize(width: frame.pixelsWide, height: frame.pixelsHigh))
-            sourceImage.addRepresentation(frame)
-
-            let yOffset = CGFloat(sheetHeight - (index + 1) * frameHeight)
-            let destRect = NSRect(x: 0, y: yOffset, width: CGFloat(frameWidth), height: CGFloat(frameHeight))
-            sourceImage.draw(in: destRect, from: .zero, operation: .copy, fraction: 1.0)
+            guard let cgImage = frame.cgImage else { continue }
+            let y = sheetHeight - (index + 1) * frameHeight
+            context.draw(cgImage, in: CGRect(x: 0, y: y, width: frameWidth, height: frameHeight))
         }
 
-        NSGraphicsContext.restoreGraphicsState()
-        return spriteSheet
+        guard let resultImage = context.makeImage() else { return nil }
+        return NSBitmapImageRep(cgImage: resultImage)
     }
 
     // MARK: - Bitmap Helpers

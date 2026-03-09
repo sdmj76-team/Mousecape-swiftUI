@@ -202,13 +202,6 @@ NSString *nameForCursorIdentifier(NSString *identifier) {
     return name ?: @"Unknown";
 }
 
-NSString *cursorIdentifierForName(NSString *name) {
-    NSArray *keys = [cursorMap() allKeysForObject:name];
-    if (keys.count)
-        return keys[0];
-    return UUID();
-}
-
 NSArray<NSString *> *MCArrowSynonyms(void) {
     static NSArray<NSString *> *result = nil;
     static dispatch_once_t onceToken;

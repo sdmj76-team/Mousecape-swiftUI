@@ -9,6 +9,8 @@
 #ifndef Mousecape_backup_h
 #define Mousecape_backup_h
 
+#import <Foundation/Foundation.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *backupStringForIdentifier(NSString *identifier);

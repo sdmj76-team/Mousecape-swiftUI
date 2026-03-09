@@ -19,7 +19,9 @@ struct AnimatingCursorView: View {
 
     @State private var currentFrame: Int = 0
     @State private var animationTimer: Timer?
+    @State private var cachedFrames: [NSImage] = []
     @AppStorage("showPreviewAnimations") private var showPreviewAnimations = true
+    @Environment(AppState.self) private var appState
 
     var body: some View {
         GeometryReader { geometry in
@@ -54,12 +56,15 @@ struct AnimatingCursorView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .onAppear {
+            buildFrameCache()
             startAnimation()
         }
         .onDisappear {
             stopAnimation()
+            cachedFrames = []
         }
         .onChange(of: cursor.frameCount) { _, _ in
+            buildFrameCache()
             restartAnimation()
         }
         .onChange(of: cursor.frameDuration) { _, _ in
@@ -67,10 +72,12 @@ struct AnimatingCursorView: View {
         }
         .onChange(of: cursor.id) { _, _ in
             currentFrame = 0
+            buildFrameCache()
             restartAnimation()
         }
         .onChange(of: refreshTrigger) { _, _ in
-            // Force refresh - restart animation
+            // Force refresh - rebuild cache and restart animation
+            buildFrameCache()
             restartAnimation()
         }
         .onChange(of: showPreviewAnimations) { _, newValue in
@@ -81,43 +88,66 @@ struct AnimatingCursorView: View {
                 currentFrame = 0
             }
         }
+        .onChange(of: appState.isWindowVisible) { _, newValue in
+            if newValue {
+                startAnimation()
+            } else {
+                stopAnimation()
+            }
+        }
+        .accessibilityLabel("Animated cursor preview")
+        .accessibilityValue(cursor.frameCount > 1 ? "\(cursor.frameCount) frames" : "Static")
     }
 
-    /// Extract a single frame from the sprite sheet
+    /// Get a cached frame image at the given index
     private func getFrameImage(at frameIndex: Int) -> NSImage? {
-        guard let image = cursor.image else { return nil }
+        guard frameIndex >= 0, frameIndex < cachedFrames.count else {
+            // Fallback: try to build cache if empty
+            if cachedFrames.isEmpty { buildFrameCache() }
+            guard frameIndex >= 0, frameIndex < cachedFrames.count else { return nil }
+            return cachedFrames[frameIndex]
+        }
+        return cachedFrames[frameIndex]
+    }
+
+    /// Build frame cache from sprite sheet using CGImage.cropping
+    private func buildFrameCache() {
+        guard let image = cursor.image,
+              let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+            cachedFrames = []
+            return
+        }
 
         let frameCount = max(1, cursor.frameCount)
-        let frameHeight = image.size.height / CGFloat(frameCount)
-        let frameWidth = image.size.width
+        let totalHeight = cgImage.height
+        let frameHeight = totalHeight / frameCount
+        let frameWidth = cgImage.width
 
-        // Guard against zero-size images
-        guard frameWidth > 0, frameHeight > 0 else { return nil }
+        // Use NSImage logical size (points) for display, not pixel dimensions
+        let logicalWidth = image.size.width
+        let logicalFrameHeight = image.size.height / CGFloat(frameCount)
 
-        // Calculate source rect for this frame (frames are stacked vertically, top to bottom)
-        let sourceRect = NSRect(
-            x: 0,
-            y: image.size.height - CGFloat(frameIndex + 1) * frameHeight,
-            width: frameWidth,
-            height: frameHeight
-        )
+        guard frameWidth > 0, frameHeight > 0 else {
+            cachedFrames = []
+            return
+        }
 
-        // Create new image for this frame
-        let frameImage = NSImage(size: NSSize(width: frameWidth, height: frameHeight))
-        frameImage.lockFocus()
-        image.draw(
-            in: NSRect(x: 0, y: 0, width: frameWidth, height: frameHeight),
-            from: sourceRect,
-            operation: .copy,
-            fraction: 1.0
-        )
-        frameImage.unlockFocus()
+        var frames: [NSImage] = []
+        frames.reserveCapacity(frameCount)
 
-        return frameImage
+        for i in 0..<frameCount {
+            // CGImage origin is top-left, frames are stacked top to bottom
+            let cropRect = CGRect(x: 0, y: i * frameHeight, width: frameWidth, height: frameHeight)
+            guard let croppedCG = cgImage.cropping(to: cropRect) else { continue }
+            let nsImage = NSImage(cgImage: croppedCG, size: NSSize(width: logicalWidth, height: logicalFrameHeight))
+            frames.append(nsImage)
+        }
+
+        cachedFrames = frames
     }
 
     private func startAnimation() {
-        guard cursor.frameCount > 1, cursor.frameDuration > 0, showPreviewAnimations else {
+        guard cursor.frameCount > 1, cursor.frameDuration > 0, showPreviewAnimations, appState.isWindowVisible else {
             currentFrame = 0
             return
         }
@@ -170,7 +200,13 @@ private struct HotspotIndicator: View {
                 Circle()
                     .stroke(Color.primary.opacity(0.5), lineWidth: 0.5)
             )
+            .overlay(
+                Circle()
+                    .stroke(Color.white, lineWidth: 1.5)
+            )
             .position(x: x, y: y)
+            .accessibilityLabel("Hotspot position")
+            .accessibilityValue("X: \(Int(hotspot.x)), Y: \(Int(hotspot.y))")
     }
 }
 
@@ -232,34 +268,26 @@ struct StaticCursorFrameView: View {
         }
     }
 
-    /// Extract a single frame from the sprite sheet
+    /// Extract a single frame from the sprite sheet using CGImage.cropping
     private func getFrameImage(at frameIndex: Int) -> NSImage? {
-        guard let image = cursor.image else { return nil }
+        guard let image = cursor.image,
+              let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else { return nil }
 
         let frameCount = max(1, cursor.frameCount)
-        let frameHeight = image.size.height / CGFloat(frameCount)
-        let frameWidth = image.size.width
+        let totalHeight = cgImage.height
+        let frameHeight = totalHeight / frameCount
+        let frameWidth = cgImage.width
+
+        // Use NSImage logical size (points) for display
+        let logicalWidth = image.size.width
+        let logicalFrameHeight = image.size.height / CGFloat(frameCount)
 
         guard frameWidth > 0, frameHeight > 0 else { return nil }
 
-        let sourceRect = NSRect(
-            x: 0,
-            y: image.size.height - CGFloat(frameIndex + 1) * frameHeight,
-            width: frameWidth,
-            height: frameHeight
-        )
-
-        let frameImage = NSImage(size: NSSize(width: frameWidth, height: frameHeight))
-        frameImage.lockFocus()
-        image.draw(
-            in: NSRect(x: 0, y: 0, width: frameWidth, height: frameHeight),
-            from: sourceRect,
-            operation: .copy,
-            fraction: 1.0
-        )
-        frameImage.unlockFocus()
-
-        return frameImage
+        // CGImage origin is top-left, frames are stacked top to bottom
+        let cropRect = CGRect(x: 0, y: frameIndex * frameHeight, width: frameWidth, height: frameHeight)
+        guard let croppedCG = cgImage.cropping(to: cropRect) else { return nil }
+        return NSImage(cgImage: croppedCG, size: NSSize(width: logicalWidth, height: logicalFrameHeight))
     }
 }
 

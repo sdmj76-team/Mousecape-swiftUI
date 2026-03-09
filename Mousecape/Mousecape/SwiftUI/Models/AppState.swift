@@ -11,6 +11,12 @@ import Combine
 import UniformTypeIdentifiers
 
 /// Main application state - ObservableObject for SwiftUI
+///
+/// @unchecked Sendable is safe because:
+/// 1. All access is @MainActor isolated (enforced by compiler)
+/// 2. ObjC objects (libraryController, MCCursor, MCCursorLibrary) are accessed only from main thread
+/// 3. Closures in undo/redo stacks are @MainActor closures, executed on main thread
+/// 4. No concurrent access possible due to @MainActor isolation
 @Observable @MainActor
 final class AppState: @unchecked Sendable {
 
@@ -95,13 +101,16 @@ final class AppState: @unchecked Sendable {
     var lastError: Error?
     var showError: Bool = false
 
+    /// Window visibility state (for pausing animations when hidden)
+    var isWindowVisible: Bool = true
+
     // MARK: - Undo/Redo
 
-    /// Undo stack - stores closures to undo changes
-    private var undoStack: [() -> Void] = []
+    /// Undo stack - stores paired closures to undo/redo changes
+    private var undoStack: [(undo: () -> Void, redo: () -> Void)] = []
 
-    /// Redo stack - stores closures to redo changes
-    private var redoStack: [() -> Void] = []
+    /// Redo stack - stores paired closures to undo/redo changes
+    private var redoStack: [(undo: () -> Void, redo: () -> Void)] = []
 
     /// Maximum undo history size
     private let maxUndoHistory = 20
@@ -226,7 +235,7 @@ final class AppState: @unchecked Sendable {
 
     /// Load cursor scale from preferences and apply it
     private func applySavedCursorScale() {
-        let preferenceDomain = "com.alexzielenski.Mousecape"
+        let preferenceDomain = "com.sdmj76.Mousecape"
         let cursorScaleKey = "MCCursorScale"
 
         // Read saved scale value
@@ -378,17 +387,17 @@ final class AppState: @unchecked Sendable {
 
         // Save identifier for "Apply Last Cape on Launch" feature
         UserDefaults.standard.set(cape.identifier, forKey: "lastAppliedCapeIdentifier")
-        // Also write MCAppliedCursor for mousecloakhelper (ObjC helper daemon)
+        // Also write MCAppliedCursor for session monitor (ObjC listen.m)
         // Uses CFPreferences to write to current user + current host domain
         CFPreferencesSetValue(
             "MCAppliedCursor" as CFString,
             cape.identifier as CFString,
-            "com.alexzielenski.Mousecape" as CFString,
+            "com.sdmj76.Mousecape" as CFString,
             kCFPreferencesCurrentUser,
             kCFPreferencesCurrentHost
         )
         CFPreferencesSynchronize(
-            "com.alexzielenski.Mousecape" as CFString,
+            "com.sdmj76.Mousecape" as CFString,
             kCFPreferencesCurrentUser,
             kCFPreferencesCurrentHost
         )
@@ -405,16 +414,16 @@ final class AppState: @unchecked Sendable {
 
         // Clear last applied cape identifier
         UserDefaults.standard.removeObject(forKey: "lastAppliedCapeIdentifier")
-        // Also clear MCAppliedCursor for mousecloakhelper
+        // Also clear MCAppliedCursor for session monitor
         CFPreferencesSetValue(
             "MCAppliedCursor" as CFString,
             nil,
-            "com.alexzielenski.Mousecape" as CFString,
+            "com.sdmj76.Mousecape" as CFString,
             kCFPreferencesCurrentUser,
             kCFPreferencesCurrentHost
         )
         CFPreferencesSynchronize(
-            "com.alexzielenski.Mousecape" as CFString,
+            "com.sdmj76.Mousecape" as CFString,
             kCFPreferencesCurrentUser,
             kCFPreferencesCurrentHost
         )
@@ -444,8 +453,8 @@ final class AppState: @unchecked Sendable {
         // Clear redo stack when new action is registered
         redoStack.removeAll()
 
-        // Add to undo stack
-        undoStack.append(undoAction)
+        // Add paired closures to undo stack
+        undoStack.append((undo: undoAction, redo: redoAction))
 
         // Limit stack size
         if undoStack.count > maxUndoHistory {
@@ -457,19 +466,16 @@ final class AppState: @unchecked Sendable {
 
     /// Undo the last change
     func undo() {
-        guard let undoAction = undoStack.popLast() else { return }
-        undoAction()
-
-        // If no more undo actions, check if we're back to saved state
-        if undoStack.isEmpty {
-            hasUnsavedChanges = false
-        }
+        guard let entry = undoStack.popLast() else { return }
+        entry.undo()
+        redoStack.append(entry)
     }
 
     /// Redo the last undone change
     func redo() {
-        guard let redoAction = redoStack.popLast() else { return }
-        redoAction()
+        guard let entry = redoStack.popLast() else { return }
+        entry.redo()
+        undoStack.append(entry)
         hasUnsavedChanges = true
     }
 
@@ -477,6 +483,143 @@ final class AppState: @unchecked Sendable {
     func clearUndoHistory() {
         undoStack.removeAll()
         redoStack.removeAll()
+    }
+
+    /// Clear all memory caches for background mode (aggressive cleanup)
+    func clearMemoryCaches() {
+        let memoryBefore = reportMemoryUsage()
+        debugLog("Clearing memory caches for background mode - Memory before: \(memoryBefore) MB")
+
+        // Save essential state before clearing
+        let selectedIdentifier = selectedCape?.identifier
+        let appliedIdentifier = appliedCape?.identifier
+        let appliedCapeName = appliedCape?.name  // Save name for menu bar display
+
+        debugLog("Clearing \(capes.count) capes with total \(capes.reduce(0) { $0 + $1.cursorCount }) cursors")
+
+        // Clear all cursor image caches
+        for cape in capes {
+            cape.invalidateCursorCache()
+            for cursor in cape.cursors {
+                cursor.invalidateImageCache()
+            }
+        }
+
+        // Aggressively clear the entire capes array to release ObjC objects
+        // This releases all MCCursorLibrary and MCCursor objects and their image data
+        capes.removeAll()
+        selectedCape = nil
+        // Don't clear appliedCape yet - we need to recreate a lightweight version for menu bar
+
+        // Clear ALL edit state to release view references
+        isEditing = false
+        editingCape = nil
+        editingSelectedCursor = nil
+        showCapeInfo = false
+        capeToDelete = nil
+
+        // Reset to home page to clear navigation stack
+        currentPage = .home
+
+        // Clear all dialog states
+        showAddCursorSheet = false
+        showDeleteCursorConfirmation = false
+        showDeleteConfirmation = false
+        showDiscardConfirmation = false
+        showDuplicateFilenameError = false
+        showValidationError = false
+        showImageImportWarning = false
+        showImportResult = false
+        showOperationResult = false
+        showError = false
+        lastError = nil
+
+        // Clear undo/redo history
+        clearUndoHistory()
+
+        // Store identifiers for restoration on window reopen
+        if let selected = selectedIdentifier {
+            UserDefaults.standard.set(selected, forKey: "lastSelectedCapeIdentifier")
+        }
+        if let applied = appliedIdentifier {
+            UserDefaults.standard.set(applied, forKey: "lastAppliedCapeIdentifier")
+        }
+
+        // CRITICAL: Clear libraryController to release all ObjC cape objects
+        // This is the key to releasing the 27+ MB of CFData held by MCLibraryController
+        libraryController = nil
+        debugLog("LibraryController released")
+
+        // Recreate a lightweight appliedCape for menu bar display (no cursor data)
+        if let appliedId = appliedIdentifier, let appliedName = appliedCapeName {
+            // Create a minimal CursorLibrary with just metadata for menu bar display
+            let lightweightLibrary = CursorLibrary(name: appliedName, author: "")
+            lightweightLibrary.identifier = appliedId
+            appliedCape = lightweightLibrary
+            debugLog("Recreated lightweight appliedCape for menu bar: \(appliedName)")
+        } else {
+            appliedCape = nil
+        }
+
+        // Force refresh triggers to update views
+        capeListRefreshTrigger += 1
+        cursorListRefreshTrigger += 1
+        capeInfoRefreshTrigger += 1
+
+        // Force memory cleanup with multiple passes
+        for _ in 0..<3 {
+            autoreleasepool {
+                // Empty pool to release autoreleased objects
+            }
+        }
+
+        let memoryAfter = reportMemoryUsage()
+        debugLog("Memory caches cleared - Memory after: \(memoryAfter) MB (freed: \(memoryBefore - memoryAfter) MB)")
+    }
+
+    /// Report current memory usage in MB
+    private func reportMemoryUsage() -> Double {
+        var info = mach_task_basic_info()
+        var count = mach_msg_type_number_t(MemoryLayout<mach_task_basic_info>.size) / 4
+        let kerr: kern_return_t = withUnsafeMutablePointer(to: &info) {
+            // Calculate correct capacity for rebinding mach_task_basic_info to integer_t array
+            let capacity = MemoryLayout<mach_task_basic_info>.size / MemoryLayout<integer_t>.size
+            return $0.withMemoryRebound(to: integer_t.self, capacity: capacity) {
+                task_info(mach_task_self_, task_flavor_t(MACH_TASK_BASIC_INFO), $0, &count)
+            }
+        }
+        if kerr == KERN_SUCCESS {
+            let usedMB = Double(info.resident_size) / 1024.0 / 1024.0
+            return usedMB
+        }
+        return 0
+    }
+
+    /// Restore state after window reopens (called from showMainWindow)
+    func restoreStateAfterReopen() {
+        debugLog("Restoring state after window reopen")
+
+        // Recreate libraryController if it was cleared
+        if libraryController == nil {
+            setupLibraryController()
+            debugLog("LibraryController recreated")
+        }
+
+        // Reload capes from disk
+        loadCapes()
+
+        // Restore selections
+        if let selectedId = UserDefaults.standard.string(forKey: "lastSelectedCapeIdentifier") {
+            selectedCape = capes.first { $0.identifier == selectedId }
+            UserDefaults.standard.removeObject(forKey: "lastSelectedCapeIdentifier")
+        }
+
+        if let appliedId = UserDefaults.standard.string(forKey: "lastAppliedCapeIdentifier") {
+            appliedCape = capes.first { $0.identifier == appliedId }
+            UserDefaults.standard.removeObject(forKey: "lastAppliedCapeIdentifier")
+        }
+
+        debugLog("State restored - \(capes.count) capes loaded")
     }
 
     /// Request to close edit mode (may show confirmation if dirty)
@@ -692,10 +835,16 @@ final class AppState: @unchecked Sendable {
     // MARK: - Cursor Actions (Edit Mode)
 
     /// Delete the currently selected cursor
+    /// In simple mode (editMode == 0), deletes the entire cursor group
     func deleteSelectedCursor() {
         guard let cape = editingCape, let cursor = editingSelectedCursor else { return }
-        cape.removeCursor(cursor)
-        editingSelectedCursor = cape.cursors.first
+        let editMode = UserDefaults.standard.integer(forKey: "cursorEditMode")
+        if editMode == 0, let group = WindowsCursorGroup.group(for: cursor.identifier) {
+            cape.removeGroupCursors(for: group)
+        } else {
+            cape.removeCursor(cursor)
+        }
+        editingSelectedCursor = nil
         markAsChanged()
         cursorListRefreshTrigger += 1
         showDeleteCursorConfirmation = false

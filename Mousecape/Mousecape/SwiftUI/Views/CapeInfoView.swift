@@ -134,6 +134,14 @@ struct CapeInfoView: View {
                     Text("\(String(localized:"Cursors")) (\(cape.cursorCount))")
                         .font(.headline)
 
+                    if cape.cursors.isEmpty {
+                        Text("No cursors yet")
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding()
+                            .accessibilityLabel("No cursors in this cape")
+                    }
+
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 60))], spacing: 8) {
                         ForEach(cape.cursors) { cursor in
                             VStack(spacing: 4) {

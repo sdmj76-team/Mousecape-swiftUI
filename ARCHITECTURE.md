@@ -450,19 +450,21 @@ NSString *appliedCapePathForUser(NSString *user) {
 
 ## Component Responsibilities
 
-### Three Build Targets
+### Two Build Targets
 
 | Component | Type | Needs to Keep Running | Responsibility |
 |-----------|------|----------------------|----------------|
-| **Mousecape** | GUI App | ❌ | User interface, manage Capes, trigger registration |
+| **Mousecape** | GUI App + Menu Bar | ✅ (background) | User interface, manage Capes, trigger registration, session monitoring via embedded `startSessionMonitor()` |
 | **mousecloak** | CLI Tool | ❌ | Command-line operations, execute actual registration |
-| **mousecloakHelper** | LaunchAgent | ✅ | Listen for events, re-register cursors |
 
-### Events Monitored by mousecloakHelper
+### Events Monitored by Session Monitor
+
+The session monitor (`startSessionMonitor()` in `listen.m`) runs as a non-blocking listener on the main run loop:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    mousecloakHelper's Role                       │
+│              Embedded Session Monitor's Role                     │
+│              (startSessionMonitor in listen.m)                   │
 └─────────────────────────────────────────────────────────────────┘
 
 1. User Switch (SCDynamicStore)
@@ -497,15 +499,16 @@ WindowServer starts (cursor registry empty)
 User Login
     │
     ▼
-launchd starts mousecloakHelper
+Mousecape launches (via Login Item or manually)
     │
+    ├──► startSessionMonitor() attaches to main run loop
     ├──► Read user's configured Cape
     ├──► Call CGSRegisterCursorWithImages to register
-    └──► Enter event listening loop
+    └──► App stays in menu bar, listening for events
               │
               ├──► User switch → Re-register
               ├──► Display change → Re-register
-              └──► Keep listening...
+              └──► Keep listening (non-blocking)...
 ```
 
 ---
@@ -1164,19 +1167,21 @@ NSString *appliedCapePathForUser(NSString *user) {
 
 ## 组件职责
 
-### 三个构建目标
+### 两个构建目标
 
 | 组件 | 类型 | 需要保持运行 | 职责 |
 |------|------|-------------|------|
-| **Mousecape** | GUI 应用 | ❌ | 用户界面，管理 Cape，触发注册 |
+| **Mousecape** | GUI 应用 + 菜单栏 | ✅（后台） | 用户界面，管理 Cape，触发注册，通过内嵌 `startSessionMonitor()` 进行会话监听 |
 | **mousecloak** | CLI 工具 | ❌ | 命令行操作，执行实际注册 |
-| **mousecloakHelper** | LaunchAgent | ✅ | 监听事件，重新注册光标 |
 
-### mousecloakHelper 监听的事件
+### 会话监听器监听的事件
+
+会话监听器（`listen.m` 中的 `startSessionMonitor()`）以非阻塞方式运行在主 RunLoop 上：
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    mousecloakHelper 的作用                       │
+│              内嵌会话监听器的作用                                  │
+│              (listen.m 中的 startSessionMonitor)                  │
 └─────────────────────────────────────────────────────────────────┘
 
 1. 用户切换（SCDynamicStore）
@@ -1210,15 +1215,16 @@ WindowServer 启动（光标注册表为空）
 用户登录
     │
     ▼
-launchd 启动 mousecloakHelper
+Mousecape 启动（通过登录项或手动启动）
     │
+    ├──► startSessionMonitor() 挂载到主 RunLoop
     ├──► 读取用户配置的 Cape
     ├──► 调用 CGSRegisterCursorWithImages 注册
-    └──► 进入事件监听循环
+    └──► 应用驻留菜单栏，持续监听事件
               │
               ├──► 用户切换 → 重新注册
               ├──► 显示器变化 → 重新注册
-              └──► 持续监听...
+              └──► 持续监听（非阻塞）...
 ```
 
 ---

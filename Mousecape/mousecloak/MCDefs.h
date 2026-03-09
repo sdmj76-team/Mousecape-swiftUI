@@ -9,6 +9,7 @@
 #ifndef Mousecape_MCDefs_h
 #define Mousecape_MCDefs_h
 
+#import <AppKit/AppKit.h>
 #import "MCLogger.h"
 
 // In DEBUG mode, use file logging; in Release mode, use stdout only
@@ -83,7 +84,6 @@ extern const NSString *MCCursorDictionaryRepresentationsKey;
 
 extern NSDictionary *cursorMap(void);
 extern NSString *nameForCursorIdentifier(NSString *identifier);
-extern NSString *cursorIdentifierForName(NSString *name);
 
 extern NSString *UUID(void);
 extern NSDictionary * _Nullable capeWithIdentifier(NSString *identifier);

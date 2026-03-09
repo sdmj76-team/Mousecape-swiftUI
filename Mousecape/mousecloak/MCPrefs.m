@@ -10,12 +10,8 @@
 #import "MCDefs.h"
 
 NSString *MCPreferencesAppliedCursorKey          = @"MCAppliedCursor";
-NSString *MCPreferencesAppliedClickActionKey     = @"MCLibraryClickAction";
 NSString *MCPreferencesCursorScaleKey            = @"MCCursorScale";
-NSString *MCPreferencesDoubleActionKey           = @"MCDoubleAction";
 NSString *MCPreferencesHandednessKey             = @"MCHandedness";
-NSString *MCSuppressDeleteLibraryConfirmationKey = @"MCSuppressDeleteLibraryConfirmationKey";
-NSString *MCSuppressDeleteCursorConfirmationKey  = @"MCSuppressDeleteCursorConfirmationKey";
 
 id MCDefaultFor(NSString *key, NSString *user, NSString *host) {
     NSString *value = (__bridge_transfer NSString *)CFPreferencesCopyValue((__bridge CFStringRef)key, (__bridge CFStringRef)kMCDomain, (__bridge CFStringRef)user, (__bridge CFStringRef)host);
@@ -47,5 +43,19 @@ void MCSetDefaultFor(id value, NSString *key, NSString *user, NSString *host) {
 #endif
     CFPreferencesSetValue((__bridge CFStringRef)key, (__bridge CFPropertyListRef)value, (__bridge CFStringRef)kMCDomain, (__bridge CFStringRef)user, (__bridge CFStringRef)host);
     //    CFPreferencesSynchronize((CFStringRef)kMCDomain, (CFStringRef)user, (CFStringRef)host);
+
+    // Post Darwin notification to notify Helper about preference change
+    if ([key isEqualToString:MCPreferencesAppliedCursorKey]) {
+        CFNotificationCenterPostNotification(
+            CFNotificationCenterGetDarwinNotifyCenter(),
+            CFSTR("com.sdmj76.Mousecape.preferencesChanged"),
+            NULL,
+            NULL,
+            true
+        );
+#ifdef DEBUG
+        MMLog("Posted Darwin notification: com.sdmj76.Mousecape.preferencesChanged");
+#endif
+    }
 }
 

@@ -45,6 +45,11 @@ enum WindowsCursorError: LocalizedError {
 // MARK: - Converter
 
 /// Converts Windows cursor files (.cur, .ani) to Mousecape format
+///
+/// @unchecked Sendable is safe because:
+/// 1. Singleton with no mutable state
+/// 2. All conversion operations use TaskGroup for parallel processing
+/// 3. No shared mutable state between concurrent tasks
 final class WindowsCursorConverter: @unchecked Sendable {
 
     /// Shared instance
@@ -296,22 +301,5 @@ extension WindowsCursorResult {
     /// For animated cursors, returns a sprite sheet with all frames stacked vertically
     func createBitmapImageRep() -> NSBitmapImageRep? {
         return NSBitmapImageRep(cgImage: image)
-    }
-
-    /// Create MCCursor from the result
-    func createMCCursor(identifier: String) -> MCCursor? {
-        guard let bitmap = createBitmapImageRep() else { return nil }
-
-        let cursor = MCCursor()
-        cursor.identifier = identifier
-        cursor.frameCount = UInt(frameCount)
-        cursor.frameDuration = frameDuration
-        cursor.size = NSSize(width: CGFloat(width), height: CGFloat(height))
-        cursor.hotSpot = NSPoint(x: CGFloat(hotspotX), y: CGFloat(hotspotY))
-
-        // Set representation for 2x scale (standard HiDPI)
-        cursor.setRepresentation(bitmap, for: MCCursorScale(rawValue: 200)!)
-
-        return cursor
     }
 }

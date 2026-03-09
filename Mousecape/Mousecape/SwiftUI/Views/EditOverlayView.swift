@@ -13,14 +13,10 @@ import UniformTypeIdentifiers
 
 extension UTType {
     /// Windows static cursor file (.cur)
-    static var windowsCursor: UTType {
-        UTType(filenameExtension: "cur") ?? .data
-    }
+    static let windowsCursor = UTType(filenameExtension: "cur") ?? .data
 
     /// Windows animated cursor file (.ani)
-    static var windowsAnimatedCursor: UTType {
-        UTType(filenameExtension: "ani") ?? .data
-    }
+    static let windowsAnimatedCursor = UTType(filenameExtension: "ani") ?? .data
 }
 
 // MARK: - Edit Detail Content (right panel content only, used in HomeView)
@@ -28,6 +24,7 @@ extension UTType {
 struct EditDetailContent: View {
     let cape: CursorLibrary
     @Environment(AppState.self) private var appState
+    @AppStorage("cursorEditMode") private var editMode: Int = 0  // 0=simple, 1=advanced
 
     var body: some View {
         Group {
@@ -35,7 +32,6 @@ struct EditDetailContent: View {
                 CapeInfoView(cape: cape)
             } else if let cursor = appState.editingSelectedCursor {
                 CursorDetailView(cursor: cursor, cape: cape)
-                    .id(cursor.id)  // Force view recreation when cursor changes
             } else {
                 ContentUnavailableView(
                     "Select a Cursor",
@@ -47,24 +43,33 @@ struct EditDetailContent: View {
         .onAppear {
             // Invalidate cache to ensure we get fresh cursor data
             cape.invalidateCursorCache()
-            // Select first cursor when opening
-            if appState.editingSelectedCursor == nil {
-                appState.editingSelectedCursor = cape.cursors.first
-            }
+            // 进入编辑页面时保持无选择状态，由用户手动选择
         }
         // Edit mode toolbar (navigationTitle is now in HomeView)
         .toolbar {
             // Flexible spacer pushes buttons to the right (macOS 26+ only)
             AdaptiveToolbarSpacer(.flexible)
 
+            // Mode toggle
+            ToolbarItem {
+                Picker("", selection: $editMode) {
+                    Text("Simple").tag(0)
+                    Text("Advanced").tag(1)
+                }
+                .pickerStyle(.segmented)
+                .fixedSize()
+            }
+
             // Main action buttons group
             ToolbarItemGroup {
+                if editMode == 1 {
                 Button(action: {
                     appState.showAddCursorSheet = true
                 }) {
                     Image(systemName: "plus")
                 }
                 .help("Add Cursor")
+                .accessibilityLabel("Add cursor")
 
                 Button(action: {
                     appState.showDeleteCursorConfirmation = true
@@ -72,7 +77,9 @@ struct EditDetailContent: View {
                     Image(systemName: "minus")
                 }
                 .help("Delete Cursor")
+                .accessibilityLabel("Delete cursor")
                 .disabled(appState.editingSelectedCursor == nil)
+                }
 
                 Button(action: {
                     appState.showCapeInfo.toggle()
@@ -83,6 +90,7 @@ struct EditDetailContent: View {
                     Image(systemName: appState.showCapeInfo ? "info.circle.fill" : "info.circle")
                 }
                 .help("Cape Info")
+                .accessibilityLabel("Cape information")
             }
 
             AdaptiveToolbarSpacer(.fixed)
@@ -95,6 +103,7 @@ struct EditDetailContent: View {
                     Image(systemName: "checkmark")
                 }
                 .help("Done")
+                .accessibilityLabel("Done editing")
             }
         }
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
@@ -117,7 +126,7 @@ struct EditOverlayView: View {
                 selection: $appState.editingSelectedCursor
             )
             .scrollContentBackground(.hidden)
-            .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 280)
+            .navigationSplitViewColumnWidth(min: 200, ideal: 220, max: 280)
         } detail: {
             // Right side: Content area
             detailContent
@@ -126,10 +135,7 @@ struct EditOverlayView: View {
         .onAppear {
             // Invalidate cache to ensure we get fresh cursor data
             cape.invalidateCursorCache()
-            // Select first cursor when opening
-            if appState.editingSelectedCursor == nil {
-                appState.editingSelectedCursor = cape.cursors.first
-            }
+            // 进入编辑页面时保持无选择状态，由用户手动选择
         }
     }
 
@@ -156,53 +162,142 @@ struct CursorListView: View {
     let cape: CursorLibrary
     @Binding var selection: Cursor?
     @Environment(AppState.self) private var appState
+    @AppStorage("cursorEditMode") private var editMode: Int = 0
+    @State private var selectedGroup: WindowsCursorGroup?
 
     var body: some View {
         @Bindable var appState = appState
 
-        List(cape.cursors, id: \.id, selection: $selection) { cursor in
-            CursorListRow(cursor: cursor, currentIdentifier: cursor.identifier)
-                .tag(cursor)
-                .contextMenu {
-                    Button("Duplicate") {
-                        duplicateCursor()
-                    }
-                    Divider()
-                    Button("Delete", role: .destructive) {
-                        appState.showDeleteCursorConfirmation = true
-                    }
+        Group {
+        if editMode == 0 {
+            // Simple mode: show Windows cursor groups
+            List(WindowsCursorGroup.allCases, id: \.id, selection: $selectedGroup) { group in
+                SimpleGroupRow(group: group, cape: cape)
+                    .tag(group)
+            }
+            .listStyle(.sidebar)
+            .scrollContentBackground(.hidden)
+            .id(appState.cursorListRefreshTrigger)
+            .onChange(of: selectedGroup) { _, newGroup in
+                guard let group = newGroup else { return }
+                if appState.showCapeInfo {
+                    appState.showCapeInfo = false
                 }
+                // Find existing primary cursor or create one
+                let primaryCursor = findOrCreatePrimaryCursor(for: group)
+                selection = primaryCursor
+            }
+            .onAppear {
+                // Initialize group selection from current cursor
+                if let cursor = selection,
+                   let group = WindowsCursorGroup.group(for: cursor.identifier) {
+                    selectedGroup = group
+                }
+                // 进入编辑页面时保持无选择状态，不自动选中分组
+            }
+            .onChange(of: selection) { _, newSelection in
+                if newSelection == nil {
+                    selectedGroup = nil
+                }
+            }
+        } else {
+            // Advanced mode: show all cursors (existing behavior)
+            List(cape.cursors, id: \.id, selection: $selection) { cursor in
+                CursorListRow(cursor: cursor, currentIdentifier: cursor.identifier)
+                    .tag(cursor)
+            }
+            .listStyle(.sidebar)
+            .scrollContentBackground(.hidden)
+            .id(appState.cursorListRefreshTrigger)
+            .onChange(of: selection) { _, newValue in
+                if newValue != nil && appState.showCapeInfo {
+                    appState.showCapeInfo = false
+                }
+            }
         }
-        .listStyle(.sidebar)
-        .scrollContentBackground(.hidden)
-        .id(appState.cursorListRefreshTrigger)  // Force list refresh when trigger changes
-        .onChange(of: selection) { _, newValue in
-            // When user selects a cursor, dismiss the cape info view
-            if newValue != nil && appState.showCapeInfo {
+        } // Group
+        .onChange(of: editMode) { _, _ in
+            // 切换模式时强制清空选中状态，避免类型选择器暴露
+            selectedGroup = nil
+            selection = nil
+            // 关闭 info 面板
+            if appState.showCapeInfo {
                 appState.showCapeInfo = false
             }
         }
     }
 
-    private func duplicateCursor() {
-        guard let cursor = selection else { return }
-        // Create a copy with a modified identifier
-        let newCursor = Cursor(identifier: cursor.identifier + ".copy")
-        newCursor.frameDuration = cursor.frameDuration
-        newCursor.frameCount = cursor.frameCount
-        newCursor.size = cursor.size
-        newCursor.hotSpot = cursor.hotSpot
-
-        // Copy representations
-        for scale in CursorScale.allCases {
-            if let rep = cursor.representation(for: scale) {
-                newCursor.setRepresentation(rep, for: scale)
+    /// Find the primary cursor for a group, or create one if none exists
+    private func findOrCreatePrimaryCursor(for group: WindowsCursorGroup) -> Cursor? {
+        // Prioritize the primaryType cursor
+        if let primaryType = group.primaryType,
+           let primaryCursor = cape.cursor(withIdentifier: primaryType.rawValue) {
+            return primaryCursor
+        }
+        // Fallback: return the first existing cursor in this group
+        for cursorType in group.cursorTypes {
+            if let existing = cape.cursor(withIdentifier: cursorType.rawValue) {
+                return existing
             }
         }
+        // No cursor exists for this group yet - create the primary cursor
+        if let primaryType = group.primaryType {
+            let newCursor = Cursor(identifier: primaryType.rawValue)
+            cape.addCursor(newCursor)
+            appState.markAsChanged()
+            return newCursor
+        }
+        return nil
+    }
 
+    private func duplicateCursor() {
+        guard let cursor = selection else { return }
+        let newCursor = cursor.copy(withIdentifier: cursor.identifier + ".copy")
         cape.addCursor(newCursor)
         selection = newCursor
         appState.markAsChanged()
+    }
+}
+
+// MARK: - Simple Group Row
+
+struct SimpleGroupRow: View {
+    let group: WindowsCursorGroup
+    let cape: CursorLibrary
+
+    /// Get preview image from the first existing cursor in this group
+    private var previewCursor: Cursor? {
+        for cursorType in group.cursorTypes {
+            if let cursor = cape.cursor(withIdentifier: cursorType.rawValue),
+               cursor.hasAnyRepresentation {
+                return cursor
+            }
+        }
+        return nil
+    }
+
+    var body: some View {
+        HStack {
+            if let cursor = previewCursor, let image = cursor.previewImage(size: 32) {
+                Image(nsImage: image)
+                    .resizable()
+                    .frame(width: 32, height: 32)
+            } else {
+                Image(systemName: group.previewSymbol)
+                    .frame(width: 32, height: 32)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(group.displayName)
+                    .font(.headline)
+                Text("\(group.cursorTypes.count) types")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.vertical, 4)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(group.displayName)
     }
 }
 
@@ -254,6 +349,8 @@ struct CursorListRow: View {
             }
         }
         .padding(.vertical, 4)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(displayName)
     }
 }
 
@@ -263,6 +360,7 @@ struct CursorDetailView: View {
     @Bindable var cursor: Cursor
     let cape: CursorLibrary
     @Environment(AppState.self) private var appState
+    @AppStorage("cursorEditMode") private var editMode: Int = 0
     @State private var hotspotX: Double = 0
     @State private var hotspotY: Double = 0
     @State private var frameCount: Int = 1
@@ -271,6 +369,8 @@ struct CursorDetailView: View {
     @State private var selectedType: CursorType = .arrow
     @State private var previewRefreshTrigger: Int = 0  // Force preview refresh
     @State private var availableTypes: [CursorType] = CursorType.allCases
+    @State private var showAliasOverwriteAlert = false
+    @State private var hasCheckedAliasConsistency = false
 
     // MARK: - Validation
 
@@ -321,12 +421,14 @@ struct CursorDetailView: View {
                 // Combined preview + drop zone
                 CursorPreviewDropZone(
                     cursor: cursor,
-                    refreshTrigger: previewRefreshTrigger
+                    refreshTrigger: previewRefreshTrigger,
+                    cape: cape
                 )
 
                 // Properties panel
                 VStack(alignment: .leading, spacing: 16) {
-                    // Type section
+                    // Type section (advanced mode only)
+                    if editMode == 1 {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Type")
                             .font(.headline)
@@ -369,6 +471,7 @@ struct CursorDetailView: View {
                     }
 
                     Divider()
+                    } // end if editMode == 1
 
                     // Hotspot section
                     VStack(alignment: .leading, spacing: 8) {
@@ -381,6 +484,8 @@ struct CursorDetailView: View {
                                 TextField("X", value: $hotspotX, format: .number.precision(.fractionLength(1)))
                                     .textFieldStyle(.roundedBorder)
                                     .frame(width: 60)
+                                    .accessibilityLabel("Hotspot X coordinate")
+                                    .accessibilityValue("\(hotspotX)")
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
                                             .stroke(isHotspotXValid ? Color.clear : Color.red, lineWidth: 2)
@@ -400,18 +505,31 @@ struct CursorDetailView: View {
                                         let capturedOld = oldValue
                                         cursor.hotSpot = NSPoint(x: CGFloat(clamped), y: cursor.hotSpot.y)
                                         previewRefreshTrigger += 1
+                                        let capturedEditMode = editMode
                                         appState.registerUndo(
                                             undo: { [weak cursor] in
-                                                cursor?.hotSpot = NSPoint(x: CGFloat(capturedOld), y: cursor?.hotSpot.y ?? 0)
+                                                guard let cursor = cursor else { return }
+                                                cursor.hotSpot = NSPoint(x: CGFloat(capturedOld), y: cursor.hotSpot.y)
                                                 self.hotspotX = capturedOld
                                                 self.previewRefreshTrigger += 1
+                                                if capturedEditMode == 0 {
+                                                    cape.syncMetadataToAliases(cursor)
+                                                }
                                             },
                                             redo: { [weak cursor] in
-                                                cursor?.hotSpot = NSPoint(x: CGFloat(clamped), y: cursor?.hotSpot.y ?? 0)
+                                                guard let cursor = cursor else { return }
+                                                cursor.hotSpot = NSPoint(x: CGFloat(clamped), y: cursor.hotSpot.y)
                                                 self.hotspotX = clamped
                                                 self.previewRefreshTrigger += 1
+                                                if capturedEditMode == 0 {
+                                                    cape.syncMetadataToAliases(cursor)
+                                                }
                                             }
                                         )
+                                        // Simple mode: sync metadata to aliases (no image deep copy needed)
+                                        if editMode == 0 {
+                                            cape.syncMetadataToAliases(cursor)
+                                        }
                                     }
                             }
                             HStack {
@@ -419,6 +537,8 @@ struct CursorDetailView: View {
                                 TextField("Y", value: $hotspotY, format: .number.precision(.fractionLength(1)))
                                     .textFieldStyle(.roundedBorder)
                                     .frame(width: 60)
+                                    .accessibilityLabel("Hotspot Y coordinate")
+                                    .accessibilityValue("\(hotspotY)")
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 5)
                                             .stroke(isHotspotYValid ? Color.clear : Color.red, lineWidth: 2)
@@ -438,18 +558,31 @@ struct CursorDetailView: View {
                                         let capturedOld = oldValue
                                         cursor.hotSpot = NSPoint(x: cursor.hotSpot.x, y: CGFloat(clamped))
                                         previewRefreshTrigger += 1
+                                        let capturedEditMode = editMode
                                         appState.registerUndo(
                                             undo: { [weak cursor] in
-                                                cursor?.hotSpot = NSPoint(x: cursor?.hotSpot.x ?? 0, y: CGFloat(capturedOld))
+                                                guard let cursor = cursor else { return }
+                                                cursor.hotSpot = NSPoint(x: cursor.hotSpot.x, y: CGFloat(capturedOld))
                                                 self.hotspotY = capturedOld
                                                 self.previewRefreshTrigger += 1
+                                                if capturedEditMode == 0 {
+                                                    cape.syncMetadataToAliases(cursor)
+                                                }
                                             },
                                             redo: { [weak cursor] in
-                                                cursor?.hotSpot = NSPoint(x: cursor?.hotSpot.x ?? 0, y: CGFloat(clamped))
+                                                guard let cursor = cursor else { return }
+                                                cursor.hotSpot = NSPoint(x: cursor.hotSpot.x, y: CGFloat(clamped))
                                                 self.hotspotY = clamped
                                                 self.previewRefreshTrigger += 1
+                                                if capturedEditMode == 0 {
+                                                    cape.syncMetadataToAliases(cursor)
+                                                }
                                             }
                                         )
+                                        // Simple mode: sync metadata to aliases (no image deep copy needed)
+                                        if editMode == 0 {
+                                            cape.syncMetadataToAliases(cursor)
+                                        }
                                     }
                             }
                         }
@@ -468,6 +601,7 @@ struct CursorDetailView: View {
                             TextField("Frames", value: $frameCount, format: .number)
                                 .textFieldStyle(.roundedBorder)
                                 .frame(width: 60)
+                                .accessibilityLabel("Animation frame count")
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 5)
                                         .stroke(isFrameCountValid ? Color.clear : Color.red, lineWidth: 2)
@@ -479,18 +613,31 @@ struct CursorDetailView: View {
                                     let actualNew = max(1, newValue)
                                     cursor.frameCount = actualNew
                                     previewRefreshTrigger += 1
+                                    let capturedEditMode = editMode
                                     appState.registerUndo(
                                         undo: { [weak cursor] in
-                                            cursor?.frameCount = capturedOld
+                                            guard let cursor = cursor else { return }
+                                            cursor.frameCount = capturedOld
                                             self.frameCount = capturedOld
                                             self.previewRefreshTrigger += 1
+                                            if capturedEditMode == 0 {
+                                                cape.syncMetadataToAliases(cursor)
+                                            }
                                         },
                                         redo: { [weak cursor] in
-                                            cursor?.frameCount = actualNew
+                                            guard let cursor = cursor else { return }
+                                            cursor.frameCount = actualNew
                                             self.frameCount = actualNew
                                             self.previewRefreshTrigger += 1
+                                            if capturedEditMode == 0 {
+                                                cape.syncMetadataToAliases(cursor)
+                                            }
                                         }
                                     )
+                                    // Simple mode: sync metadata to aliases (no image deep copy needed)
+                                    if editMode == 0 {
+                                        cape.syncMetadataToAliases(cursor)
+                                    }
                                 }
                         }
 
@@ -499,6 +646,7 @@ struct CursorDetailView: View {
                             TextField("Speed", value: $fps, format: .number.precision(.fractionLength(1)))
                                 .textFieldStyle(.roundedBorder)
                                 .frame(width: 60)
+                                .accessibilityLabel("Animation speed in frames per second")
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 5)
                                         .stroke(isFPSValid ? Color.clear : Color.red, lineWidth: 2)
@@ -511,26 +659,39 @@ struct CursorDetailView: View {
                                     let newDuration = 1.0 / actualNew
                                     cursor.frameDuration = CGFloat(newDuration)
                                     previewRefreshTrigger += 1
+                                    let capturedEditMode = editMode
                                     appState.registerUndo(
                                         undo: { [weak cursor] in
+                                            guard let cursor = cursor else { return }
                                             let oldDuration = capturedOld > 0 ? 1.0 / capturedOld : 0
-                                            cursor?.frameDuration = CGFloat(oldDuration)
+                                            cursor.frameDuration = CGFloat(oldDuration)
                                             self.fps = capturedOld
                                             self.previewRefreshTrigger += 1
+                                            if capturedEditMode == 0 {
+                                                cape.syncMetadataToAliases(cursor)
+                                            }
                                         },
                                         redo: { [weak cursor] in
-                                            cursor?.frameDuration = CGFloat(newDuration)
+                                            guard let cursor = cursor else { return }
+                                            cursor.frameDuration = CGFloat(newDuration)
                                             self.fps = actualNew
                                             self.previewRefreshTrigger += 1
+                                            if capturedEditMode == 0 {
+                                                cape.syncMetadataToAliases(cursor)
+                                            }
                                         }
                                     )
+                                    // Simple mode: sync metadata to aliases (no image deep copy needed)
+                                    if editMode == 0 {
+                                        cape.syncMetadataToAliases(cursor)
+                                    }
                                 }
                             Text("frames/sec")
                                 .foregroundStyle(.secondary)
                         }
 
                         if cursor.isAnimated {
-                            Text("Duration: \(String(format: "%.3f", frameDuration))s per frame, \(String(format: "%.2f", Double(frameCount) * frameDuration))s total")
+                            Text(String(format: String(localized: "Duration: %@s per frame, %@s total"), String(format: "%.3f", frameDuration), String(format: "%.2f", Double(frameCount) * frameDuration)))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -543,14 +704,29 @@ struct CursorDetailView: View {
         }
         .onAppear {
             loadCursorValues()
+            checkAliasConsistencyOnAppear()
         }
         .onChange(of: cursor.id) { _, _ in
             loadCursorValues()
+            hasCheckedAliasConsistency = false
+            checkAliasConsistencyOnAppear()
         }
         .onChange(of: appState.cursorListRefreshTrigger) { _, _ in
             // Refresh preview and reload values when image is imported
             previewRefreshTrigger += 1
             loadCursorValues()
+        }
+        .alert("Overwrite Alias Cursors?", isPresented: $showAliasOverwriteAlert) {
+            Button("Continue") {
+                hasCheckedAliasConsistency = true
+            }
+            Button("Cancel", role: .cancel) {
+                hasCheckedAliasConsistency = true
+                // 返回无选择状态
+                appState.editingSelectedCursor = nil
+            }
+        } message: {
+            Text("This group contains alias cursors with different settings. Editing in Simple mode will overwrite all aliases with the primary cursor's settings.")
         }
     }
 
@@ -575,6 +751,179 @@ struct CursorDetailView: View {
             isLoadingValues = false
         }
     }
+
+    private func checkAliasConsistencyOnAppear() {
+        guard editMode == 0, !hasCheckedAliasConsistency else { return }
+        if !checkAliasConsistency() {
+            showAliasOverwriteAlert = true
+        } else {
+            hasCheckedAliasConsistency = true
+        }
+    }
+
+    private func checkAliasConsistency() -> Bool {
+        guard let group = WindowsCursorGroup.group(for: cursor.identifier) else { return true }
+        for cursorType in group.cursorTypes where cursorType.rawValue != cursor.identifier {
+            if let alias = cape.cursor(withIdentifier: cursorType.rawValue) {
+                if alias.hotSpot != cursor.hotSpot ||
+                   alias.frameCount != cursor.frameCount ||
+                   alias.frameDuration != cursor.frameDuration {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+}
+
+// MARK: - Background Image Processing Results
+
+/// Sendable result for static image processing
+private struct StaticImageResult: Sendable {
+    let cgImage: CGImage
+    let originalWidth: Int
+    let originalHeight: Int
+    let isSquare: Bool
+}
+
+/// Sendable result for GIF processing
+private struct GIFProcessingResult: Sendable {
+    let cgImage: CGImage  // scaled sprite sheet (or single frame)
+    let frameCount: Int
+    let avgFrameDuration: Double
+    let frameWidth: Int
+    let frameHeight: Int
+    let failedFrames: Int
+    let totalSourceFrames: Int
+}
+
+/// Sendable result for Windows cursor processing
+private struct WindowsCursorProcessingResult: Sendable {
+    let cgImage: CGImage
+    let frameCount: Int
+    let frameDuration: Double
+    let hotspotX: CGFloat
+    let hotspotY: CGFloat
+    let originalWidth: Int
+    let originalHeight: Int
+}
+
+// MARK: - Nonisolated Background Processing Functions
+
+/// Process a static image (PNG/JPEG/TIFF) off the main actor
+private func _processStaticImage(data: Data) async -> StaticImageResult? {
+    guard let image = NSImage(data: data) else { return nil }
+    guard let originalBitmap = CursorImageScaler.getOriginalBitmapRep(from: image) else { return nil }
+    let w = originalBitmap.pixelsWide
+    let h = originalBitmap.pixelsHigh
+    guard let scaled = CursorImageScaler.scaleImageToStandardSize(originalBitmap) else { return nil }
+    guard let cg = scaled.cgImage else { return nil }
+    return StaticImageResult(cgImage: cg, originalWidth: w, originalHeight: h, isSquare: w == h)
+}
+
+/// Process a GIF file off the main actor
+private func _processGIF(data: Data) async -> GIFProcessingResult? {
+    guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
+    let sourceFrameCount = CGImageSourceGetCount(imageSource)
+    guard sourceFrameCount > 0 else { return nil }
+
+    // Single-frame GIF
+    if sourceFrameCount == 1 {
+        guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else { return nil }
+        let bitmap = NSBitmapImageRep(cgImage: cgImage)
+        guard let scaled = CursorImageScaler.scaleImageToStandardSize(bitmap) else { return nil }
+        guard let cg = scaled.cgImage else { return nil }
+        return GIFProcessingResult(cgImage: cg, frameCount: 1, avgFrameDuration: 0.0,
+                                   frameWidth: bitmap.pixelsWide, frameHeight: bitmap.pixelsHigh,
+                                   failedFrames: 0, totalSourceFrames: sourceFrameCount)
+    }
+
+    // Multi-frame GIF
+    var frames: [NSBitmapImageRep] = []
+    var totalDuration: Double = 0.0
+    var frameWidth: Int = 0
+    var frameHeight: Int = 0
+    var failedFrames = 0
+
+    for i in 0..<sourceFrameCount {
+        guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource, i, nil) else {
+            failedFrames += 1
+            continue
+        }
+        let bitmap = NSBitmapImageRep(cgImage: cgImage)
+        frames.append(bitmap)
+        if i == 0 {
+            frameWidth = bitmap.pixelsWide
+            frameHeight = bitmap.pixelsHigh
+        }
+        if let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, i, nil) as? [String: Any],
+           let gifProps = properties[kCGImagePropertyGIFDictionary as String] as? [String: Any] {
+            if let delay = gifProps[kCGImagePropertyGIFUnclampedDelayTime as String] as? Double, delay > 0 {
+                totalDuration += delay
+            } else if let delay = gifProps[kCGImagePropertyGIFDelayTime as String] as? Double, delay > 0 {
+                totalDuration += delay
+            } else {
+                totalDuration += 0.1
+            }
+        } else {
+            totalDuration += 0.1
+        }
+    }
+
+    guard !frames.isEmpty else { return nil }
+
+    // Downsample if needed
+    let maxFrameCount = CursorImageScaler.maxFrameCount
+    if frames.count > maxFrameCount {
+        frames = CursorImageScaler.downsampleFrames(frames, targetCount: maxFrameCount)
+    }
+
+    let avgFrameDuration = totalDuration / Double(frames.count)
+
+    guard let spriteSheet = CursorImageScaler.createSpriteSheet(from: frames, frameWidth: frameWidth, frameHeight: frameHeight) else { return nil }
+    guard let scaledSheet = CursorImageScaler.scaleSpriteSheet(spriteSheet, frameCount: frames.count, originalFrameWidth: frameWidth, originalFrameHeight: frameHeight) else { return nil }
+    guard let cg = scaledSheet.cgImage else { return nil }
+
+    return GIFProcessingResult(cgImage: cg, frameCount: frames.count, avgFrameDuration: avgFrameDuration,
+                               frameWidth: frameWidth, frameHeight: frameHeight,
+                               failedFrames: failedFrames, totalSourceFrames: sourceFrameCount)
+}
+
+/// Process a Windows cursor file off the main actor
+private func _processWindowsCursor(convertResult: WindowsCursorResult) async -> WindowsCursorProcessingResult? {
+    guard let originalBitmap = convertResult.createBitmapImageRep() else { return nil }
+
+    let originalWidth = CGFloat(convertResult.width)
+    let originalHeight = CGFloat(convertResult.height)
+    let targetSizeF = CGFloat(CursorImageScaler.standardCursorSize)
+
+    let scale = min(targetSizeF / originalWidth, targetSizeF / originalHeight)
+    let scaledWidth = originalWidth * scale
+    let scaledHeight = originalHeight * scale
+    let offsetX = (targetSizeF - scaledWidth) / 2
+    let offsetY = (targetSizeF - scaledHeight) / 2
+
+    let hotspotXPixels = CGFloat(convertResult.hotspotX) * scale + offsetX
+    let hotspotYPixels = CGFloat(convertResult.hotspotY) * scale + offsetY
+    let hotspotX = min(max(0, hotspotXPixels / 2.0), CGFloat(MCMaxHotspotValue))
+    let hotspotY = min(max(0, hotspotYPixels / 2.0), CGFloat(MCMaxHotspotValue))
+
+    let scaledBitmap: NSBitmapImageRep?
+    if convertResult.frameCount > 1 {
+        scaledBitmap = CursorImageScaler.scaleSpriteSheet(
+            originalBitmap, frameCount: convertResult.frameCount,
+            originalFrameWidth: Int(originalWidth), originalFrameHeight: Int(originalHeight))
+    } else {
+        scaledBitmap = CursorImageScaler.scaleImageToStandardSize(originalBitmap)
+    }
+
+    guard let scaled = scaledBitmap, let cg = scaled.cgImage else { return nil }
+
+    return WindowsCursorProcessingResult(
+        cgImage: cg, frameCount: convertResult.frameCount,
+        frameDuration: convertResult.frameDuration,
+        hotspotX: hotspotX, hotspotY: hotspotY,
+        originalWidth: convertResult.width, originalHeight: convertResult.height)
 }
 
 // MARK: - Cursor Preview Drop Zone (Combined preview + image drop)
@@ -582,19 +931,20 @@ struct CursorDetailView: View {
 struct CursorPreviewDropZone: View {
     @Bindable var cursor: Cursor
     var refreshTrigger: Int = 0
+    var cape: CursorLibrary?  // Needed for simple mode alias sync
     @Environment(AppState.self) private var appState
+    @AppStorage("cursorEditMode") private var editMode: Int = 0
     @State private var isTargeted = false
     @State private var showFilePicker = false
     @State private var localRefreshTrigger = 0
+    @State private var isLoadingImage = false
 
     private let targetScale: CursorScale = .scale200  // Always use 2x HiDPI
 
     /// Supported image types for file picker
-    private var supportedImageTypes: [UTType] {
-        var types: [UTType] = [.png, .jpeg, .tiff, .gif]
-        types.append(contentsOf: [.windowsCursor, .windowsAnimatedCursor])
-        return types
-    }
+    private static let supportedImageTypes: [UTType] = [
+        .png, .jpeg, .tiff, .gif, .windowsCursor, .windowsAnimatedCursor
+    ]
 
     /// Check if cursor has any valid image representation
     private var hasImage: Bool {
@@ -628,6 +978,19 @@ struct CursorPreviewDropZone: View {
                 }
             }
 
+            // Loading indicator overlay
+            if isLoadingImage {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(.ultraThinMaterial)
+                VStack(spacing: 8) {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                    Text("Loading...")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
             // Drag overlay indicator
             if isTargeted {
                 RoundedRectangle(cornerRadius: 16)
@@ -643,262 +1006,189 @@ struct CursorPreviewDropZone: View {
         .adaptiveGlass(in: RoundedRectangle(cornerRadius: 16))
         .contentShape(Rectangle())
         .onTapGesture {
-            showFilePicker = true
+            if !isLoadingImage {
+                showFilePicker = true
+            }
         }
         .dropDestination(for: URL.self) { urls, _ in
+            guard !isLoadingImage else { return false }
             handleURLDrop(urls)
+            return true
         } isTargeted: { isTargeted in
             self.isTargeted = isTargeted
         }
         .fileImporter(
             isPresented: $showFilePicker,
-            allowedContentTypes: supportedImageTypes,
+            allowedContentTypes: Self.supportedImageTypes,
             allowsMultipleSelection: false
         ) { result in
             handleFileImport(result)
         }
         .help(hasImage ? String(localized:"Click or drag to replace image") : String(localized:"Click or drag to add image"))
+        .accessibilityLabel("Cursor image drop zone")
+        .accessibilityHint(hasImage ? "Drop an image file or click to replace" : "Drop an image file or click to select")
+        .accessibilityValue(isLoadingImage ? "Loading image" : (hasImage ? "Image loaded" : "Empty"))
     }
 
-    private func handleURLDrop(_ urls: [URL]) -> Bool {
-        guard let url = urls.first else { return false }
-        return loadImage(from: url)
+    private func handleURLDrop(_ urls: [URL]) {
+        guard let url = urls.first else { return }
+        guard url.isFileURL else {
+            debugLog("Ignoring non-file URL: \(url)")
+            return
+        }
+        loadImage(from: url)
     }
 
     private func handleFileImport(_ result: Result<[URL], Error>) {
         switch result {
         case .success(let urls):
             if let url = urls.first {
-                _ = loadImage(from: url)
+                loadImage(from: url)
             }
         case .failure(let error):
             debugLog("File import error: \(error)")
         }
     }
 
-    private func loadImage(from url: URL) -> Bool {
+    private func loadImage(from url: URL) {
         guard url.startAccessingSecurityScopedResource() else {
             debugLog("Failed to access security scoped resource: \(url)")
-            return false
+            return
         }
-        defer { url.stopAccessingSecurityScopedResource() }
 
         // Check if it's a Windows cursor file
         let ext = url.pathExtension.lowercased()
         if ext == "cur" || ext == "ani" {
-            return loadWindowsCursor(from: url)
+            loadWindowsCursor(from: url)
+            return
         }
 
         // Check if it's a GIF file - handle animation
         if ext == "gif" {
-            return loadGIFImage(from: url)
+            loadGIFImage(from: url)
+            return
         }
 
-        guard let image = NSImage(contentsOf: url) else {
+        // Static image (PNG/JPEG/TIFF): read data while we have security access
+        guard let data = try? Data(contentsOf: url) else {
+            url.stopAccessingSecurityScopedResource()
             debugLog("Failed to load image from: \(url)")
             appState.validationErrorMessage = String(localized:"Unsupported image format. Supported formats: PNG, JPEG, TIFF, GIF, CUR, ANI.")
             appState.showValidationError = true
-            return false
+            return
         }
+        url.stopAccessingSecurityScopedResource()
 
-        // Get original image dimensions
-        guard let originalBitmap = CursorImageScaler.getOriginalBitmapRep(from: image) else {
-            debugLog("Failed to get bitmap rep from image")
-            return false
+        isLoadingImage = true
+        Task {
+            let result = await _processStaticImage(data: data)
+
+            isLoadingImage = false
+            guard let result = result else {
+                debugLog("Failed to scale image")
+                return
+            }
+
+            if !result.isSquare {
+                appState.imageImportWarningMessage = String(format: String(localized: "Image is not square (%d×%d). It will be scaled to fit and centered."), result.originalWidth, result.originalHeight)
+                appState.showImageImportWarning = true
+            }
+
+            cursor.setRepresentation(NSBitmapImageRep(cgImage: result.cgImage), for: targetScale)
+            cursor.size = NSSize(width: 32, height: 32)
+            appState.markAsChanged()
+            localRefreshTrigger += 1
+            appState.cursorListRefreshTrigger += 1
+            debugLog("Image imported successfully: \(result.originalWidth)x\(result.originalHeight) → \(CursorImageScaler.standardCursorSize)x\(CursorImageScaler.standardCursorSize)")
+            syncAliasesIfSimpleMode()
         }
+    }
 
-        let originalWidth = originalBitmap.pixelsWide
-        let originalHeight = originalBitmap.pixelsHigh
+    // MARK: - Simple Mode Alias Sync
 
-        // Check if image is square
-        let isSquare = originalWidth == originalHeight
-        if !isSquare {
-            // Show warning but continue with import
-            appState.imageImportWarningMessage = "Image is not square (\(originalWidth)×\(originalHeight)). It will be scaled to fit and centered."
-            appState.showImageImportWarning = true
+    /// Sync cursor to aliases if in simple mode
+    private func syncAliasesIfSimpleMode() {
+        if editMode == 0, let cape = cape {
+            cape.syncCursorToAliases(cursor)
         }
-
-        // Scale image to standard size (64x64) with aspect fit and center
-        guard let scaledBitmap = CursorImageScaler.scaleImageToStandardSize(originalBitmap) else {
-            debugLog("Failed to scale image")
-            return false
-        }
-
-        cursor.setRepresentation(scaledBitmap, for: targetScale)
-
-        // Set cursor size to 32x32 points (since we use 2x scale)
-        cursor.size = NSSize(width: 32, height: 32)
-
-        appState.markAsChanged()
-
-        // Trigger refresh - both local preview and cursor list
-        localRefreshTrigger += 1
-        appState.cursorListRefreshTrigger += 1
-
-        debugLog("Image imported successfully: \(originalWidth)x\(originalHeight) → \(CursorImageScaler.standardCursorSize)x\(CursorImageScaler.standardCursorSize)")
-        return true
     }
 
     // MARK: - GIF Import
 
     /// Load an animated GIF file and extract all frames
-    private func loadGIFImage(from url: URL) -> Bool {
+    private func loadGIFImage(from url: URL) {
         guard let data = try? Data(contentsOf: url) else {
             debugLog("Failed to read GIF data from: \(url)")
-            return false
+            url.stopAccessingSecurityScopedResource()
+            return
         }
+        url.stopAccessingSecurityScopedResource()
 
-        guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil) else {
-            debugLog("Failed to create image source from GIF")
-            return false
-        }
+        isLoadingImage = true
+        Task {
+            let result = await _processGIF(data: data)
 
-        let frameCount = CGImageSourceGetCount(imageSource)
-        guard frameCount > 0 else {
-            debugLog("GIF has no frames")
-            return false
-        }
-
-        // For single-frame GIFs, treat as static image
-        if frameCount == 1 {
-            guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else {
-                debugLog("Failed to get first GIF frame")
-                return false
-            }
-            let bitmap = NSBitmapImageRep(cgImage: cgImage)
-            guard let scaledBitmap = CursorImageScaler.scaleImageToStandardSize(bitmap) else {
-                debugLog("Failed to scale GIF image")
-                return false
+            isLoadingImage = false
+            guard let result = result else {
+                debugLog("Failed to process GIF")
+                return
             }
 
-            cursor.setRepresentation(scaledBitmap, for: targetScale)
+            // Warn if too many frames failed to decode
+            if result.failedFrames > 0 {
+                let failureRate = Double(result.failedFrames) / Double(result.totalSourceFrames)
+                debugLog("GIF import: \(result.failedFrames)/\(result.totalSourceFrames) frames failed to decode (\(String(format: "%.1f%%", failureRate * 100)))")
+
+                if failureRate > 0.2 {
+                    appState.imageImportWarningMessage = String(format: String(localized:"gif_decode_warning_message"), result.failedFrames, result.totalSourceFrames)
+                    appState.showImageImportWarning = true
+                }
+            }
+
+            cursor.setRepresentation(NSBitmapImageRep(cgImage: result.cgImage), for: targetScale)
             cursor.size = NSSize(width: 32, height: 32)
-            cursor.frameCount = 1
-            cursor.frameDuration = 0.0
-
+            cursor.frameCount = result.frameCount
+            cursor.frameDuration = CGFloat(result.avgFrameDuration)
             appState.markAsChanged()
             localRefreshTrigger += 1
             appState.cursorListRefreshTrigger += 1
 
-            debugLog("Static GIF imported successfully")
-            return true
-        }
-
-        // Multi-frame GIF - extract all frames
-        var frames: [NSBitmapImageRep] = []
-        var totalDuration: Double = 0.0
-        var frameWidth: Int = 0
-        var frameHeight: Int = 0
-        var failedFrames = 0
-
-        for i in 0..<frameCount {
-            guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource, i, nil) else {
-                failedFrames += 1
-                debugLog("Failed to decode GIF frame \(i)")
-                continue
-            }
-
-            let bitmap = NSBitmapImageRep(cgImage: cgImage)
-            frames.append(bitmap)
-
-            if i == 0 {
-                frameWidth = bitmap.pixelsWide
-                frameHeight = bitmap.pixelsHigh
-            }
-
-            // Get frame duration from GIF properties
-            if let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, i, nil) as? [String: Any],
-               let gifProperties = properties[kCGImagePropertyGIFDictionary as String] as? [String: Any] {
-                // Try unclamped delay time first, then delay time
-                if let delay = gifProperties[kCGImagePropertyGIFUnclampedDelayTime as String] as? Double, delay > 0 {
-                    totalDuration += delay
-                } else if let delay = gifProperties[kCGImagePropertyGIFDelayTime as String] as? Double, delay > 0 {
-                    totalDuration += delay
-                } else {
-                    totalDuration += 0.1  // Default 100ms per frame
-                }
+            if result.frameCount > 1 {
+                debugLog("Animated GIF imported: \(result.frameWidth)x\(result.frameHeight), \(result.frameCount) frames, \(String(format: "%.3f", result.avgFrameDuration))s/frame")
             } else {
-                totalDuration += 0.1
+                debugLog("Static GIF imported successfully")
             }
+            syncAliasesIfSimpleMode()
         }
-
-        guard !frames.isEmpty else {
-            debugLog("Failed to extract any frames from GIF")
-            return false
-        }
-
-        // Warn if too many frames failed to decode
-        if failedFrames > 0 {
-            let failureRate = Double(failedFrames) / Double(frameCount)
-            debugLog("GIF import: \(failedFrames)/\(frameCount) frames failed to decode (\(String(format: "%.1f%%", failureRate * 100)))")
-
-            if failureRate > 0.2 {
-                // More than 20% frames failed - show warning to user
-                DispatchQueue.main.async {
-                    let alert = NSAlert()
-                    alert.messageText = String(localized:"gif_decode_warning_title")
-                    alert.informativeText = String(format: String(localized:"gif_decode_warning_message"), failedFrames, frameCount)
-                    alert.alertStyle = .warning
-                    alert.addButton(withTitle: String(localized:"ok"))
-                    alert.runModal()
-                }
-            }
-        }
-
-        // Downsample frames to maximum 24 if needed (system limit)
-        let maxFrameCount = CursorImageScaler.maxFrameCount
-        if frames.count > maxFrameCount {
-            let originalFrameCount = frames.count
-            let downsampledFrames = CursorImageScaler.downsampleFrames(frames, targetCount: maxFrameCount)
-            debugLog("GIF downsampled: \(originalFrameCount) → \(downsampledFrames.count) frames")
-            frames = downsampledFrames
-            // totalDuration already represents the correct total animation time;
-            // dividing by the new frame count below gives the correct per-frame duration.
-        }
-
-        // Calculate average frame duration
-        let avgFrameDuration = totalDuration / Double(frames.count)
-
-        // Create a sprite sheet (all frames stacked vertically)
-        guard let spriteSheet = CursorImageScaler.createSpriteSheet(from: frames, frameWidth: frameWidth, frameHeight: frameHeight) else {
-            debugLog("Failed to create sprite sheet from GIF frames")
-            return false
-        }
-
-        // Scale the sprite sheet
-        guard let scaledSpriteSheet = CursorImageScaler.scaleSpriteSheet(spriteSheet, frameCount: frames.count, originalFrameWidth: frameWidth, originalFrameHeight: frameHeight) else {
-            debugLog("Failed to scale GIF sprite sheet")
-            return false
-        }
-
-        cursor.setRepresentation(scaledSpriteSheet, for: targetScale)
-        cursor.size = NSSize(width: 32, height: 32)
-        cursor.frameCount = frames.count
-        cursor.frameDuration = CGFloat(avgFrameDuration)
-
-        appState.markAsChanged()
-        localRefreshTrigger += 1
-        appState.cursorListRefreshTrigger += 1
-
-        debugLog("Animated GIF imported: \(frameWidth)x\(frameHeight), \(frames.count) frames, \(String(format: "%.3f", avgFrameDuration))s/frame")
-        return true
     }
 
     // MARK: - Windows Cursor Import
 
     /// Load a Windows cursor file (.cur or .ani)
-    private func loadWindowsCursor(from url: URL) -> Bool {
+    private func loadWindowsCursor(from url: URL) {
+        // Parse and convert while we still have security access
+        let convertResult: WindowsCursorResult
         do {
-            let result = try WindowsCursorConverter.shared.convert(fileURL: url)
+            convertResult = try WindowsCursorConverter.shared.convert(fileURL: url)
+        } catch {
+            url.stopAccessingSecurityScopedResource()
+            debugLog("Failed to convert Windows cursor: \(error.localizedDescription)")
+            appState.imageImportWarningMessage = String(format: String(localized: "Failed to import Windows cursor: %@"), error.localizedDescription)
+            appState.showImageImportWarning = true
+            return
+        }
+        url.stopAccessingSecurityScopedResource()
 
-            // Create bitmap from result
-            guard let originalBitmap = result.createBitmapImageRep() else {
-                debugLog("Failed to create bitmap from Windows cursor")
-                return false
+        isLoadingImage = true
+        Task {
+            let result = await _processWindowsCursor(convertResult: convertResult)
+
+            isLoadingImage = false
+            guard let result = result else {
+                debugLog("Failed to scale Windows cursor")
+                return
             }
 
-            // For animated cursors, set frame count and duration
-            // (downsampling already handled by WindowsCursorConverter if needed)
             if result.frameCount > 1 {
                 cursor.frameCount = result.frameCount
                 cursor.frameDuration = result.frameDuration
@@ -907,78 +1197,17 @@ struct CursorPreviewDropZone: View {
                 cursor.frameDuration = 0.0
             }
 
-            // Calculate scale factor for hotspot adjustment
-            let originalWidth = CGFloat(result.width)
-            let originalHeight = CGFloat(result.height)
-            let targetSizeF = CGFloat(CursorImageScaler.standardCursorSize)
-
-            // For animated cursors, the sprite sheet height is frameCount * height
-            // We need to scale the entire sprite sheet
-            let frameCount = result.frameCount
-            let singleFrameHeight = originalHeight
-
-            // Scale factor (same as PNG import logic)
-            let scale = min(targetSizeF / originalWidth, targetSizeF / singleFrameHeight)
-            let scaledWidth = originalWidth * scale
-            let scaledHeight = singleFrameHeight * scale
-
-            // Offset for centering (in pixels)
-            let offsetX = (targetSizeF - scaledWidth) / 2
-            let offsetY = (targetSizeF - scaledHeight) / 2
-
-            // Scale hotspot proportionally (in pixels)
-            let scaledHotspotXPixels = CGFloat(result.hotspotX) * scale + offsetX
-            let scaledHotspotYPixels = CGFloat(result.hotspotY) * scale + offsetY
-
-            // Convert from pixels to points (divide by 2 for 2x HiDPI)
-            // This is the KEY fix: hotspot is in points, not pixels
-            var scaledHotspotX = scaledHotspotXPixels / 2.0
-            var scaledHotspotY = scaledHotspotYPixels / 2.0
-
-            // Clamp hotspot to valid range [0, MCMaxHotspotValue]
-            // This prevents CGSRegisterCursorWithImages from failing with CGError=1000
-            // Use the same constant as defined in MCDefs.h
-            scaledHotspotX = min(max(0, scaledHotspotX), CGFloat(MCMaxHotspotValue))
-            scaledHotspotY = min(max(0, scaledHotspotY), CGFloat(MCMaxHotspotValue))
-
-            // Set hotspot (in points)
-            cursor.hotSpot = NSPoint(x: scaledHotspotX, y: scaledHotspotY)
-
-            // Set size to 32x32 points (since we use 2x scale, same as PNG import)
+            cursor.hotSpot = NSPoint(x: result.hotspotX, y: result.hotspotY)
             cursor.size = NSSize(width: 32, height: 32)
-
-            // Scale the bitmap to standard size (64x64 per frame)
-            if frameCount > 1 {
-                // Animated cursor: scale each frame and stack vertically
-                guard let scaledBitmap = CursorImageScaler.scaleSpriteSheet(originalBitmap, frameCount: frameCount, originalFrameWidth: Int(originalWidth), originalFrameHeight: Int(singleFrameHeight)) else {
-                    debugLog("Failed to scale animated cursor sprite sheet")
-                    return false
-                }
-                cursor.setRepresentation(scaledBitmap, for: targetScale)
-            } else {
-                // Static cursor: scale to 64x64
-                guard let scaledBitmap = CursorImageScaler.scaleImageToStandardSize(originalBitmap) else {
-                    debugLog("Failed to scale Windows cursor")
-                    return false
-                }
-                cursor.setRepresentation(scaledBitmap, for: targetScale)
-            }
+            cursor.setRepresentation(NSBitmapImageRep(cgImage: result.cgImage), for: targetScale)
 
             appState.markAsChanged()
-
-            // Trigger refresh
             localRefreshTrigger += 1
             appState.cursorListRefreshTrigger += 1
 
             let frameInfo = result.frameCount > 1 ? " (\(result.frameCount) frames)" : ""
-            debugLog("Windows cursor imported: \(result.width)x\(result.height)\(frameInfo) → \(CursorImageScaler.standardCursorSize)x\(CursorImageScaler.standardCursorSize)")
-            return true
-
-        } catch {
-            debugLog("Failed to convert Windows cursor: \(error.localizedDescription)")
-            appState.imageImportWarningMessage = "Failed to import Windows cursor: \(error.localizedDescription)"
-            appState.showImageImportWarning = true
-            return false
+            debugLog("Windows cursor imported: \(result.originalWidth)x\(result.originalHeight)\(frameInfo) → \(CursorImageScaler.standardCursorSize)x\(CursorImageScaler.standardCursorSize)")
+            syncAliasesIfSimpleMode()
         }
     }
 }

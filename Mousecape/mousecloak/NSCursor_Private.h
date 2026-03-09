@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Alex Zielenski. All rights reserved.
 //
 
+#import <AppKit/AppKit.h>
+
 @interface NSCursor (Private)
 + (void)initialize;
 + (id)_buildCursor:(id)arg1 cursorData:(struct CGPoint)arg2;

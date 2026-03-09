@@ -112,6 +112,52 @@ final class CursorLibrary: Identifiable, Hashable {
         cursors.first { $0.identifier == identifier }
     }
 
+    /// 将光标的所有属性同步到同组别名（覆盖已有）
+    func syncCursorToAliases(_ cursor: Cursor) {
+        guard let group = WindowsCursorGroup.group(for: cursor.identifier) else { return }
+        for cursorType in group.cursorTypes where cursorType.rawValue != cursor.identifier {
+            let aliasCursor = cursor.copy(withIdentifier: cursorType.rawValue)
+            // 直接操作底层 ObjC 对象，避免多次缓存失效
+            if let existing = objcLibrary.cursors.first(where: { ($0 as? MCCursor)?.identifier == cursorType.rawValue }) as? MCCursor {
+                objcLibrary.removeCursor(existing)
+            }
+            objcLibrary.addCursor(aliasCursor.underlyingCursor)
+        }
+        _cursors = nil  // 只在最后失效一次
+    }
+
+    /// 只同步元数据到别名（不深拷贝图像），用于 hotspot/fps/frameCount 变化时的快速同步
+    func syncMetadataToAliases(_ cursor: Cursor) {
+        guard let group = WindowsCursorGroup.group(for: cursor.identifier) else { return }
+        for cursorType in group.cursorTypes where cursorType.rawValue != cursor.identifier {
+            let aliasCursor = cursor.copyMetadata(withIdentifier: cursorType.rawValue)
+            // 直接操作底层 ObjC 对象，避免多次缓存失效
+            if let existing = objcLibrary.cursors.first(where: { ($0 as? MCCursor)?.identifier == cursorType.rawValue }) as? MCCursor {
+                objcLibrary.removeCursor(existing)
+            }
+            objcLibrary.addCursor(aliasCursor.underlyingCursor)
+        }
+        _cursors = nil  // 只在最后失效一次
+    }
+
+    /// 删除分组中所有光标（简易模式下删除整个分组用）
+    func removeGroupCursors(for group: WindowsCursorGroup) {
+        for cursorType in group.cursorTypes {
+            if let existing = self.cursor(withIdentifier: cursorType.rawValue) {
+                removeCursor(existing)
+            }
+        }
+    }
+
+    /// 添加光标并自动创建同组别名
+    func addCursorWithAliases(_ cursor: Cursor) {
+        if let existing = self.cursor(withIdentifier: cursor.identifier) {
+            removeCursor(existing)
+        }
+        addCursor(cursor)
+        syncCursorToAliases(cursor)
+    }
+
     // MARK: - Save & Load
 
     func save() throws {
@@ -166,6 +212,59 @@ final class CursorLibrary: Identifiable, Hashable {
         self.init(objcLibrary: library)
     }
 
+    /// Initialize from dictionary (for .cape file deserialization)
+    /// - Parameter dictionary: Dictionary containing cape data
+    /// - Returns: nil if dictionary is invalid or version is unsupported
+    convenience init?(dictionary: [String: Any]) {
+        // Extract version information
+        guard let minimumVersion = dictionary["MinimumVersion"] as? NSNumber,
+              let version = dictionary["Version"] as? NSNumber else {
+            return nil
+        }
+
+        // Check minimum version compatibility
+        let parserVersion: CGFloat = 2.0  // MCCursorParserVersion
+        if minimumVersion.doubleValue > parserVersion {
+            return nil
+        }
+
+        // Extract metadata
+        guard let capeName = dictionary["CapeName"] as? String,
+              let author = dictionary["Author"] as? String,
+              let identifier = dictionary["Identifier"] as? String,
+              let capeVersion = dictionary["CapeVersion"] as? NSNumber,
+              let cursorsDict = dictionary["Cursors"] as? [String: [String: Any]] else {
+            return nil
+        }
+
+        // Create empty library
+        let library = MCCursorLibrary(cursors: Set())
+        library.name = capeName
+        library.author = author
+        library.identifier = identifier
+        library.version = capeVersion
+
+        // Optional metadata
+        if let hiDPI = dictionary["HiDPI"] as? NSNumber {
+            library.isHiDPI = hiDPI.boolValue
+        }
+        if let cloud = dictionary["Cloud"] as? NSNumber {
+            library.isInCloud = cloud.boolValue
+        }
+
+        // Parse cursors
+        let doubleVersion = version.doubleValue
+        for (cursorIdentifier, cursorDict) in cursorsDict {
+            guard let cursor = Cursor(dictionary: cursorDict, version: doubleVersion) else {
+                continue
+            }
+            cursor.identifier = cursorIdentifier
+            library.addCursor(cursor.underlyingCursor)
+        }
+
+        self.init(objcLibrary: library)
+    }
+
     // MARK: - ObjC Bridge
 
     /// Get the underlying ObjC library object
@@ -200,5 +299,188 @@ extension CursorLibrary {
         return standardCursors.allSatisfy { standard in
             identifiers.contains { $0.contains(standard) }
         }
+    }
+}
+
+// MARK: - Serialization
+
+extension CursorLibrary {
+    /// Convert library to dictionary representation (for .cape file serialization)
+    /// - Returns: Dictionary compatible with ObjC MCCursorLibrary format
+    func toDictionary() -> [String: Any] {
+        var dict: [String: Any] = [:]
+
+        // Version information
+        dict["MinimumVersion"] = NSNumber(value: 2.0)
+        dict["Version"] = NSNumber(value: 2.0)
+
+        // Metadata
+        dict["CapeName"] = name
+        dict["CapeVersion"] = NSNumber(value: version)
+        dict["Cloud"] = NSNumber(value: isInCloud)
+        dict["Author"] = author
+        dict["HiDPI"] = NSNumber(value: isHiDPI)
+        dict["Identifier"] = identifier
+
+        // Cursors dictionary
+        var cursorsDict: [String: [String: Any]] = [:]
+        for cursor in cursors {
+            cursorsDict[cursor.identifier] = cursor.toDictionary()
+        }
+        dict["Cursors"] = cursorsDict
+
+        return dict
+    }
+
+    /// Write library to file as binary plist
+    /// - Parameter url: Target file URL
+    /// - Throws: Error if write fails
+    func write(to url: URL) throws {
+        let dict = toDictionary() as NSDictionary
+        let success = dict.write(to: url, atomically: true)
+        if !success {
+            throw NSError(
+                domain: "com.sdmj76.mousecape.error",
+                code: -2,
+                userInfo: [
+                    NSLocalizedDescriptionKey: "Failed to save cape",
+                    NSLocalizedFailureReasonErrorKey: "Could not write to file"
+                ]
+            )
+        }
+    }
+}
+
+// MARK: - Validation
+
+extension CursorLibrary {
+    /// Validation error types
+    enum ValidationError: LocalizedError {
+        case frameCountExceeded(cursorName: String, count: Int, max: Int)
+        case hotspotOutOfBounds(cursorName: String, details: String)
+        case imageTooLarge(cursorName: String, width: Int, height: Int, max: Int)
+        case multipleErrors(errors: [ValidationError])
+
+        var errorDescription: String? {
+            switch self {
+            case .frameCountExceeded(let name, let count, let max):
+                return "Frame count exceeded for \(name): \(count) frames (max: \(max))"
+            case .hotspotOutOfBounds(let name, let details):
+                return "Hotspot out of bounds for \(name): \(details)"
+            case .imageTooLarge(let name, let width, let height, let max):
+                return "Image too large for \(name): \(width)×\(height) (max: \(max)×\(max))"
+            case .multipleErrors(let errors):
+                let messages = errors.map { $0.errorDescription ?? "Unknown error" }
+                return "Multiple validation errors:\n" + messages.joined(separator: "\n")
+            }
+        }
+    }
+
+    /// Validate the cape for system compatibility
+    /// - Throws: ValidationError if validation fails
+    func validate() throws {
+        let maxFrameCount = 24  // MCMaxFrameCount
+        let maxHotspotValue: CGFloat = 31.99  // MCMaxHotspotValue
+        let maxImportSize = 512  // MCMaxImportSize
+
+        var errors: [ValidationError] = []
+
+        for cursor in cursors {
+            let cursorName = cursor.displayName
+
+            // Check frame count
+            if cursor.frameCount > maxFrameCount {
+                errors.append(.frameCountExceeded(
+                    cursorName: cursorName,
+                    count: cursor.frameCount,
+                    max: maxFrameCount
+                ))
+            }
+
+            // Check hotspot bounds
+            var hotspotDetails: [String] = []
+            if cursor.hotSpot.x < 0 {
+                hotspotDetails.append("X is negative (\(cursor.hotSpot.x))")
+            } else if cursor.hotSpot.x > maxHotspotValue {
+                hotspotDetails.append("X exceeds maximum (\(cursor.hotSpot.x) > \(maxHotspotValue))")
+            }
+
+            if cursor.hotSpot.y < 0 {
+                hotspotDetails.append("Y is negative (\(cursor.hotSpot.y))")
+            } else if cursor.hotSpot.y > maxHotspotValue {
+                hotspotDetails.append("Y exceeds maximum (\(cursor.hotSpot.y) > \(maxHotspotValue))")
+            }
+
+            if !hotspotDetails.isEmpty {
+                errors.append(.hotspotOutOfBounds(
+                    cursorName: cursorName,
+                    details: hotspotDetails.joined(separator: ", ")
+                ))
+            }
+
+            // Check image size (check all representations)
+            for scale in CursorScale.allCases {
+                if let rep = cursor.representation(for: scale) {
+                    let width = rep.pixelsWide
+                    let height = rep.pixelsHigh / cursor.frameCount  // Per-frame height
+                    if width > maxImportSize || height > maxImportSize {
+                        errors.append(.imageTooLarge(
+                            cursorName: cursorName,
+                            width: width,
+                            height: height,
+                            max: maxImportSize
+                        ))
+                        break  // Only report once per cursor
+                    }
+                }
+            }
+        }
+
+        if !errors.isEmpty {
+            if errors.count == 1 {
+                throw errors[0]
+            } else {
+                throw ValidationError.multipleErrors(errors: errors)
+            }
+        }
+    }
+}
+
+// MARK: - Change Tracking
+
+extension CursorLibrary {
+    /// Document change type
+    enum ChangeType {
+        case done
+        case undone
+        case redone
+        case cleared
+    }
+
+    /// Current change count
+    var changeCount: Int {
+        (objcLibrary.value(forKey: "changeCount") as? NSNumber)?.intValue ?? 0
+    }
+
+    /// Last saved change count
+    var lastChangeCount: Int {
+        (objcLibrary.value(forKey: "lastChangeCount") as? NSNumber)?.intValue ?? 0
+    }
+
+    /// Update change count
+    /// - Parameter type: Type of change
+    func updateChangeCount(_ type: ChangeType) {
+        let nsType: NSDocument.ChangeType
+        switch type {
+        case .done:
+            nsType = .changeDone
+        case .undone:
+            nsType = .changeUndone
+        case .redone:
+            nsType = .changeRedone
+        case .cleared:
+            nsType = .changeCleared
+        }
+        objcLibrary.updateChangeCount(nsType)
     }
 }

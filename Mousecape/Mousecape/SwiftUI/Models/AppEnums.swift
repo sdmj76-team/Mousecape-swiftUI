@@ -250,3 +250,86 @@ enum CursorType: String, CaseIterable, Identifiable {
         }
     }
 }
+
+// MARK: - Windows Cursor Group
+
+/// Windows 光标分组（简易模式用）
+enum WindowsCursorGroup: Int, CaseIterable, Identifiable {
+    case normalSelect = 0
+    case helpSelect = 1
+    case workingInBackground = 2
+    case busy = 3
+    case precisionSelect = 4
+    case textSelect = 5
+    case handwriting = 6
+    case unavailable = 7
+    case verticalResize = 8
+    case horizontalResize = 9
+    case diagonalResize1 = 10
+    case diagonalResize2 = 11
+    case move = 12
+    case alternateSelect = 13
+    case linkSelect = 14
+
+    var id: Int { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .normalSelect: String(localized: "Normal Select")
+        case .helpSelect: String(localized: "Help Select")
+        case .workingInBackground: String(localized: "Working in Background")
+        case .busy: String(localized: "Busy")
+        case .precisionSelect: String(localized: "Precision Select")
+        case .textSelect: String(localized: "Text Select")
+        case .handwriting: String(localized: "Handwriting")
+        case .unavailable: String(localized: "Unavailable")
+        case .verticalResize: String(localized: "Vertical Resize")
+        case .horizontalResize: String(localized: "Horizontal Resize")
+        case .diagonalResize1: String(localized: "Diagonal Resize ↖↘")
+        case .diagonalResize2: String(localized: "Diagonal Resize ↗↙")
+        case .move: String(localized: "Move")
+        case .alternateSelect: String(localized: "Alternate Select")
+        case .linkSelect: String(localized: "Link Select")
+        }
+    }
+
+    var previewSymbol: String {
+        switch self {
+        case .normalSelect: "cursorarrow"
+        case .helpSelect: "questionmark.circle"
+        case .workingInBackground: "hourglass"
+        case .busy: "hourglass.circle"
+        case .precisionSelect: "plus.circle"
+        case .textSelect: "character.cursor.ibeam"
+        case .handwriting: "pencil"
+        case .unavailable: "nosign"
+        case .verticalResize: "arrow.up.and.down"
+        case .horizontalResize: "arrow.left.and.right"
+        case .diagonalResize1: "arrow.up.left.and.arrow.down.right"
+        case .diagonalResize2: "arrow.up.right.and.arrow.down.left"
+        case .move: "arrow.up.and.down.and.arrow.left.and.right"
+        case .alternateSelect: "arrow.up.forward"
+        case .linkSelect: "hand.point.up"
+        }
+    }
+
+    /// 此分组对应的所有 macOS 光标类型（复用 WindowsINFParser 的映射）
+    var cursorTypes: [CursorType] {
+        WindowsINFParser.schemeRegPositionMapping[rawValue]
+    }
+
+    /// 此分组的「主光标」类型（第一个）
+    var primaryType: CursorType? {
+        cursorTypes.first
+    }
+
+    /// 根据光标 identifier 查找所属分组
+    static func group(for identifier: String) -> WindowsCursorGroup? {
+        for group in allCases {
+            if group.cursorTypes.contains(where: { $0.rawValue == identifier }) {
+                return group
+            }
+        }
+        return nil
+    }
+}

@@ -18,8 +18,6 @@ typedef NS_ENUM(NSUInteger, MCCursorScale) {
     MCCursorScale1000 = 1000
 };
 
-extern MCCursorScale cursorScaleForScale(CGFloat scale);
-
 @interface MCCursor : NSObject <NSCopying>
 @property (nonatomic, copy)     NSString          *identifier;
 @property (nonatomic, readonly) NSString          *name;
@@ -35,13 +33,10 @@ extern MCCursorScale cursorScaleForScale(CGFloat scale);
 
 - (void)setRepresentation:(nullable NSImageRep *)imageRep forScale:(MCCursorScale)scale;
 - (void)removeRepresentationForScale:(MCCursorScale)scale;
-- (void)addFrame:(NSImageRep *)frame forScale:(MCCursorScale)scale;
 
 - (nullable NSImageRep *)representationForScale:(MCCursorScale)scale;
-- (nullable NSImageRep *)representationWithScale:(CGFloat)scale;
 
 - (NSDictionary *)dictionaryRepresentation;
-+ (nullable NSImageRep *)composeRepresentationWithFrames:(NSArray *)frames;
 
 // Derived Properties
 - (nullable NSImage *)imageWithAllReps;

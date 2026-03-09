@@ -22,25 +22,18 @@ extern NSString *const MCLibraryDidSaveNotificationName;
 @property (nonatomic, copy)   NSNumber *version;
 @property (nonatomic, copy, nullable)   NSURL    *fileURL;
 @property (nonatomic, weak, nullable)   MCLibraryController *library;
-@property (nonatomic, readonly) NSUndoManager *undoManager;
 @property (nonatomic, readonly, getter=isDirty) BOOL dirty;
 @property (nonatomic, assign, getter = isInCloud) BOOL inCloud;
 @property (nonatomic, assign, getter = isHiDPI)   BOOL hiDPI;
 
-+ (nullable MCCursorLibrary *)cursorLibraryWithContentsOfFile:(NSString *)path;
 + (nullable MCCursorLibrary *)cursorLibraryWithContentsOfURL:(NSURL *)URL;
-+ (nullable MCCursorLibrary *)cursorLibraryWithDictionary:(NSDictionary *)dictionary;
-+ (MCCursorLibrary *)cursorLibraryWithCursors:(NSSet *)cursors;
 
-- (nullable instancetype)initWithContentsOfFile:(NSString *)path;
 - (nullable instancetype)initWithContentsOfURL:(NSURL *)URL;
 - (nullable instancetype)initWithDictionary:(NSDictionary *)dictionary;
 - (instancetype)initWithCursors:(NSSet *)cursors;
 
-- (NSSet *)cursorsWithIdentifier:(NSString *)identifier;
 - (void)addCursor:(MCCursor *)cursor;
 - (void)removeCursor:(MCCursor *)cursor;
-- (void)removeCursorsWithIdentifier:(NSString *)identifier;
 
 - (NSDictionary *)dictionaryRepresentation;
 - (BOOL)writeToFile:(NSString *)file atomically:(BOOL)atomically;

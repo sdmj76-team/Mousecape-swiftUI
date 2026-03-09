@@ -1,0 +1,918 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9CB312EE7052700D9F29C682 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5B757C0780EA0A10BF1469 /* main.swift */; };
+		DE3661FD2EFAAAB600D94521 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661F52EFAAAB600D94521 /* MainView.swift */; };
+		DE3661FE2EFAAAB600D94521 /* EditOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661F32EFAAAB600D94521 /* EditOverlayView.swift */; };
+		DE3661FF2EFAAAB600D94521 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661EC2EFAAAB600D94521 /* AppState.swift */; };
+		DE3662002EFAAAB600D94521 /* CursorLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661EE2EFAAAB600D94521 /* CursorLibrary.swift */; };
+		DE3662012EFAAAB600D94521 /* MousecapeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661F92EFAAAB600D94521 /* MousecapeApp.swift */; };
+		DE3662022EFAAAB600D94521 /* CapeContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661F12EFAAAB600D94521 /* CapeContextMenu.swift */; };
+		DE3662032EFAAAB600D94521 /* GlassEffectContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661E92EFAAAB600D94521 /* GlassEffectContainer.swift */; };
+		DE3662042EFAAAB600D94521 /* MousecapeCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661F62EFAAAB600D94521 /* MousecapeCommands.swift */; };
+		DE3662052EFAAAB600D94521 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661F72EFAAAB600D94521 /* SettingsView.swift */; };
+		DE3662062EFAAAB600D94521 /* AnimatingCursorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661E82EFAAAB600D94521 /* AnimatingCursorView.swift */; };
+		DE3662072EFAAAB600D94521 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661F42EFAAAB600D94521 /* HomeView.swift */; };
+		DE3662082EFAAAB600D94521 /* CapePreviewPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661F22EFAAAB600D94521 /* CapePreviewPanel.swift */; };
+		DE3662092EFAAAB600D94521 /* Cursor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661ED2EFAAAB600D94521 /* Cursor.swift */; };
+		DE36620A2EFAAAB600D94521 /* AppEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3661EB2EFAAAB600D94521 /* AppEnums.swift */; };
+		DE4A92B52F4F8C0000288163 /* listen.m in Sources */ = {isa = PBXBuildFile; fileRef = FA359851189E035900288163 /* listen.m */; };
+		DE4A92B62F4F8C0100288163 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA359844189DBA3800288163 /* SystemConfiguration.framework */; };
+		DE525A822EFE93C200A315A3 /* WindowsCursorConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE525A7F2EFE93C200A315A3 /* WindowsCursorConverter.swift */; };
+		DE525A832EFE93C200A315A3 /* OrderedSetSortedInsert.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE525A7E2EFE93C200A315A3 /* OrderedSetSortedInsert.swift */; };
+		DE525A852EFE93C200A315A3 /* DirectoryLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE525A7D2EFE93C200A315A3 /* DirectoryLocations.swift */; };
+		DE53D4032F3B398800011C1F /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = DE53D4022F3B398800011C1F /* Localizable.xcstrings */; };
+		DE654C422F0A6DB40025E5A0 /* WindowsINFParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE654C412F0A6DB40025E5A0 /* WindowsINFParser.swift */; };
+		DE6B14B42F0512EE00742257 /* WindowsCursorParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6B14B32F0512EE00742257 /* WindowsCursorParser.swift */; };
+		DEAB0D642F39ADB000DB9EB0 /* CursorImageScaler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB0D632F39ADB000DB9EB0 /* CursorImageScaler.swift */; };
+		DEBC96002F16577D004E6C07 /* MCLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = DEBC95FF2F16577D004E6C07 /* MCLogger.m */; };
+		DEBC96032F1657A4004E6C07 /* DebugLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEBC96022F1657A4004E6C07 /* DebugLogger.swift */; };
+		DEBC96042F165800004E6C07 /* MCLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = DEBC95FF2F16577D004E6C07 /* MCLogger.m */; };
+		DED4B7D62F39BD5800CAFCCE /* CapeInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED4B7D42F39BD5800CAFCCE /* CapeInfoView.swift */; };
+		DED4B7D82F39BD5800CAFCCE /* AddCursorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED4B7D32F39BD5800CAFCCE /* AddCursorSheet.swift */; };
+		DED4B7DC2F39C14F00CAFCCE /* AppState+WindowsImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED4B7DB2F39C14F00CAFCCE /* AppState+WindowsImport.swift */; };
+		FA000001UTITYPES00000001 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA000001UTITYPES00000000 /* UniformTypeIdentifiers.framework */; };
+		FA35983F189DA3BC00288163 /* MCPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = FA35983E189DA3BC00288163 /* MCPrefs.m */; };
+		FA359840189DA3C100288163 /* MCPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = FA35983E189DA3BC00288163 /* MCPrefs.m */; };
+		FA359849189DC40100288163 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA359848189DC40100288163 /* Security.framework */; };
+		FA35984D189DC55A00288163 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA35984C189DC55A00288163 /* ServiceManagement.framework */; };
+		FA359852189E035900288163 /* listen.m in Sources */ = {isa = PBXBuildFile; fileRef = FA359851189E035900288163 /* listen.m */; };
+		FA359853189E040D00288163 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA359844189DBA3800288163 /* SystemConfiguration.framework */; };
+		FA7582B8193D377300CE223C /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA7582B7193D377300CE223C /* ApplicationServices.framework */; };
+		FA8FF76B189D664400750E51 /* restore.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8FF76A189D664400750E51 /* restore.m */; };
+		FA8FF76E189D66CB00750E51 /* backup.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8FF76D189D66CB00750E51 /* backup.m */; };
+		FA8FF771189D66D800750E51 /* apply.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8FF770189D66D800750E51 /* apply.m */; };
+		FA8FF774189D67B100750E51 /* create.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8FF773189D67B100750E51 /* create.m */; };
+		FAAEF8F7189EB34700145DF8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAAEF8F6189EB34700145DF8 /* QuartzCore.framework */; };
+		FAAEF94E189EFC9300145DF8 /* create.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8FF773189D67B100750E51 /* create.m */; };
+		FAAEF94F189EFC9600145DF8 /* backup.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8FF76D189D66CB00750E51 /* backup.m */; };
+		FAAEF950189EFC9800145DF8 /* apply.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8FF770189D66D800750E51 /* apply.m */; };
+		FAAEF951189F0CC300145DF8 /* restore.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8FF76A189D664400750E51 /* restore.m */; };
+		FAAEF957189F4ED300145DF8 /* scale.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAEF956189F4ED300145DF8 /* scale.m */; };
+		FAAEF958189F4F8200145DF8 /* scale.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAEF956189F4ED300145DF8 /* scale.m */; };
+		FABA44D421D9D7D0009B10D9 /* NSBitmapImageRep+ColorSpace.m in Sources */ = {isa = PBXBuildFile; fileRef = FABA44D321D9D7D0009B10D9 /* NSBitmapImageRep+ColorSpace.m */; };
+		FABA44D521D9D947009B10D9 /* NSBitmapImageRep+ColorSpace.m in Sources */ = {isa = PBXBuildFile; fileRef = FABA44D321D9D7D0009B10D9 /* NSBitmapImageRep+ColorSpace.m */; };
+		FAC69F65189D603C00BC829D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAC69F64189D603C00BC829D /* Cocoa.framework */; };
+		FAC69F7D189D603C00BC829D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAC69F7C189D603C00BC829D /* Images.xcassets */; };
+		FAC69FD4189D609B00BC829D /* GBCommandLineParser.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC69FCF189D609B00BC829D /* GBCommandLineParser.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		FAC69FD5189D609B00BC829D /* GBOptionsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC69FD1189D609B00BC829D /* GBOptionsHelper.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		FAC69FD6189D609B00BC829D /* GBSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC69FD3189D609B00BC829D /* GBSettings.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		FAC69FDA189D632B00BC829D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAC69F64189D603C00BC829D /* Cocoa.framework */; };
+		FAC69FDC189D636700BC829D /* MCDefs.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC69FDB189D636700BC829D /* MCDefs.m */; };
+		FAC69FDD189D636700BC829D /* MCDefs.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC69FDB189D636700BC829D /* MCDefs.m */; };
+		FAE5D57E19527359007620DE /* mousecloak in Copy Tool */ = {isa = PBXBuildFile; fileRef = FAC69FAD189D608900BC829D /* mousecloak */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		FAEE652F18A047E8003AA182 /* MCLibraryController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEE651718A047E8003AA182 /* MCLibraryController.m */; };
+		FAEE653218A047E8003AA182 /* MCCursor.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEE651E18A047E8003AA182 /* MCCursor.m */; };
+		FAEE653318A047E8003AA182 /* MCCursorLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEE652018A047E8003AA182 /* MCCursorLibrary.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FA359846189DBEB700288163 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FAC69F59189D603C00BC829D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FAC69FAC189D608900BC829D;
+			remoteInfo = mousecloak;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FAC69FAB189D608900BC829D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		FAE5D57D1952734F007620DE /* Copy Tool */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				FAE5D57E19527359007620DE /* mousecloak in Copy Tool */,
+			);
+			name = "Copy Tool";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		7A5B757C0780EA0A10BF1469 /* main.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = main.swift; path = Mousecape/mousecloak/main.swift; sourceTree = "<group>"; };
+		CF122E4B298E5744EE9F0578 /* mousecloak-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "mousecloak-Bridging-Header.h"; path = "Mousecape/mousecloak/mousecloak-Bridging-Header.h"; sourceTree = "<group>"; };
+		DE3661E82EFAAAB600D94521 /* AnimatingCursorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatingCursorView.swift; sourceTree = "<group>"; };
+		DE3661E92EFAAAB600D94521 /* GlassEffectContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassEffectContainer.swift; sourceTree = "<group>"; };
+		DE3661EB2EFAAAB600D94521 /* AppEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnums.swift; sourceTree = "<group>"; };
+		DE3661EC2EFAAAB600D94521 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		DE3661ED2EFAAAB600D94521 /* Cursor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cursor.swift; sourceTree = "<group>"; };
+		DE3661EE2EFAAAB600D94521 /* CursorLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorLibrary.swift; sourceTree = "<group>"; };
+		DE3661F12EFAAAB600D94521 /* CapeContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapeContextMenu.swift; sourceTree = "<group>"; };
+		DE3661F22EFAAAB600D94521 /* CapePreviewPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapePreviewPanel.swift; sourceTree = "<group>"; };
+		DE3661F32EFAAAB600D94521 /* EditOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOverlayView.swift; sourceTree = "<group>"; };
+		DE3661F42EFAAAB600D94521 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		DE3661F52EFAAAB600D94521 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		DE3661F62EFAAAB600D94521 /* MousecapeCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MousecapeCommands.swift; sourceTree = "<group>"; };
+		DE3661F72EFAAAB600D94521 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		DE3661F92EFAAAB600D94521 /* MousecapeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MousecapeApp.swift; sourceTree = "<group>"; };
+		DE525A7D2EFE93C200A315A3 /* DirectoryLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryLocations.swift; sourceTree = "<group>"; };
+		DE525A7E2EFE93C200A315A3 /* OrderedSetSortedInsert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderedSetSortedInsert.swift; sourceTree = "<group>"; };
+		DE525A7F2EFE93C200A315A3 /* WindowsCursorConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowsCursorConverter.swift; sourceTree = "<group>"; };
+		DE53D4022F3B398800011C1F /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		DE654C412F0A6DB40025E5A0 /* WindowsINFParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowsINFParser.swift; sourceTree = "<group>"; };
+		DE6B14B32F0512EE00742257 /* WindowsCursorParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowsCursorParser.swift; sourceTree = "<group>"; };
+		DEAB0D632F39ADB000DB9EB0 /* CursorImageScaler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorImageScaler.swift; sourceTree = "<group>"; };
+		DEBC95FE2F16577D004E6C07 /* MCLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCLogger.h; sourceTree = "<group>"; };
+		DEBC95FF2F16577D004E6C07 /* MCLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCLogger.m; sourceTree = "<group>"; };
+		DEBC96022F1657A4004E6C07 /* DebugLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogger.swift; sourceTree = "<group>"; };
+		DED4B7D32F39BD5800CAFCCE /* AddCursorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCursorSheet.swift; sourceTree = "<group>"; };
+		DED4B7D42F39BD5800CAFCCE /* CapeInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapeInfoView.swift; sourceTree = "<group>"; };
+		DED4B7DB2F39C14F00CAFCCE /* AppState+WindowsImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+WindowsImport.swift"; sourceTree = "<group>"; };
+		FA000001UTITYPES00000000 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
+		FA1DC01719527A56009E879C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		FA254779189D85890038E1D9 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		FA35983D189DA3BC00288163 /* MCPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCPrefs.h; sourceTree = "<group>"; };
+		FA35983E189DA3BC00288163 /* MCPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCPrefs.m; sourceTree = "<group>"; };
+		FA359844189DBA3800288163 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		FA359848189DC40100288163 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		FA35984C189DC55A00288163 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
+		FA359850189E035200288163 /* listen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listen.h; sourceTree = "<group>"; };
+		FA359851189E035900288163 /* listen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = listen.m; sourceTree = "<group>"; };
+		FA5733A32495667900103FCF /* Mousecape.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Mousecape.entitlements; sourceTree = "<group>"; };
+		FA7582B7193D377300CE223C /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = ../../../../../../../../../System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<group>"; };
+		FA8FF769189D663B00750E51 /* restore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = restore.h; sourceTree = "<group>"; };
+		FA8FF76A189D664400750E51 /* restore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = restore.m; sourceTree = "<group>"; };
+		FA8FF76C189D66C400750E51 /* backup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = backup.h; sourceTree = "<group>"; };
+		FA8FF76D189D66CB00750E51 /* backup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = backup.m; sourceTree = "<group>"; };
+		FA8FF76F189D66D100750E51 /* apply.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = apply.h; sourceTree = "<group>"; };
+		FA8FF770189D66D800750E51 /* apply.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = apply.m; sourceTree = "<group>"; };
+		FA8FF772189D67AA00750E51 /* create.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = create.h; sourceTree = "<group>"; };
+		FA8FF773189D67B100750E51 /* create.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = create.m; sourceTree = "<group>"; };
+		FAAEF8F6189EB34700145DF8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		FAAEF955189F4ECC00145DF8 /* scale.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scale.h; sourceTree = "<group>"; };
+		FAAEF956189F4ED300145DF8 /* scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = scale.m; sourceTree = "<group>"; };
+		FABA44D221D9D7D0009B10D9 /* NSBitmapImageRep+ColorSpace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+ColorSpace.h"; sourceTree = "<group>"; };
+		FABA44D321D9D7D0009B10D9 /* NSBitmapImageRep+ColorSpace.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBitmapImageRep+ColorSpace.m"; sourceTree = "<group>"; };
+		FAC69F61189D603C00BC829D /* Mousecape.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mousecape.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAC69F64189D603C00BC829D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		FAC69F67189D603C00BC829D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		FAC69F68189D603C00BC829D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		FAC69F69189D603C00BC829D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FAC69F6C189D603C00BC829D /* Mousecape-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Mousecape-Info.plist"; sourceTree = "<group>"; };
+		FAC69F72189D603C00BC829D /* Mousecape-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mousecape-Prefix.pch"; sourceTree = "<group>"; };
+		FAC69F7C189D603C00BC829D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		FAC69F9D189D605300BC829D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FAC69FAD189D608900BC829D /* mousecloak */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mousecloak; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAC69FB3189D608900BC829D /* mousecloak-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "mousecloak-Prefix.pch"; sourceTree = "<group>"; };
+		FAC69FBA189D609B00BC829D /* CarbonHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarbonHelpers.h; sourceTree = "<group>"; };
+		FAC69FBB189D609B00BC829D /* CGSAccessibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSAccessibility.h; sourceTree = "<group>"; };
+		FAC69FBC189D609B00BC829D /* CGSCIFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSCIFilter.h; sourceTree = "<group>"; };
+		FAC69FBD189D609B00BC829D /* CGSConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSConnection.h; sourceTree = "<group>"; };
+		FAC69FBE189D609B00BC829D /* CGSCursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSCursor.h; sourceTree = "<group>"; };
+		FAC69FBF189D609B00BC829D /* CGSDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSDebug.h; sourceTree = "<group>"; };
+		FAC69FC0189D609B00BC829D /* CGSDisplays.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSDisplays.h; sourceTree = "<group>"; };
+		FAC69FC1189D609B00BC829D /* CGSHotKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSHotKeys.h; sourceTree = "<group>"; };
+		FAC69FC2189D609B00BC829D /* CGSInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSInternal.h; sourceTree = "<group>"; };
+		FAC69FC3189D609B00BC829D /* CGSMisc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSMisc.h; sourceTree = "<group>"; };
+		FAC69FC4189D609B00BC829D /* CGSNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSNotifications.h; sourceTree = "<group>"; };
+		FAC69FC5189D609B00BC829D /* CGSRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSRegion.h; sourceTree = "<group>"; };
+		FAC69FC6189D609B00BC829D /* CGSSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSSession.h; sourceTree = "<group>"; };
+		FAC69FC7189D609B00BC829D /* CGSTransitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSTransitions.h; sourceTree = "<group>"; };
+		FAC69FC8189D609B00BC829D /* CGSWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSWindow.h; sourceTree = "<group>"; };
+		FAC69FC9189D609B00BC829D /* CGSWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGSWorkspace.h; sourceTree = "<group>"; };
+		FAC69FCA189D609B00BC829D /* MCDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCDefs.h; sourceTree = "<group>"; };
+		FAC69FCB189D609B00BC829D /* NSCursor_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCursor_Private.h; sourceTree = "<group>"; };
+		FAC69FCE189D609B00BC829D /* GBCommandLineParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBCommandLineParser.h; sourceTree = "<group>"; };
+		FAC69FCF189D609B00BC829D /* GBCommandLineParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBCommandLineParser.m; sourceTree = "<group>"; };
+		FAC69FD0189D609B00BC829D /* GBOptionsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBOptionsHelper.h; sourceTree = "<group>"; };
+		FAC69FD1189D609B00BC829D /* GBOptionsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBOptionsHelper.m; sourceTree = "<group>"; };
+		FAC69FD2189D609B00BC829D /* GBSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBSettings.h; sourceTree = "<group>"; };
+		FAC69FD3189D609B00BC829D /* GBSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBSettings.m; sourceTree = "<group>"; };
+		FAC69FD7189D623C00BC829D /* Mousecape-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mousecape-Prefix.pch"; sourceTree = "<group>"; };
+		FAC69FDB189D636700BC829D /* MCDefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCDefs.m; sourceTree = "<group>"; };
+		FAEE651618A047E8003AA182 /* MCLibraryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCLibraryController.h; sourceTree = "<group>"; };
+		FAEE651718A047E8003AA182 /* MCLibraryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCLibraryController.m; sourceTree = "<group>"; };
+		FAEE651D18A047E8003AA182 /* MCCursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCCursor.h; sourceTree = "<group>"; };
+		FAEE651E18A047E8003AA182 /* MCCursor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCCursor.m; sourceTree = "<group>"; };
+		FAEE651F18A047E8003AA182 /* MCCursorLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCCursorLibrary.h; sourceTree = "<group>"; };
+		FAEE652018A047E8003AA182 /* MCCursorLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCCursorLibrary.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FAC69F5E189D603C00BC829D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAAEF8F7189EB34700145DF8 /* QuartzCore.framework in Frameworks */,
+				FA35984D189DC55A00288163 /* ServiceManagement.framework in Frameworks */,
+				FA000001UTITYPES00000001 /* UniformTypeIdentifiers.framework in Frameworks */,
+				FA359849189DC40100288163 /* Security.framework in Frameworks */,
+				DE4A92B62F4F8C0100288163 /* SystemConfiguration.framework in Frameworks */,
+				FAC69F65189D603C00BC829D /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAC69FAA189D608900BC829D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA7582B8193D377300CE223C /* ApplicationServices.framework in Frameworks */,
+				FA359853189E040D00288163 /* SystemConfiguration.framework in Frameworks */,
+				FAC69FDA189D632B00BC829D /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DE3661EA2EFAAAB600D94521 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				DE3661E82EFAAAB600D94521 /* AnimatingCursorView.swift */,
+				DE3661E92EFAAAB600D94521 /* GlassEffectContainer.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		DE3661EF2EFAAAB600D94521 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DED4B7DB2F39C14F00CAFCCE /* AppState+WindowsImport.swift */,
+				DE3661EB2EFAAAB600D94521 /* AppEnums.swift */,
+				DE3661EC2EFAAAB600D94521 /* AppState.swift */,
+				DE3661ED2EFAAAB600D94521 /* Cursor.swift */,
+				DE3661EE2EFAAAB600D94521 /* CursorLibrary.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		DE3661F82EFAAAB600D94521 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DED4B7D32F39BD5800CAFCCE /* AddCursorSheet.swift */,
+				DED4B7D42F39BD5800CAFCCE /* CapeInfoView.swift */,
+				DE3661F12EFAAAB600D94521 /* CapeContextMenu.swift */,
+				DE3661F22EFAAAB600D94521 /* CapePreviewPanel.swift */,
+				DE3661F32EFAAAB600D94521 /* EditOverlayView.swift */,
+				DE3661F42EFAAAB600D94521 /* HomeView.swift */,
+				DE3661F52EFAAAB600D94521 /* MainView.swift */,
+				DE3661F62EFAAAB600D94521 /* MousecapeCommands.swift */,
+				DE3661F72EFAAAB600D94521 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DE3661FB2EFAAAB600D94521 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				DE525A812EFE93C200A315A3 /* Utilities */,
+				DE3661EA2EFAAAB600D94521 /* Helpers */,
+				DE3661EF2EFAAAB600D94521 /* Models */,
+				DE3661F82EFAAAB600D94521 /* Views */,
+				DE3661F92EFAAAB600D94521 /* MousecapeApp.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		DE525A812EFE93C200A315A3 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				DEAB0D632F39ADB000DB9EB0 /* CursorImageScaler.swift */,
+				DEBC96022F1657A4004E6C07 /* DebugLogger.swift */,
+				DE654C412F0A6DB40025E5A0 /* WindowsINFParser.swift */,
+				DE6B14B32F0512EE00742257 /* WindowsCursorParser.swift */,
+				DE525A7D2EFE93C200A315A3 /* DirectoryLocations.swift */,
+				DE525A7E2EFE93C200A315A3 /* OrderedSetSortedInsert.swift */,
+				DE525A7F2EFE93C200A315A3 /* WindowsCursorConverter.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		FAC69F58189D603C00BC829D = {
+			isa = PBXGroup;
+			children = (
+				FAC69F6A189D603C00BC829D /* Mousecape */,
+				FAC69FAF189D608900BC829D /* mousecloak */,
+				FAC69F63189D603C00BC829D /* Frameworks */,
+				FAC69F62189D603C00BC829D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FAC69F62189D603C00BC829D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FAC69F61189D603C00BC829D /* Mousecape.app */,
+				FAC69FAD189D608900BC829D /* mousecloak */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FAC69F63189D603C00BC829D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FA1DC01719527A56009E879C /* CoreGraphics.framework */,
+				FA7582B7193D377300CE223C /* ApplicationServices.framework */,
+				FAAEF8F6189EB34700145DF8 /* QuartzCore.framework */,
+				FA35984C189DC55A00288163 /* ServiceManagement.framework */,
+				FA000001UTITYPES00000000 /* UniformTypeIdentifiers.framework */,
+				FA359848189DC40100288163 /* Security.framework */,
+				FA359844189DBA3800288163 /* SystemConfiguration.framework */,
+				FA254779189D85890038E1D9 /* ApplicationServices.framework */,
+				FAC69F64189D603C00BC829D /* Cocoa.framework */,
+				FAC69F9D189D605300BC829D /* Foundation.framework */,
+				FAC69F66189D603C00BC829D /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FAC69F66189D603C00BC829D /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FAC69F67189D603C00BC829D /* AppKit.framework */,
+				FAC69F68189D603C00BC829D /* CoreData.framework */,
+				FAC69F69189D603C00BC829D /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		FAC69F6A189D603C00BC829D /* Mousecape */ = {
+			isa = PBXGroup;
+			children = (
+				DE53D4022F3B398800011C1F /* Localizable.xcstrings */,
+				DE3661FB2EFAAAB600D94521 /* SwiftUI */,
+				FA5733A32495667900103FCF /* Mousecape.entitlements */,
+				FAEE650D18A047E8003AA182 /* controllers */,
+				FAEE651C18A047E8003AA182 /* models */,
+				FAC69FD7189D623C00BC829D /* Mousecape-Prefix.pch */,
+				FAC69F7C189D603C00BC829D /* Images.xcassets */,
+				FAC69F6B189D603C00BC829D /* Supporting Files */,
+			);
+			path = Mousecape;
+			sourceTree = "<group>";
+		};
+		FAC69F6B189D603C00BC829D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FAC69F6C189D603C00BC829D /* Mousecape-Info.plist */,
+				FAC69F72189D603C00BC829D /* Mousecape-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FAC69FAF189D608900BC829D /* mousecloak */ = {
+			isa = PBXGroup;
+			children = (
+				DEBC95FE2F16577D004E6C07 /* MCLogger.h */,
+				DEBC95FF2F16577D004E6C07 /* MCLogger.m */,
+				FAC69FB9189D609B00BC829D /* CGSInternal */,
+				FAC69FCC189D609B00BC829D /* vendor */,
+				FAC69FCA189D609B00BC829D /* MCDefs.h */,
+				FAC69FDB189D636700BC829D /* MCDefs.m */,
+				FA35983D189DA3BC00288163 /* MCPrefs.h */,
+				FA35983E189DA3BC00288163 /* MCPrefs.m */,
+				FA8FF769189D663B00750E51 /* restore.h */,
+				FA8FF76A189D664400750E51 /* restore.m */,
+				FA8FF76C189D66C400750E51 /* backup.h */,
+				FA8FF76D189D66CB00750E51 /* backup.m */,
+				FA8FF76F189D66D100750E51 /* apply.h */,
+				FA8FF770189D66D800750E51 /* apply.m */,
+				FA8FF772189D67AA00750E51 /* create.h */,
+				FA8FF773189D67B100750E51 /* create.m */,
+				FA359850189E035200288163 /* listen.h */,
+				FA359851189E035900288163 /* listen.m */,
+				FAAEF955189F4ECC00145DF8 /* scale.h */,
+				FAAEF956189F4ED300145DF8 /* scale.m */,
+				FAC69FCB189D609B00BC829D /* NSCursor_Private.h */,
+				FAC69FB2189D608900BC829D /* Supporting Files */,
+				FABA44D221D9D7D0009B10D9 /* NSBitmapImageRep+ColorSpace.h */,
+				FABA44D321D9D7D0009B10D9 /* NSBitmapImageRep+ColorSpace.m */,
+				7A5B757C0780EA0A10BF1469 /* main.swift */,
+				CF122E4B298E5744EE9F0578 /* mousecloak-Bridging-Header.h */,
+			);
+			path = mousecloak;
+			sourceTree = "<group>";
+		};
+		FAC69FB2189D608900BC829D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FAC69FB3189D608900BC829D /* mousecloak-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FAC69FB9189D609B00BC829D /* CGSInternal */ = {
+			isa = PBXGroup;
+			children = (
+				FAC69FBA189D609B00BC829D /* CarbonHelpers.h */,
+				FAC69FBB189D609B00BC829D /* CGSAccessibility.h */,
+				FAC69FBC189D609B00BC829D /* CGSCIFilter.h */,
+				FAC69FBD189D609B00BC829D /* CGSConnection.h */,
+				FAC69FBE189D609B00BC829D /* CGSCursor.h */,
+				FAC69FBF189D609B00BC829D /* CGSDebug.h */,
+				FAC69FC0189D609B00BC829D /* CGSDisplays.h */,
+				FAC69FC1189D609B00BC829D /* CGSHotKeys.h */,
+				FAC69FC2189D609B00BC829D /* CGSInternal.h */,
+				FAC69FC3189D609B00BC829D /* CGSMisc.h */,
+				FAC69FC4189D609B00BC829D /* CGSNotifications.h */,
+				FAC69FC5189D609B00BC829D /* CGSRegion.h */,
+				FAC69FC6189D609B00BC829D /* CGSSession.h */,
+				FAC69FC7189D609B00BC829D /* CGSTransitions.h */,
+				FAC69FC8189D609B00BC829D /* CGSWindow.h */,
+				FAC69FC9189D609B00BC829D /* CGSWorkspace.h */,
+			);
+			path = CGSInternal;
+			sourceTree = "<group>";
+		};
+		FAC69FCC189D609B00BC829D /* vendor */ = {
+			isa = PBXGroup;
+			children = (
+				FAC69FCD189D609B00BC829D /* GBCli */,
+			);
+			path = vendor;
+			sourceTree = "<group>";
+		};
+		FAC69FCD189D609B00BC829D /* GBCli */ = {
+			isa = PBXGroup;
+			children = (
+				FAC69FCE189D609B00BC829D /* GBCommandLineParser.h */,
+				FAC69FCF189D609B00BC829D /* GBCommandLineParser.m */,
+				FAC69FD0189D609B00BC829D /* GBOptionsHelper.h */,
+				FAC69FD1189D609B00BC829D /* GBOptionsHelper.m */,
+				FAC69FD2189D609B00BC829D /* GBSettings.h */,
+				FAC69FD3189D609B00BC829D /* GBSettings.m */,
+			);
+			path = GBCli;
+			sourceTree = "<group>";
+		};
+		FAEE650D18A047E8003AA182 /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+				FAEE651618A047E8003AA182 /* MCLibraryController.h */,
+				FAEE651718A047E8003AA182 /* MCLibraryController.m */,
+			);
+			name = controllers;
+			path = src/controllers;
+			sourceTree = "<group>";
+		};
+		FAEE651C18A047E8003AA182 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				FAEE651D18A047E8003AA182 /* MCCursor.h */,
+				FAEE651E18A047E8003AA182 /* MCCursor.m */,
+				FAEE651F18A047E8003AA182 /* MCCursorLibrary.h */,
+				FAEE652018A047E8003AA182 /* MCCursorLibrary.m */,
+			);
+			name = models;
+			path = src/models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FAC69F60189D603C00BC829D /* Mousecape */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAC69F92189D603C00BC829D /* Build configuration list for PBXNativeTarget "Mousecape" */;
+			buildPhases = (
+				FAC69F5D189D603C00BC829D /* Sources */,
+				FAC69F5F189D603C00BC829D /* Resources */,
+				FAC69F5E189D603C00BC829D /* Frameworks */,
+				FAE5D57D1952734F007620DE /* Copy Tool */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FA359847189DBEB700288163 /* PBXTargetDependency */,
+			);
+			name = Mousecape;
+			productName = Mousecape;
+			productReference = FAC69F61189D603C00BC829D /* Mousecape.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FAC69FAC189D608900BC829D /* mousecloak */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAC69FB6189D608A00BC829D /* Build configuration list for PBXNativeTarget "mousecloak" */;
+			buildPhases = (
+				FAC69FA9189D608900BC829D /* Sources */,
+				FAC69FAA189D608900BC829D /* Frameworks */,
+				FAC69FAB189D608900BC829D /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = mousecloak;
+			productName = mousecloak;
+			productReference = FAC69FAD189D608900BC829D /* mousecloak */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FAC69F59189D603C00BC829D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				CLASSPREFIX = MC;
+				LastUpgradeCheck = 2610;
+				ORGANIZATIONNAME = "Alex Zielenski";
+				TargetAttributes = {
+					FAC69F60189D603C00BC829D = {
+						ProvisioningStyle = Automatic;
+					};
+					FAC69FAC189D608900BC829D = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = FAC69F5C189D603C00BC829D /* Build configuration list for PBXProject "Mousecape" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				"zh-Hans",
+			);
+			mainGroup = FAC69F58189D603C00BC829D;
+			productRefGroup = FAC69F62189D603C00BC829D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FAC69F60189D603C00BC829D /* Mousecape */,
+				FAC69FAC189D608900BC829D /* mousecloak */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FAC69F5F189D603C00BC829D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAC69F7D189D603C00BC829D /* Images.xcassets in Resources */,
+				DE53D4032F3B398800011C1F /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FAC69F5D189D603C00BC829D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FABA44D521D9D947009B10D9 /* NSBitmapImageRep+ColorSpace.m in Sources */,
+				FAEE653318A047E8003AA182 /* MCCursorLibrary.m in Sources */,
+				FAEE652F18A047E8003AA182 /* MCLibraryController.m in Sources */,
+				FAAEF94E189EFC9300145DF8 /* create.m in Sources */,
+				DEAB0D642F39ADB000DB9EB0 /* CursorImageScaler.swift in Sources */,
+				DED4B7D62F39BD5800CAFCCE /* CapeInfoView.swift in Sources */,
+				DED4B7D82F39BD5800CAFCCE /* AddCursorSheet.swift in Sources */,
+				FAAEF94F189EFC9600145DF8 /* backup.m in Sources */,
+				FAAEF951189F0CC300145DF8 /* restore.m in Sources */,
+				DE654C422F0A6DB40025E5A0 /* WindowsINFParser.swift in Sources */,
+				DE525A822EFE93C200A315A3 /* WindowsCursorConverter.swift in Sources */,
+				DE525A832EFE93C200A315A3 /* OrderedSetSortedInsert.swift in Sources */,
+				DE525A852EFE93C200A315A3 /* DirectoryLocations.swift in Sources */,
+				FAAEF950189EFC9800145DF8 /* apply.m in Sources */,
+				DE6B14B42F0512EE00742257 /* WindowsCursorParser.swift in Sources */,
+				FAEE653218A047E8003AA182 /* MCCursor.m in Sources */,
+				FAAEF958189F4F8200145DF8 /* scale.m in Sources */,
+				DE3661FD2EFAAAB600D94521 /* MainView.swift in Sources */,
+				DE3661FE2EFAAAB600D94521 /* EditOverlayView.swift in Sources */,
+				DE3661FF2EFAAAB600D94521 /* AppState.swift in Sources */,
+				DE3662002EFAAAB600D94521 /* CursorLibrary.swift in Sources */,
+				DEBC96032F1657A4004E6C07 /* DebugLogger.swift in Sources */,
+				DE3662012EFAAAB600D94521 /* MousecapeApp.swift in Sources */,
+				DE3662022EFAAAB600D94521 /* CapeContextMenu.swift in Sources */,
+				DED4B7DC2F39C14F00CAFCCE /* AppState+WindowsImport.swift in Sources */,
+				DE3662032EFAAAB600D94521 /* GlassEffectContainer.swift in Sources */,
+				DE3662042EFAAAB600D94521 /* MousecapeCommands.swift in Sources */,
+				DE3662052EFAAAB600D94521 /* SettingsView.swift in Sources */,
+				DE3662062EFAAAB600D94521 /* AnimatingCursorView.swift in Sources */,
+				DE3662072EFAAAB600D94521 /* HomeView.swift in Sources */,
+				DE3662082EFAAAB600D94521 /* CapePreviewPanel.swift in Sources */,
+				DE3662092EFAAAB600D94521 /* Cursor.swift in Sources */,
+				DE36620A2EFAAAB600D94521 /* AppEnums.swift in Sources */,
+				FAC69FDC189D636700BC829D /* MCDefs.m in Sources */,
+				DEBC96042F165800004E6C07 /* MCLogger.m in Sources */,
+				FA359840189DA3C100288163 /* MCPrefs.m in Sources */,
+				DE4A92B52F4F8C0000288163 /* listen.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAC69FA9189D608900BC829D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA8FF76E189D66CB00750E51 /* backup.m in Sources */,
+				FAC69FD6189D609B00BC829D /* GBSettings.m in Sources */,
+				FA359852189E035900288163 /* listen.m in Sources */,
+				FAC69FD5189D609B00BC829D /* GBOptionsHelper.m in Sources */,
+				FA35983F189DA3BC00288163 /* MCPrefs.m in Sources */,
+				FAAEF957189F4ED300145DF8 /* scale.m in Sources */,
+				FA8FF76B189D664400750E51 /* restore.m in Sources */,
+				FA8FF771189D66D800750E51 /* apply.m in Sources */,
+				FAC69FDD189D636700BC829D /* MCDefs.m in Sources */,
+				FAC69FD4189D609B00BC829D /* GBCommandLineParser.m in Sources */,
+				DEBC96002F16577D004E6C07 /* MCLogger.m in Sources */,
+				FA8FF774189D67B100750E51 /* create.m in Sources */,
+				FABA44D421D9D7D0009B10D9 /* NSBitmapImageRep+ColorSpace.m in Sources */,
+				9CB312EE7052700D9F29C682 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FA359847189DBEB700288163 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FAC69FAC189D608900BC829D /* mousecloak */;
+			targetProxy = FA359846189DBEB700288163 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		FAC69F90189D603C00BC829D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"PROJECT_DIR=\\\"\"$(PROJECT_DIR)\"\\\"",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		FAC69F91189D603C00BC829D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "PROJECT_DIR=\\\"\"$(PROJECT_DIR)\"\\\"";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		FAC69F93189D603C00BC829D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Mousecape/Mousecape.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Mousecape/Mousecape-Prefix.pch";
+				INFOPLIST_FILE = "Mousecape/Mousecape-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Mousecape;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST))",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.4;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdmj76.Mousecape;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				RUNTIME_EXCEPTION_ALLOW_UNSIGNED_EXECUTABLE_MEMORY = YES;
+				RUNTIME_EXCEPTION_DISABLE_LIBRARY_VALIDATION = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "Mousecape/Mousecape-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		FAC69F94189D603C00BC829D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Mousecape/Mousecape.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Mousecape/Mousecape-Prefix.pch";
+				INFOPLIST_FILE = "Mousecape/Mousecape-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Mousecape;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(LD_RUNPATH_SEARCH_PATHS_$(IS_MACCATALYST))",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.4;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdmj76.Mousecape;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				RUNTIME_EXCEPTION_ALLOW_UNSIGNED_EXECUTABLE_MEMORY = YES;
+				RUNTIME_EXCEPTION_DISABLE_LIBRARY_VALIDATION = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Mousecape/Mousecape-Bridging-Header.h";
+				SWIFT_VERSION = 6.0;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		FAC69FB7189D608A00BC829D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "mousecloak/mousecloak-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/mousecloak/vendor",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Mousecape/mousecloak/mousecloak-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FAC69FB8189D608A00BC829D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "mousecloak/mousecloak-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/mousecloak/vendor",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Mousecape/mousecloak/mousecloak-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FAC69F5C189D603C00BC829D /* Build configuration list for PBXProject "Mousecape" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAC69F90189D603C00BC829D /* Debug */,
+				FAC69F91189D603C00BC829D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FAC69F92189D603C00BC829D /* Build configuration list for PBXNativeTarget "Mousecape" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAC69F93189D603C00BC829D /* Debug */,
+				FAC69F94189D603C00BC829D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FAC69FB6189D608A00BC829D /* Build configuration list for PBXNativeTarget "mousecloak" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAC69FB7189D608A00BC829D /* Debug */,
+				FAC69FB8189D608A00BC829D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FAC69F59189D603C00BC829D /* Project object */;
+}

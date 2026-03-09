@@ -8,6 +8,8 @@
 
 #import "scale.h"
 #import "MCPrefs.h"
+#import "MCDefs.h"
+#import "CGSCursor.h"
 #import <math.h>
 
 float cursorScale(void) {

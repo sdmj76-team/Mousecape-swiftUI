@@ -67,23 +67,23 @@ struct WindowsINFParser {
     /// Windows registry fixed-order cursor type mapping (positions 0-16)
     /// Based on Windows Control Panel\Cursors\Schemes registry format
     static let schemeRegPositionMapping: [[CursorType]] = [
-        [.arrow, .arrowCtx],           // 0: Normal Select
-        [.help],                        // 1: Help Select
-        [.wait],                        // 2: Working in Background
-        [.busy],                        // 3: Busy
-        [.crosshair],                   // 4: Precision Select
-        [.iBeam, .iBeamXOR],           // 5: Text Select
-        [.open],                        // 6: Handwriting (com.apple.cursor.12)
-        [.forbidden],                   // 7: Unavailable
-        [.resizeNS, .windowNS],        // 8: Vertical Resize
-        [.resizeWE, .windowEW],        // 9: Horizontal Resize
-        [.windowNWSE],                  // 10: Diagonal Resize 1 (NW-SE)
-        [.windowNESW],                  // 11: Diagonal Resize 2 (NE-SW)
-        [.move],                        // 12: Move
-        [.alias],                       // 13: Alternate Select
-        [.pointing, .link],            // 14: Link Select
-        [],                             // 15: Location Select (no macOS equivalent)
-        [],                             // 16: Person Select (no macOS equivalent)
+        [.arrow, .arrowCtx, .arrowS, .ctxMenu],                          // 0: Normal Select
+        [.help],                                                           // 1: Help Select
+        [.wait],                                                           // 2: Working in Background
+        [.busy, .countingUp, .countingDown, .countingUpDown],             // 3: Busy
+        [.crosshair, .crosshair2, .cell, .cellXOR],                      // 4: Precision Select
+        [.iBeam, .iBeamXOR, .iBeamS, .iBeamH],                          // 5: Text Select
+        [.open, .closed],                                                  // 6: Handwriting
+        [.forbidden],                                                      // 7: Unavailable
+        [.resizeNS, .windowNS, .resizeN, .resizeS, .windowN, .windowS], // 8: Vertical Resize
+        [.resizeWE, .windowEW, .resizeW, .resizeE, .windowE, .windowW], // 9: Horizontal Resize
+        [.windowNWSE, .windowNW, .windowSE],                              // 10: Diagonal Resize 1 (NW-SE)
+        [.windowNESW, .windowNE, .windowSW],                              // 11: Diagonal Resize 2 (NE-SW)
+        [.move, .resizeSquare],                                            // 12: Move
+        [.alias],                                                          // 13: Alternate Select
+        [.pointing, .link],                                                // 14: Link Select
+        [],                                                                // 15: Location Select (no macOS equivalent)
+        [],                                                                // 16: Person Select (no macOS equivalent)
     ]
 
     /// Parse an install.inf file

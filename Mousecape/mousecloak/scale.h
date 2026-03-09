@@ -9,6 +9,8 @@
 #ifndef Mousecape_scale_h
 #define Mousecape_scale_h
 
+#import <Foundation/Foundation.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 extern float cursorScale(void);

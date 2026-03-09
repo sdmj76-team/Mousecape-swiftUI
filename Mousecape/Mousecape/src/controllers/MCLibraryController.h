@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MCLibraryController : NSObject
 @property (readonly, weak, nullable) MCCursorLibrary *appliedCape;
-@property (nonatomic, readonly) NSUndoManager *undoManager;
 @property (readonly, copy) NSURL *libraryURL;
 
 - (instancetype)initWithURL:(NSURL *)url;
@@ -28,9 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)restoreCape;
 
 - (NSURL *)URLForCape:(MCCursorLibrary *)cape;
-
-- (NSSet *)capesWithIdentifier:(NSString *)identifier;
-- (BOOL)dumpCursorsWithProgressBlock:(BOOL (^)(NSUInteger current, NSUInteger total))block;
 
 @end
 

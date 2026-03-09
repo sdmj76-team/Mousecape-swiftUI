@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import ServiceManagement
 
 struct SettingsView: View {
     @State private var selectedCategory: SettingsCategory = .general
@@ -58,22 +59,39 @@ struct SettingsView: View {
 // MARK: - General Settings
 
 struct GeneralSettingsView: View {
-    @AppStorage("applyLastCapeOnLaunch") private var applyLastCapeOnLaunch = true
+    @AppStorage("launchAtLogin") private var launchAtLogin = false
     @AppStorage("doubleClickAction") private var doubleClickAction = 0
     @State private var cursorScale: Double = 1.0
+    @State private var loginToggleError: String?
+    @State private var showLoginError = false
     @Environment(AppState.self) private var appState
 
     /// The key used by ObjC code for cursor scale
     private static let cursorScaleKey = "MCCursorScale"
-    private static let preferenceDomain = "com.alexzielenski.Mousecape"
+    private static let preferenceDomain = "com.sdmj76.Mousecape"
 
     var body: some View {
         Form {
-            // Helper Tool Section (moved from Advanced)
-            HelperToolSettingsView()
-
             Section("Startup") {
-                Toggle("Apply Last Cape on Launch", isOn: $applyLastCapeOnLaunch)
+                Toggle("Apply at Login", isOn: $launchAtLogin)
+                    .onChange(of: launchAtLogin) { _, newValue in
+                        // Control MousecapeHelper's launch-at-login registration only
+                        let helper = SMAppService.loginItem(identifier: "com.sdmj76.MousecapeHelper")
+                        do {
+                            if newValue {
+                                try helper.register()
+                                debugLog("Helper registered for launch-at-login")
+                            } else {
+                                try helper.unregister()
+                                debugLog("Helper unregistered from launch-at-login")
+                            }
+                        } catch {
+                            launchAtLogin = !newValue
+                            loginToggleError = error.localizedDescription
+                            showLoginError = true
+                            debugLog("Failed to update helper status: \(error)")
+                        }
+                    }
             }
 
             Section("Double-click Action") {
@@ -111,6 +129,11 @@ struct GeneralSettingsView: View {
         .navigationTitle("General")
         .onAppear {
             loadCursorScale()
+        }
+        .alert("Login Item Error", isPresented: $showLoginError) {
+            Button("OK") { }
+        } message: {
+            Text(loginToggleError ?? "")
         }
     }
 
@@ -300,7 +323,7 @@ struct AdvancedSettingsView: View {
                        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
                         Text("Mousecape v\(version) (\(build))")
                     } else {
-                        Text("Mousecape v1.0.4")
+                        Text("Mousecape v1.1.0")
                     }
                 }
                 LabeledContent("System Requirements") {

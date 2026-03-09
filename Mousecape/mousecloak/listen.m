@@ -10,6 +10,7 @@
 #import "apply.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 #import "MCPrefs.h"
+#import "MCDefs.h"
 #import "CGSCursor.h"
 #import <Cocoa/Cocoa.h>
 #import "scale.h"
@@ -197,4 +198,48 @@ void listener(void) {
 #ifdef DEBUG
     MCLoggerClose();
 #endif
+}
+
+void startSessionMonitor(void) {
+    MMLog("========================================");
+    MMLog("=== SESSION MONITOR STARTED (in-app) ===");
+    MMLog("========================================");
+
+    SCDynamicStoreRef store = SCDynamicStoreCreate(NULL, CFSTR("com.apple.dts.ConsoleUser"), UserSpaceChanged, NULL);
+    assert(store != NULL);
+
+    CFStringRef key = SCDynamicStoreKeyCreateConsoleUser(NULL);
+    assert(key != NULL);
+
+    CFArrayRef keys = CFArrayCreate(NULL, (const void **)&key, 1, &kCFTypeArrayCallBacks);
+    assert(keys != NULL);
+
+    Boolean success = SCDynamicStoreSetNotificationKeys(store, keys, NULL);
+    assert(success);
+
+    CGDisplayRegisterReconfigurationCallback(reconfigurationCallback, NULL);
+    MMLog(BOLD CYAN "Listening for Display changes" RESET);
+
+    CFRunLoopSourceRef rls = SCDynamicStoreCreateRunLoopSource(NULL, store, 0);
+    assert(rls != NULL);
+    MMLog(BOLD CYAN "Listening for User changes" RESET);
+
+    // Apply the cape for the user on load (if configured)
+    NSString *initialCapePath = appliedCapePathForUser(NSUserName());
+    if (initialCapePath) {
+        BOOL applySuccess = applyCapeAtPath(initialCapePath);
+        MMLog("Initial apply result: %s", applySuccess ? "SUCCESS" : "FAILED");
+    } else {
+        MMLog("No cape configured - running in standby mode");
+    }
+    setCursorScale(defaultCursorScale());
+    MMLog("Initial cursor scale applied");
+
+    CFRunLoopAddSource(CFRunLoopGetMain(), rls, kCFRunLoopDefaultMode);
+    MMLog("Session monitor attached to main run loop (non-blocking)");
+
+    // Intentionally not releasing store/rls — they must stay alive
+    // for the lifetime of the app to keep the session monitor active.
+    CFRelease(keys);
+    CFRelease(key);
 }
