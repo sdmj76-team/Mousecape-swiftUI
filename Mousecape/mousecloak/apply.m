@@ -275,20 +275,51 @@ BOOL applyCape(NSDictionary *dictionary) {
 
         MMLog("--- Applying cursors ---");
 
+        NSUInteger successCount = 0;
+        NSUInteger skippedCount = 0;
+        NSUInteger failedCount = 0;
+
         for (NSString *key in cursors) {
             NSDictionary *cape = cursors[key];
             MMLog("Hooking for %s", key.UTF8String);
 
+            // Check if cursor has valid image data before attempting to apply
+            NSArray *reps = cape[MCCursorDictionaryRepresentationsKey];
+            if (!reps || reps.count == 0) {
+                MMLog(YELLOW "  Skipping cursor %s - no image data (Representations count: 0)" RESET, key.UTF8String);
+                skippedCount++;
+                continue;
+            }
+
             BOOL success = applyCapeForIdentifier(cape, key, NO);
             if (!success) {
-                MMLog(BOLD RED "Failed to hook identifier %s for some unknown reason. Bailing out..." RESET, key.UTF8String);
-                return NO;
+                MMLog(YELLOW "  Failed to apply cursor %s - continuing with remaining cursors..." RESET, key.UTF8String);
+                failedCount++;
+            } else {
+                successCount++;
             }
+        }
+
+        MMLog("--- Application Summary ---");
+        MMLog("  Total cursors: %lu", (unsigned long)cursors.count);
+        MMLog("  Successfully applied: %lu", (unsigned long)successCount);
+        MMLog("  Skipped (no images): %lu", (unsigned long)skippedCount);
+        MMLog("  Failed: %lu", (unsigned long)failedCount);
+
+        // Consider the cape application successful if at least one cursor was applied
+        if (successCount == 0) {
+            MMLog(BOLD RED "No cursors were successfully applied!" RESET);
+            return NO;
         }
 
         MCSetDefault(dictionary[MCCursorDictionaryIdentifierKey], MCPreferencesAppliedCursorKey);
 
-        MMLog(BOLD GREEN "Applied %s successfully!" RESET, name.UTF8String);
+        if (skippedCount > 0 || failedCount > 0) {
+            MMLog(BOLD GREEN "Applied %s with warnings (success: %lu, skipped: %lu, failed: %lu)" RESET,
+                  name.UTF8String, (unsigned long)successCount, (unsigned long)skippedCount, (unsigned long)failedCount);
+        } else {
+            MMLog(BOLD GREEN "Applied %s successfully! (all %lu cursors)" RESET, name.UTF8String, (unsigned long)successCount);
+        }
         MMLog("========================================");
 
         return YES;
