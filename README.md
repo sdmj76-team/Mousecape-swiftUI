@@ -59,7 +59,7 @@ A free macOS cursor manager that allows you to easily replace Mac system pointer
 
 ## Download & Installation
 
-Download the latest version from the [Releases](https://github.com/sdmj76/Mousecape/releases) section of this GitHub page.
+Download the latest version from the [Releases](https://github.com/sdmj76/Mousecape-swiftUI/releases) section of this GitHub page.
 
 If you encounter any problems, we recommend that you first check the [Troubleshooting](#Troubleshooting_en) section.
 
@@ -146,7 +146,7 @@ Due to macOS system limitations, Mousecape has the following restrictions:
 
 ## Troubleshooting
 
-If you encounter issues, please check the common solutions below first. For more help, please [submit an Issue](https://github.com/sdmj76/Mousecape/issues).
+If you encounter issues, please check the common solutions below first. For more help, please [submit an Issue](https://github.com/sdmj76/Mousecape-swiftUI/issues).
 
 ### Helper Tool Not Running
 
@@ -247,7 +247,7 @@ If you like my UI remake, you can buy me an afternoon tea :)
 
 ## Feedback & Issues
 
-If you have questions or suggestions, please submit them on [GitHub Issues](https://github.com/sdmj76/Mousecape/issues).
+If you have questions or suggestions, please submit them on [GitHub Issues](https://github.com/sdmj76/Mousecape-swiftUI/issues).
 
 ## A Note from the Author
 
@@ -281,7 +281,7 @@ This is just a tool, and I've polished its UI. But what matters most is your cur
 
 ## 下载安装
 
-在本 GitHub 页面的 [Releases](https://github.com/sdmj76/Mousecape/releases) 部分下载最新版本。
+在本 GitHub 页面的 [Releases](https://github.com/sdmj76/Mousecape-swiftUI/releases) 部分下载最新版本。
 
 如果遇到问题，建议优先查看[故障排除](#Troubleshooting_cn)章节。
 
@@ -368,7 +368,7 @@ Mousecape 支持批量导入 Windows 光标主题：
 
 ## 故障排除
 
-如果遇到问题，请先查看以下常见解决方案。更多帮助请[提交 Issue](https://github.com/sdmj76/Mousecape/issues)。
+如果遇到问题，请先查看以下常见解决方案。更多帮助请[提交 Issue](https://github.com/sdmj76/Mousecape-swiftUI/issues)。
 
 ### 守护进程未运行
 
@@ -469,7 +469,7 @@ launchctl list | grep mouse
 
 ## 反馈与问题
 
-如有问题或建议，欢迎在 [GitHub Issues](https://github.com/sdmj76/Mousecape/issues) 提出。
+如有问题或建议，欢迎在 [GitHub Issues](https://github.com/sdmj76/Mousecape-swiftUI/issues) 提出。
 
 ## 作者的话
 
