@@ -163,6 +163,7 @@
       "shouldTranslate" : false
     },
     "%lld files, %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -247,6 +248,7 @@
       }
     },
     "~/Library/Logs/Mousecape" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -697,6 +699,7 @@
       }
     },
     "Clear All Logs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -846,17 +849,8 @@
         }
       }
     },
-    "Dark" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "深色"
-          }
-        }
-      }
-    },
     "Debug" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1122,16 +1116,6 @@
         }
       }
     },
-    "Enable semi-transparent window background" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "启用半透明窗口背景"
-          }
-        }
-      }
-    },
     "Error" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1226,6 +1210,7 @@
       }
     },
     "Export All Logs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1266,6 +1251,7 @@
       }
     },
     "Export Debug Logs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1762,16 +1748,6 @@
         }
       }
     },
-    "Light" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "浅色"
-          }
-        }
-      }
-    },
     "Link Select" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1813,6 +1789,7 @@
       }
     },
     "Log Files" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1823,6 +1800,7 @@
       }
     },
     "Log Folder" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1843,6 +1821,7 @@
       }
     },
     "Logs are automatically deleted after 24 hours. Logs contain debug information for troubleshooting cursor issues." : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2001,6 +1980,7 @@
       }
     },
     "Open Log Folder" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2451,6 +2431,7 @@
       }
     },
     "Theme" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2506,16 +2487,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "这将把所有设置重置为默认值。此操作无法撤销。"
-          }
-        }
-      }
-    },
-    "Transparent Window" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "透明窗口"
           }
         }
       }

@@ -89,7 +89,6 @@ final class DebugLogger: @unchecked Sendable {
         log("  launchAtLogin: \(defaults.bool(forKey: "launchAtLogin"))")
         log("  doubleClickAction: \(defaults.integer(forKey: "doubleClickAction"))")
         log("  language: \(defaults.string(forKey: "appLanguage") ?? "system")")
-        log("  transparentBackground: \(defaults.bool(forKey: "transparentBackground"))")
 
         // Read mousecloak preferences from CFPreferences
         if let appliedCursor = CFPreferencesCopyValue(

@@ -205,36 +205,13 @@ struct GeneralSettingsView: View {
 // MARK: - Appearance Settings
 
 struct AppearanceSettingsView: View {
-    /// appearanceMode: 1 = Light, 2 = Dark (默认 1 = Light)
-    @AppStorage("appearanceMode") private var appearanceMode = 1
     @AppStorage("showPreviewAnimations") private var showPreviewAnimations = true
     @AppStorage("showAuthorInfo") private var showAuthorInfo = true
     @AppStorage("previewGridColumns") private var previewGridColumns = 0
     @AppStorage("previewDisplayMode") private var previewDisplayMode = 0
-    @AppStorage("transparentWindow") private var transparentWindow = false
-
-    private var isDarkMode: Bool {
-        appearanceMode == 2
-    }
 
     var body: some View {
         Form {
-            Section("Theme") {
-                Picker("Appearance", selection: $appearanceMode) {
-                    Text("Light").tag(1)
-                    Text("Dark").tag(2)
-                }
-                .pickerStyle(.radioGroup)
-
-                Toggle("Transparent Window", isOn: $transparentWindow)
-                    .onChange(of: transparentWindow) { _, newValue in
-                        updateWindowTransparency(newValue)
-                    }
-                Text("Enable semi-transparent window background")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-
             Section("List Display") {
                 Toggle("Show Cursor Preview Animations", isOn: $showPreviewAnimations)
                 Toggle("Show Cape Author Info", isOn: $showAuthorInfo)
@@ -257,24 +234,6 @@ struct AppearanceSettingsView: View {
         .formStyle(.grouped)
         .scrollContentBackground(.hidden)
         .navigationTitle("Appearance")
-    }
-
-    /// Update window transparency in real-time
-    private func updateWindowTransparency(_ transparent: Bool) {
-        guard let window = NSApp.windows.first else { return }
-        if transparent {
-            window.isOpaque = false
-            if isDarkMode {
-                // 深色模式：使用深灰色背景，避免与桌面混合时泛白
-                window.backgroundColor = NSColor(calibratedWhite: 0.15, alpha: 0.95)
-            } else {
-                // 浅色模式：使用系统窗口背景色
-                window.backgroundColor = NSColor.windowBackgroundColor.withAlphaComponent(0.9)
-            }
-        } else {
-            window.isOpaque = true
-            window.backgroundColor = NSColor.windowBackgroundColor
-        }
     }
 }
 

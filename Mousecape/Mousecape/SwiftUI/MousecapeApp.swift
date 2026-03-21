@@ -31,30 +31,12 @@ struct MousecapeApp: App {
         // MenuBarExtra removed - now handled by MousecapeHelper
     }
 
+    /// Unified window appearance configuration
     private func configureWindowAppearance() {
         DispatchQueue.main.async {
             guard let window = NSApp.windows.first(where: { $0.canBecomeMain }) else { return }
 
-            // Make titlebar transparent for cleaner look
-            window.titlebarAppearsTransparent = true
-
-            // Configure window background based on user's transparentWindow setting
-            let transparentWindow = UserDefaults.standard.bool(forKey: "transparentWindow")
-            if transparentWindow {
-                window.isOpaque = false
-                // 检测当前是否为深色模式
-                let isDarkMode = NSApp.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
-                if isDarkMode {
-                    // 深色模式：使用深灰色背景，避免与桌面混合时泛白
-                    window.backgroundColor = NSColor(calibratedWhite: 0.15, alpha: 0.95)
-                } else {
-                    // 浅色模式：使用系统窗口背景色
-                    window.backgroundColor = NSColor.windowBackgroundColor.withAlphaComponent(0.9)
-                }
-            } else {
-                window.isOpaque = true
-                window.backgroundColor = NSColor.windowBackgroundColor
-            }
+            window.backgroundColor = .windowBackgroundColor
 
             // Disable fullscreen (green) button
             window.collectionBehavior.remove(.fullScreenPrimary)
@@ -409,54 +391,12 @@ enum ToolbarHider {
 
 // MARK: - Appearance Wrapper
 
+/// 窗口外观容器
 struct AppearanceWrapper<Content: View>: View {
-    /// appearanceMode: 1 = Light, 2 = Dark (默认 1 = Light)
-    @AppStorage("appearanceMode") private var appearanceMode = 1
-    @AppStorage("transparentWindow") private var transparentWindow = false
     @ViewBuilder let content: Content
-
-    private var isDarkMode: Bool {
-        appearanceMode == 2
-    }
 
     var body: some View {
         content
-            .preferredColorScheme(isDarkMode ? .dark : .light)
-            .onChange(of: appearanceMode, initial: true) { _, newValue in
-                updateAppAppearance(newValue)
-            }
-    }
-
-    private func updateAppAppearance(_ mode: Int) {
-        // 直接设置 NSApplication 的外观以确保实时生效
-        if mode == 2 {
-            NSApp.appearance = NSAppearance(named: .darkAqua)
-        } else {
-            NSApp.appearance = NSAppearance(named: .aqua)
-        }
-
-        // 更新窗口背景色
-        DispatchQueue.main.async {
-            updateWindowOpacity(isDark: mode == 2)
-        }
-    }
-
-    private func updateWindowOpacity(isDark: Bool) {
-        guard let window = NSApp.windows.first(where: { $0.canBecomeMain }) else { return }
-
-        if transparentWindow {
-            window.isOpaque = false
-            if isDark {
-                // 深色模式：使用深灰色背景，避免与桌面混合时泛白
-                window.backgroundColor = NSColor(calibratedWhite: 0.15, alpha: 0.95)
-            } else {
-                // 浅色模式：使用系统窗口背景色
-                window.backgroundColor = NSColor.windowBackgroundColor.withAlphaComponent(0.9)
-            }
-        } else {
-            window.isOpaque = true
-            window.backgroundColor = NSColor.windowBackgroundColor
-        }
     }
 }
 
