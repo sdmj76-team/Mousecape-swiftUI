@@ -35,7 +35,7 @@ void backupCursorForIdentifier(NSString *ident) {
     }
 
     NSDictionary *cape = capeWithIdentifier(ident);
-    BOOL success = applyCapeForIdentifier(cape, backupIdent, YES);
+    BOOL success = applyCapeForIdentifier(cape, backupIdent, YES, NO);
     MMLog("    Backup result: %s", success ? "SUCCESS" : "FAILED");
 }
 

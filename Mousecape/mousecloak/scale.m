@@ -12,6 +12,9 @@
 #import "CGSCursor.h"
 #import <math.h>
 
+// Direct in-process flag — bypasses CFPreferences caching issues
+static BOOL g_customScaleMode = NO;
+
 float cursorScale(void) {
     float value;
     CGSGetCursorScale(CGSMainConnectionID(), &value);
@@ -36,4 +39,13 @@ BOOL setCursorScale(float dbl) {
         MMLog("Somehow failed to set cursor scale!");
         return NO;
     }
+}
+
+BOOL customScaleMode(void) {
+    return g_customScaleMode;
+}
+
+void setCustomScaleMode(BOOL isCustom) {
+    g_customScaleMode = isCustom;
+    MMLog("Scale mode set to: %s", isCustom ? "custom" : "global");
 }

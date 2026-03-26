@@ -12,6 +12,9 @@
 #import "MCPrefs.h"
 #import "NSBitmapImageRep+ColorSpace.h"
 #import "MCDefs.h"
+#import "innerShadow.h"
+#import "outerGlow.h"
+#import "scale.h"
 
 static BOOL MCRegisterImagesForCursorName(NSUInteger frameCount, CGFloat frameDuration, CGPoint hotSpot, CGSize size, NSArray *images, NSString *name) {
     char *cursorName = (char *)name.UTF8String;
@@ -162,7 +165,7 @@ BOOL applyCursorForIdentifier(NSUInteger frameCount, CGFloat frameDuration, CGPo
 }
 
 
-BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL restore) {
+BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL restore, BOOL customScaleMode) {
     MMLog("=== applyCapeForIdentifier ===");
     MMLog("  Identifier: %s", identifier.UTF8String);
     MMLog("  Restore mode: %s", restore ? "YES" : "NO");
@@ -173,6 +176,8 @@ BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL res
     }
 
     BOOL lefty = MCFlag(MCPreferencesHandednessKey);
+    BOOL innerShadow = MCFlag(MCPreferencesInnerShadowKey);
+    BOOL outerGlow = MCFlag(MCPreferencesOuterGlowKey);
     BOOL pointer = MCCursorIsPointer(identifier);
     NSNumber *frameCount    = cursor[MCCursorDictionaryFrameCountKey];
     NSNumber *frameDuration = cursor[MCCursorDictionaryFrameDuratiomKey];
@@ -252,6 +257,85 @@ BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL res
         }
     }
 
+    // Apply inner shadow effect if enabled
+    if (innerShadow && images.count > 0) {
+        float radius = 32.0f;
+        float intensity = 0.6f;
+        MMLog("Applying inner shadow effect (radius=%.1f, intensity=%.1f)", radius, intensity);
+        NSMutableArray *processed = [NSMutableArray arrayWithCapacity:images.count];
+        for (id imgObj in images) {
+            CGImageRef original = (__bridge CGImageRef)imgObj;
+            CGImageRef shadowed = MCApplyInnerShadow(original, radius, intensity);
+            [processed addObject:(__bridge id)(shadowed ?: original)];
+            if (shadowed) CGImageRelease(shadowed);
+        }
+        images = processed;
+    }
+
+    // Apply outer glow effect if enabled
+    if (outerGlow && images.count > 0) {
+        float radius = 40.0f;
+        float intensity = 0.7f;
+        MMLog("Applying outer glow effect (radius=%.1f, intensity=%.1f)", radius, intensity);
+        NSMutableArray *processed = [NSMutableArray arrayWithCapacity:images.count];
+        for (id imgObj in images) {
+            CGImageRef original = (__bridge CGImageRef)imgObj;
+            CGImageRef glowing = MCApplyOuterGlow(original, radius, intensity);
+            [processed addObject:(__bridge id)(glowing ?: original)];
+            if (glowing) CGImageRelease(glowing);
+        }
+        images = processed;
+    }
+
+    // Per-cursor custom scaling
+    if (customScaleMode) {
+        NSDictionary *perCursorScales = MCDefault(MCPreferencesPerCursorScalesKey);
+        MMLog("SCALE DEBUG per-cursor %s: perCursorScales=%@, customMode=YES", identifier.UTF8String, perCursorScales);
+        float desiredScale = [perCursorScales[identifier] floatValue];
+        if (desiredScale <= 0.0f) desiredScale = 1.0f;
+
+        float maxScale = cursorScale(); // Read current system scale directly from CGS
+        if (maxScale <= 0.0f) maxScale = 1.0f;
+        MMLog("SCALE DEBUG per-cursor %s: desired=%.2f, maxScale=%.2f, ratio=%.3f",
+              identifier.UTF8String, desiredScale, maxScale, (maxScale > 0 ? desiredScale/maxScale : 0));
+
+        if (desiredScale < maxScale) {
+            float ratio = desiredScale / maxScale;
+            // Scale the logical size proportionally so the cursor appears at the correct visual size
+            size = CGSizeMake(size.width * ratio, size.height * ratio);
+            MMLog("Custom scaling %s: desired=%.2f, max=%.2f, ratio=%.3f, newSize=%.1fx%.1f",
+                  identifier.UTF8String, desiredScale, maxScale, ratio, size.width, size.height);
+
+            CGColorSpaceRef scaleColorSpace = CGColorSpaceCreateDeviceRGB();
+            NSMutableArray *scaledImages = [NSMutableArray arrayWithCapacity:images.count];
+            for (id imgObj in images) {
+                CGImageRef original = (__bridge CGImageRef)imgObj;
+                size_t w = CGImageGetWidth(original);
+                size_t h = CGImageGetHeight(original);
+                size_t newW = MAX((size_t)(w * ratio + 0.5f), 1);
+                size_t newH = MAX((size_t)(h * ratio + 0.5f), 1);
+
+                CGContextRef ctx = CGBitmapContextCreate(
+                    nil, newW, newH, 8, newW * 4,
+                    scaleColorSpace,
+                    kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big
+                );
+                if (ctx) {
+                    CGContextDrawImage(ctx, CGRectMake(0, 0, newW, newH), original);
+                    CGImageRef scaledImg = CGBitmapContextCreateImage(ctx);
+                    CGContextRelease(ctx);
+                    [scaledImages addObject:(__bridge id)(scaledImg ?: original)];
+                    if (scaledImg) CGImageRelease(scaledImg);
+                } else {
+                    MMLog("Failed to create scaling context for %s", identifier.UTF8String);
+                    [scaledImages addObject:imgObj];
+                }
+            }
+            CGColorSpaceRelease(scaleColorSpace);
+            images = scaledImages;
+        }
+    }
+
     return applyCursorForIdentifier(frameCount.unsignedIntegerValue, frameDuration.doubleValue, hotSpot, size, images, identifier, 0);
 }
 
@@ -273,10 +357,40 @@ BOOL applyCape(NSDictionary *dictionary) {
             MMLog("  - %s", key.UTF8String);
         }
 
+        // Save the current system scale BEFORE resetAllCursors() might reset it
+        float savedScale = cursorScale();
+        MMLog("Saved system scale before reset: %.2f", savedScale);
+
         MMLog("--- Calling resetAllCursors ---");
         resetAllCursors();
         MMLog("--- Calling backupAllCursors ---");
         backupAllCursors();
+
+        // Read scale mode from direct C variable (not CFPreferences)
+        BOOL isCustomMode = customScaleMode();
+
+        if (isCustomMode) {
+            float maxScale = 1.0f;
+            NSDictionary *perCursorScales = MCDefault(MCPreferencesPerCursorScalesKey);
+            if (perCursorScales) {
+                for (NSNumber *val in perCursorScales.allValues) {
+                    float s = val.floatValue;
+                    if (s > maxScale) maxScale = s;
+                }
+            }
+            MMLog("SCALE DEBUG: custom mode, maxScale=%.2f", maxScale);
+            setCursorScale(maxScale);
+            // Save maxScale as MCCursorScale so listen.m can restore it
+            MCSetDefault(@(maxScale), MCPreferencesCursorScaleKey);
+        } else {
+            // Global mode: restore the exact scale that was active before reset
+            MMLog("SCALE DEBUG: global mode, restoring to %.2f", savedScale);
+            if (savedScale >= 0.5f && savedScale <= 16.0f) {
+                setCursorScale(savedScale);
+            } else {
+                setCursorScale(defaultCursorScale());
+            }
+        }
 
         MMLog("--- Applying cursors ---");
 
@@ -296,7 +410,7 @@ BOOL applyCape(NSDictionary *dictionary) {
                 continue;
             }
 
-            BOOL success = applyCapeForIdentifier(cape, key, NO);
+            BOOL success = applyCapeForIdentifier(cape, key, NO, isCustomMode);
             if (!success) {
                 MMLog(YELLOW "  Failed to apply cursor %s - continuing with remaining cursors..." RESET, key.UTF8String);
                 failedCount++;

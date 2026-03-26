@@ -353,3 +353,18 @@ enum WindowsCursorGroup: Int, CaseIterable, Identifiable {
         return nil
     }
 }
+
+// MARK: - Scale Mode
+
+/// Cursor scale mode: global (one scale for all) or custom (per-cursor-type)
+enum ScaleMode: String, CaseIterable, Identifiable {
+    case global
+    case custom
+    var id: String { rawValue }
+    var displayName: String {
+        switch self {
+        case .global: return String(localized: "Global")
+        case .custom: return String(localized: "Custom")
+        }
+    }
+}

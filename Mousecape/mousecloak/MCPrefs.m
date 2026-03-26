@@ -12,6 +12,10 @@
 NSString *MCPreferencesAppliedCursorKey          = @"MCAppliedCursor";
 NSString *MCPreferencesCursorScaleKey            = @"MCCursorScale";
 NSString *MCPreferencesHandednessKey             = @"MCHandedness";
+NSString *MCPreferencesInnerShadowKey            = @"MCInnerShadow";
+NSString *MCPreferencesOuterGlowKey             = @"MCOuterGlow";
+NSString *MCPreferencesScaleModeKey             = @"MCScaleMode";
+NSString *MCPreferencesPerCursorScalesKey       = @"MCPerCursorScales";
 
 id MCDefaultFor(NSString *key, NSString *user, NSString *host) {
     NSString *value = (__bridge_transfer NSString *)CFPreferencesCopyValue((__bridge CFStringRef)key, (__bridge CFStringRef)kMCDomain, (__bridge CFStringRef)user, (__bridge CFStringRef)host);

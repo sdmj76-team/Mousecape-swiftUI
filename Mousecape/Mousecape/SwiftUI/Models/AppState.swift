@@ -241,22 +241,40 @@ final class AppState: @unchecked Sendable {
     /// Load cursor scale from preferences and apply it
     private func applySavedCursorScale() {
         let preferenceDomain = "com.sdmj76.Mousecape"
+        let scaleModeKey = "MCScaleMode"
         let cursorScaleKey = "MCCursorScale"
 
-        // Read saved scale value
-        if let value = CFPreferencesCopyAppValue(cursorScaleKey as CFString, preferenceDomain as CFString) as? Double {
-            debugLog("Loading saved cursor scale: \(value)")
-            // Apply the scale using ObjC function
-            let success = setCursorScale(Float(value))
-            if success {
-                debugLog("Successfully applied cursor scale on startup")
-            } else {
-                debugLog("Failed to apply cursor scale on startup")
+        // Sync C global variable from persisted preferences BEFORE reading it
+        if let modeStr = CFPreferencesCopyAppValue(scaleModeKey as CFString, preferenceDomain as CFString) as? String,
+           modeStr == "custom" {
+            setCustomScaleMode(true)
+        } else {
+            setCustomScaleMode(false)
+        }
+
+        if customScaleMode() {
+            // Custom mode: applyCape() handles per-cursor scaling internally
+            // Just ensure CGSSetCursorScale matches maxScale
+            debugLog("Custom scale mode on startup")
+            if let maxScale = CFPreferencesCopyAppValue(cursorScaleKey as CFString, preferenceDomain as CFString) as? Double {
+                debugLog("Setting max cursor scale: \(maxScale)")
+                _ = setCursorScale(Float(maxScale))
             }
         } else {
-            debugLog("No saved cursor scale found, using default (1.0)")
-            // Apply default scale
-            _ = setCursorScale(1.0)
+            // Global mode: existing behavior
+            debugLog("Global scale mode on startup")
+            if let value = CFPreferencesCopyAppValue(cursorScaleKey as CFString, preferenceDomain as CFString) as? Double {
+                debugLog("Loading saved cursor scale: \(value)")
+                let success = setCursorScale(Float(value))
+                if success {
+                    debugLog("Successfully applied cursor scale on startup")
+                } else {
+                    debugLog("Failed to apply cursor scale on startup")
+                }
+            } else {
+                debugLog("No saved cursor scale found, using default (1.0)")
+                _ = setCursorScale(1.0)
+            }
         }
     }
 
@@ -401,6 +419,17 @@ final class AppState: @unchecked Sendable {
         } else {
             // Import succeeded, reload the cape list
             loadCapes()
+
+            // Find the newly imported cape (may have been auto-renamed)
+            // Match by original name first, then fall back to name prefix
+            let importedCape = capes.first { $0.name == capeName }
+                ?? capes.first { $0.name.hasPrefix(capeName) }
+
+            // Auto-apply the newly imported cape
+            if let importedCape = importedCape {
+                applyCape(importedCape)
+                selectedCape = importedCape
+            }
 
             // Show success message with cape name
             operationResultMessage = "\"\(capeName)\" \(String(localized:"has been imported."))"

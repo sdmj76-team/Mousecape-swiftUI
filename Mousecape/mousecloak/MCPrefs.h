@@ -18,6 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 extern NSString *MCPreferencesAppliedCursorKey;
 extern NSString *MCPreferencesCursorScaleKey;
 extern NSString *MCPreferencesHandednessKey;
+extern NSString *MCPreferencesInnerShadowKey;
+extern NSString *MCPreferencesOuterGlowKey;
+extern NSString *MCPreferencesScaleModeKey;
+extern NSString *MCPreferencesPerCursorScalesKey;
 extern id _Nullable MCDefaultFor(NSString *key, NSString *user, NSString *host);
 extern id _Nullable MCDefault(NSString *key);
 #define MCFlag(key) [MCDefault(key) boolValue]

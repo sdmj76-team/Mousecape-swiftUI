@@ -23,6 +23,10 @@ final class UserPreferences: @unchecked Sendable {
         static let appliedCursor = "MCAppliedCursor"
         static let cursorScale = "MCCursorScale"
         static let handedness = "MCHandedness"
+        static let innerShadow = "MCInnerShadow"
+        static let outerGlow = "MCOuterGlow"
+        static let scaleMode = "MCScaleMode"
+        static let perCursorScales = "MCPerCursorScales"
     }
 
     private init() {}

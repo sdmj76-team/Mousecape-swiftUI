@@ -62,6 +62,7 @@ struct GeneralSettingsView: View {
     @AppStorage("launchAtLogin") private var launchAtLogin = false
     @AppStorage("doubleClickAction") private var doubleClickAction = 0
     @State private var cursorScale: Double = 1.0
+    @State private var scaleMode: ScaleMode = .global
     @State private var isLeftHanded: Bool = false
     @State private var loginToggleError: String?
     @State private var showLoginError = false
@@ -69,6 +70,8 @@ struct GeneralSettingsView: View {
 
     /// The key used by ObjC code for cursor scale
     private static let cursorScaleKey = "MCCursorScale"
+    private static let scaleModeKey = "MCScaleMode"
+    private static let perCursorScalesKey = "MCPerCursorScales"
     private static let handednessKey = "MCHandedness"
     private static let preferenceDomain = "com.sdmj76.Mousecape"
 
@@ -105,22 +108,49 @@ struct GeneralSettingsView: View {
             }
 
             Section("Cursor Scale") {
-                VStack(alignment: .leading) {
-                    Text("\(String(localized:"Global Scale:")) \(cursorScale, specifier: "%.1f")x")
-                    Slider(value: $cursorScale, in: 0.5...16.0, step: 0.1) {
-                    } minimumValueLabel: {
-                        Text("0.5x")
-                    } maximumValueLabel: {
-                        Text("16.0x")
+                Picker("Scale Mode", selection: $scaleMode) {
+                    ForEach(ScaleMode.allCases) { mode in
+                        Text(mode.displayName).tag(mode)
                     }
-                    .onChange(of: cursorScale) { _, newValue in
-                        saveCursorScale(newValue)
-                        _ = setCursorScale(Float(newValue))
+                }
+                .pickerStyle(.segmented)
+                .onChange(of: scaleMode) { _, newValue in
+                    saveScaleMode(newValue)
+                    if newValue == .global {
+                        // Restore global scale
+                        _ = setCursorScale(Float(cursorScale))
+                        saveCursorScale(cursorScale)
+                        if let cape = appState.appliedCape {
+                            appState.applyCape(cape)
+                        }
+                    } else {
+                        // Apply custom scales
+                        applyCustomScales()
                     }
+                }
 
-                    Text("Scale changes are applied immediately.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                if scaleMode == .global {
+                    VStack(alignment: .leading) {
+                        Text("\(String(localized:"Global Scale:")) \(cursorScale, specifier: "%.1f")x")
+                        Slider(value: $cursorScale, in: 0.5...16.0, step: 0.1) {
+                        } minimumValueLabel: {
+                            Text("0.5x")
+                        } maximumValueLabel: {
+                            Text("16.0x")
+                        }
+                        .onChange(of: cursorScale) { _, newValue in
+                            saveCursorScale(newValue)
+                            _ = setCursorScale(Float(newValue))
+                        }
+
+                        Text("Scale changes are applied immediately.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                } else {
+                    NavigationLink("Configure Per-Cursor Scales...") {
+                        CustomScaleView()
+                    }
                 }
             }
 
@@ -151,6 +181,7 @@ struct GeneralSettingsView: View {
         .onAppear {
             loadCursorScale()
             loadHandedness()
+            loadScaleMode()
         }
         .alert("Login Item Error", isPresented: $showLoginError) {
             Button("OK") { }
@@ -199,6 +230,36 @@ struct GeneralSettingsView: View {
         // Also write to UserDefaults so @AppStorage("MCHandedness") in preview views updates reactively
         UserDefaults.standard.set(intValue, forKey: Self.handednessKey)
     }
+
+    /// Load scale mode from CFPreferences and sync C global variable
+    private func loadScaleMode() {
+        if let value = CFPreferencesCopyAppValue(Self.scaleModeKey as CFString, Self.preferenceDomain as CFString) as? String,
+           let mode = ScaleMode(rawValue: value) {
+            scaleMode = mode
+        } else {
+            scaleMode = .global
+        }
+        // CRITICAL: Sync the C global variable so apply.m reads the correct mode
+        setCustomScaleMode(scaleMode == .custom)
+    }
+
+    /// Save scale mode to CFPreferences
+    private func saveScaleMode(_ mode: ScaleMode) {
+        CFPreferencesSetAppValue(
+            Self.scaleModeKey as CFString,
+            mode.rawValue as CFString,
+            Self.preferenceDomain as CFString
+        )
+        CFPreferencesAppSynchronize(Self.preferenceDomain as CFString)
+        // Set direct C variable for reliable in-process communication with ObjC
+        setCustomScaleMode(mode == .custom)
+    }
+
+    /// Apply custom per-cursor scales
+    private func applyCustomScales() {
+        guard let cape = appState.appliedCape else { return }
+        appState.applyCape(cape)
+    }
 }
 
 // MARK: - Appearance Settings
@@ -208,6 +269,13 @@ struct AppearanceSettingsView: View {
     @AppStorage("showAuthorInfo") private var showAuthorInfo = true
     @AppStorage("previewGridColumns") private var previewGridColumns = 0
     @AppStorage("previewDisplayMode") private var previewDisplayMode = 0
+    @State private var innerShadowEnabled: Bool = false
+    @State private var outerGlowEnabled: Bool = false
+    @Environment(AppState.self) private var appState
+
+    private static let innerShadowKey = "MCInnerShadow"
+    private static let outerGlowKey = "MCOuterGlow"
+    private static let preferenceDomain = "com.sdmj76.Mousecape"
 
     var body: some View {
         Form {
@@ -229,10 +297,56 @@ struct AppearanceSettingsView: View {
                     Text("8 \(String(localized:"columns"))").tag(8)
                 }
             }
+
+            Section("Effects") {
+                Toggle("Inner Shadow", isOn: $innerShadowEnabled)
+                    .onChange(of: innerShadowEnabled) { _, newValue in
+                        saveInnerShadow(newValue)
+                        if let cape = appState.appliedCape {
+                            appState.applyCape(cape)
+                        }
+                    }
+
+                Text("Adds an inner shadow effect to cursor edges for better visibility.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Toggle("Outer Glow", isOn: $outerGlowEnabled)
+                    .onChange(of: outerGlowEnabled) { _, newValue in
+                        saveOuterGlow(newValue)
+                        if let cape = appState.appliedCape {
+                            appState.applyCape(cape)
+                        }
+                    }
+
+                Text("Adds a soft glow around the cursor for better visibility on any background.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
         .formStyle(.grouped)
         .scrollContentBackground(.hidden)
         .navigationTitle("Appearance")
+        .onAppear {
+            if let value = CFPreferencesCopyAppValue(Self.innerShadowKey as CFString, Self.preferenceDomain as CFString) {
+                innerShadowEnabled = (value as? NSNumber)?.boolValue ?? false
+            }
+            if let value = CFPreferencesCopyAppValue(Self.outerGlowKey as CFString, Self.preferenceDomain as CFString) {
+                outerGlowEnabled = (value as? NSNumber)?.boolValue ?? false
+            }
+        }
+    }
+
+    private func saveInnerShadow(_ enabled: Bool) {
+        let intValue = enabled ? 1 : 0
+        CFPreferencesSetAppValue(Self.innerShadowKey as CFString, intValue as CFNumber, Self.preferenceDomain as CFString)
+        CFPreferencesAppSynchronize(Self.preferenceDomain as CFString)
+    }
+
+    private func saveOuterGlow(_ enabled: Bool) {
+        let intValue = enabled ? 1 : 0
+        CFPreferencesSetAppValue(Self.outerGlowKey as CFString, intValue as CFNumber, Self.preferenceDomain as CFString)
+        CFPreferencesAppSynchronize(Self.preferenceDomain as CFString)
     }
 }
 
@@ -453,4 +567,182 @@ struct AdvancedSettingsView: View {
     SettingsView()
         .environment(AppState.shared)
         .frame(width: 600, height: 500)
+}
+
+// MARK: - Custom Scale View
+
+struct CustomScaleView: View {
+    @Environment(AppState.self) private var appState
+    @State private var perCursorScales: [String: Double] = [:]
+    @State private var selectedCursorType: CursorType? = nil
+    @State private var showSetAllAlert = false
+    @State private var setAllValue: Double = 1.0
+    @State private var applyTask: Task<Void, Never>? = nil
+
+    private static let perCursorScalesKey = "MCPerCursorScales"
+    private static let cursorScaleKey = "MCCursorScale"
+    private static let preferenceDomain = "com.sdmj76.Mousecape"
+
+    var body: some View {
+        HStack(spacing: 0) {
+            // Left column: cursor type list
+            List(CursorType.allCases, selection: $selectedCursorType) { cursorType in
+                HStack {
+                    Text(cursorType.displayName)
+                    Spacer()
+                    if let scale = perCursorScales[cursorType.rawValue], scale != 1.0 {
+                        Text("\(scale, specifier: "%.1f")x")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                    }
+                }
+                .tag(cursorType)
+            }
+            .listStyle(.sidebar)
+            .frame(minWidth: 220, idealWidth: 260)
+
+            Divider()
+
+            // Right column: scale control
+            if let selected = selectedCursorType {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text(selected.displayName)
+                        .font(.title2)
+                        .fontWeight(.semibold)
+
+                    Text(selected.rawValue)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .textSelection(.enabled)
+
+                    let currentScale = perCursorScales[selected.rawValue] ?? 1.0
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Scale: \(currentScale, specifier: "%.1f")x")
+                            .font(.headline)
+                        Slider(value: Binding(
+                            get: { currentScale },
+                            set: { newValue in
+                                updateScale(for: selected, to: newValue)
+                            }
+                        ), in: 0.5...16.0, step: 0.1) {
+                        } minimumValueLabel: {
+                            Text("0.5x")
+                        } maximumValueLabel: {
+                            Text("16.0x")
+                        }
+                    }
+
+                    HStack(spacing: 12) {
+                        Button("Reset to 1.0x") {
+                            updateScale(for: selected, to: 1.0)
+                        }
+                        .buttonStyle(.bordered)
+
+                        Button("Set All to This") {
+                            setAllValue = currentScale
+                            showSetAllAlert = true
+                        }
+                        .buttonStyle(.bordered)
+                    }
+
+                    Spacer()
+
+                    HStack {
+                        Button("Reset All to 1.0x") {
+                            resetAllScales()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.red)
+                    }
+                }
+                .padding(20)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            } else {
+                VStack {
+                    Text("Select a cursor type")
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                    Text("Choose a cursor from the list to configure its scale.")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .navigationTitle("Custom Scales")
+        .onAppear {
+            loadPerCursorScales()
+        }
+        .onDisappear {
+            applyTask?.cancel()
+        }
+        .alert("Set All Scales", isPresented: $showSetAllAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Set All") {
+                setAllScales(to: setAllValue)
+            }
+        } message: {
+            Text("Set all cursor scales to \(setAllValue, specifier: "%.1f")x?")
+        }
+    }
+
+    private func loadPerCursorScales() {
+        if let dict = CFPreferencesCopyAppValue(Self.perCursorScalesKey as CFString, Self.preferenceDomain as CFString) as? [String: Double] {
+            perCursorScales = dict
+        } else {
+            perCursorScales = [:]
+        }
+    }
+
+    private func savePerCursorScales() {
+        CFPreferencesSetAppValue(
+            Self.perCursorScalesKey as CFString,
+            perCursorScales as CFPropertyList,
+            Self.preferenceDomain as CFString
+        )
+        CFPreferencesAppSynchronize(Self.preferenceDomain as CFString)
+    }
+
+    private func updateScale(for cursorType: CursorType, to value: Double) {
+        perCursorScales[cursorType.rawValue] = value
+        savePerCursorScales()
+        recalculateMaxScaleAndApply()
+    }
+
+    private func resetAllScales() {
+        perCursorScales = [:]
+        savePerCursorScales()
+        recalculateMaxScaleAndApply()
+    }
+
+    private func setAllScales(to value: Double) {
+        for cursorType in CursorType.allCases {
+            perCursorScales[cursorType.rawValue] = value
+        }
+        savePerCursorScales()
+        recalculateMaxScaleAndApply()
+    }
+
+    private func recalculateMaxScaleAndApply() {
+        let maxScale = perCursorScales.values.max() ?? 1.0
+        // Save maxScale as MCCursorScale
+        CFPreferencesSetAppValue(
+            Self.cursorScaleKey as CFString,
+            maxScale as CFNumber,
+            Self.preferenceDomain as CFString
+        )
+        CFPreferencesAppSynchronize(Self.preferenceDomain as CFString)
+        // Set system scale immediately for visual feedback
+        _ = setCursorScale(Float(maxScale))
+        // Debounce the full cape re-apply (expensive — re-registers all cursors)
+        applyTask?.cancel()
+        applyTask = Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(500))
+            guard !Task.isCancelled else { return }
+            if let cape = appState.appliedCape {
+                appState.applyCape(cape)
+            }
+        }
+    }
 }
