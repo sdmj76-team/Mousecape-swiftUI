@@ -15,7 +15,10 @@ typedef NS_ENUM(NSUInteger, MCCursorScale) {
     MCCursorScale100  = 100,
     MCCursorScale200  = 200,
     MCCursorScale500  = 500,
-    MCCursorScale1000 = 1000
+    MCCursorScale800  = 800,
+    MCCursorScale1000 = 1000,
+    MCCursorScale1600 = 1600,
+    MCCursorScale6400 = 6400,
 };
 
 @interface MCCursor : NSObject <NSCopying>

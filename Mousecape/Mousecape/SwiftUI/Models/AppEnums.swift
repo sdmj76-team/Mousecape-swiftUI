@@ -77,7 +77,10 @@ enum CursorScale: Int, CaseIterable, Identifiable {
     case scale100 = 100
     case scale200 = 200
     case scale500 = 500
+    case scale800 = 800
     case scale1000 = 1000
+    case scale1600 = 1600
+    case scale6400 = 6400
 
     var id: Int { rawValue }
 
@@ -86,7 +89,10 @@ enum CursorScale: Int, CaseIterable, Identifiable {
         case .scale100: return "1x"
         case .scale200: return "2x"
         case .scale500: return "5x"
+        case .scale800: return "8x"
         case .scale1000: return "10x"
+        case .scale1600: return "16x"
+        case .scale6400: return "64x"
         }
     }
 

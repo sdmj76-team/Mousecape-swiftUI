@@ -909,8 +909,8 @@ private func _processWindowsCursor(convertResult: WindowsCursorResult) async -> 
 
     let hotspotXPixels = CGFloat(convertResult.hotspotX) * scale + offsetX
     let hotspotYPixels = CGFloat(convertResult.hotspotY) * scale + offsetY
-    let hotspotX = min(max(0, hotspotXPixels / 2.0), CGFloat(MCMaxHotspotValue))
-    let hotspotY = min(max(0, hotspotYPixels / 2.0), CGFloat(MCMaxHotspotValue))
+    let hotspotX = min(max(0, hotspotXPixels / 64.0), CGFloat(MCMaxHotspotValue))
+    let hotspotY = min(max(0, hotspotYPixels / 64.0), CGFloat(MCMaxHotspotValue))
 
     let scaledBitmap: NSBitmapImageRep?
     if convertResult.frameCount > 1 {

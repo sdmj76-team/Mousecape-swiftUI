@@ -58,7 +58,7 @@ extern const CGFloat   MCMaxHotspotValue;  // Maximum hotspot coordinate value (
 
 // Cursor import limits
 extern const NSUInteger MCMaxFrameCount;   // Maximum animation frame count (24)
-extern const NSInteger  MCMaxImportSize;   // Maximum import image size in pixels (512)
+extern const NSInteger  MCMaxImportSize;   // Maximum import image size in pixels (2048)
 
 extern const CGFloat   MCCursorCreatorVersion;
 extern const CGFloat   MCCursorParserVersion;

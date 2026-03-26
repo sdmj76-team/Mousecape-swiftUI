@@ -161,6 +161,7 @@ BOOL applyCursorForIdentifier(NSUInteger frameCount, CGFloat frameDuration, CGPo
     return MCRegisterImagesForCursorName(frameCount, frameDuration, hotSpot, size, images, ident);
 }
 
+
 BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL restore) {
     MMLog("=== applyCapeForIdentifier ===");
     MMLog("  Identifier: %s", identifier.UTF8String);
@@ -198,6 +199,9 @@ BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL res
         hotSpot.x = size.width - hotSpot.x - 1;
     }
 
+    // Select only the representation with the highest pixel count
+    NSBitmapImageRep *bestRep = nil;
+    NSUInteger bestPixelCount = 0;
     for (id object in reps) {
         CFTypeID type = CFGetTypeID((__bridge CFTypeRef)object);
         NSBitmapImageRep *rep;
@@ -208,45 +212,46 @@ BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL res
         }
         rep = rep.retaggedSRGBSpace;
 
+        NSUInteger pixelCount = (NSUInteger)rep.pixelsWide * (NSUInteger)rep.pixelsHigh;
+        if (pixelCount > bestPixelCount) {
+            bestPixelCount = pixelCount;
+            bestRep = rep;
+        }
+    }
+
+    if (bestRep) {
         if (!lefty || restore) {
-            // special case if array has a type of CGImage already there is no need to convert it
-            if (type == CGImageGetTypeID()) {
-                images[images.count] = object;
-                continue;
-            }
-
-            images[images.count] = (__bridge id)[rep CGImage];
-
+            images[images.count] = (__bridge id)[bestRep CGImage];
         } else {
             NSBitmapImageRep *newRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
-                                                                               pixelsWide:rep.pixelsWide
-                                                                               pixelsHigh:rep.pixelsHigh
+                                                                               pixelsWide:bestRep.pixelsWide
+                                                                               pixelsHigh:bestRep.pixelsHigh
                                                                             bitsPerSample:8
                                                                           samplesPerPixel:4
                                                                                  hasAlpha:YES
                                                                                  isPlanar:NO
                                                                            colorSpaceName:NSCalibratedRGBColorSpace
-                                                                              bytesPerRow:4 * rep.pixelsWide
+                                                                              bytesPerRow:4 * bestRep.pixelsWide
                                                                              bitsPerPixel:32];
             NSGraphicsContext *ctx = [NSGraphicsContext graphicsContextWithBitmapImageRep:newRep];
             [NSGraphicsContext saveGraphicsState];
             [NSGraphicsContext setCurrentContext:ctx];
             NSAffineTransform *transform = [NSAffineTransform transform];
-            [transform translateXBy:rep.pixelsWide yBy:0];
+            [transform translateXBy:bestRep.pixelsWide yBy:0];
             [transform scaleXBy:-1 yBy:1];
             [transform concat];
 
-            [rep drawInRect:NSMakeRect(0, 0, rep.pixelsWide, rep.pixelsHigh)
-                   fromRect:NSZeroRect
-                  operation:NSCompositingOperationSourceOver
-                   fraction:1.0
-             respectFlipped:NO
-                      hints:nil];
+            [bestRep drawInRect:NSMakeRect(0, 0, bestRep.pixelsWide, bestRep.pixelsHigh)
+                       fromRect:NSZeroRect
+                      operation:NSCompositingOperationSourceOver
+                       fraction:1.0
+                respectFlipped:NO
+                         hints:nil];
             [NSGraphicsContext restoreGraphicsState];
             images[images.count] = (__bridge id)[newRep CGImage];
         }
     }
-    
+
     return applyCursorForIdentifier(frameCount.unsignedIntegerValue, frameDuration.doubleValue, hotSpot, size, images, identifier, 0);
 }
 

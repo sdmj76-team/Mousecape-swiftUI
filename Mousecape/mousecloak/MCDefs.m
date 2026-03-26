@@ -29,7 +29,7 @@ const CGFloat   MCMaxHotspotValue                    = 31.99;
 
 // Cursor import limits
 const NSUInteger MCMaxFrameCount                     = 24;
-const NSInteger  MCMaxImportSize                     = 512;
+const NSInteger  MCMaxImportSize                     = 2048;
 
 const CGFloat   MCCursorCreatorVersion               = 2.0;
 const CGFloat   MCCursorParserVersion                = 2.0;

@@ -13,18 +13,18 @@ enum CursorImageScaler {
 
     // MARK: - Constants
 
-    /// Standard cursor size in pixels for 2x HiDPI (64x64 pixels = 32x32 points)
-    static let standardCursorSize: Int = 64
+    /// Standard cursor size in pixels for high-resolution rendering (2048x2048 pixels)
+    static let standardCursorSize: Int = 2048
 
     /// Maximum animation frame count (macOS system limit)
     static let maxFrameCount: Int = 24
 
     /// Maximum individual frame size for import validation (pixels)
-    static let maxImportSize: Int = 512
+    static let maxImportSize: Int = 2048
 
     // MARK: - Static Image Scaling
 
-    /// Scale image to standard 64x64 size with aspect fit and transparent padding
+    /// Scale image to standard 2048x2048 size with aspect fit and transparent padding
     static func scaleImageToStandardSize(_ original: NSBitmapImageRep) -> NSBitmapImageRep? {
         let targetSize = standardCursorSize
 
@@ -209,7 +209,7 @@ enum CursorImageScaler {
     ) -> (x: CGFloat, y: CGFloat) {
         let originalWidthF = CGFloat(originalWidth)
         let originalHeightF = CGFloat(originalHeight)
-        let targetSizeF = CGFloat(standardCursorSize)  // 64 pixels
+        let targetSizeF = CGFloat(standardCursorSize)  // 2048 pixels
         let scale = min(targetSizeF / originalWidthF, targetSizeF / originalHeightF)
         let scaledWidth = originalWidthF * scale
         let scaledHeight = originalHeightF * scale
@@ -220,11 +220,11 @@ enum CursorImageScaler {
         let hotspotPixelsX = CGFloat(hotspotX) * scale + offsetX
         let hotspotPixelsY = CGFloat(hotspotY) * scale + offsetY
 
-        // Convert to points (divide by 2 for 2x scale)
+        // Convert to points (divide by 64 for 64x scale)
         // Also clamp to valid range [0, 32)
         let pointsSize: CGFloat = 32.0
-        let hotspotPointsX = min(max(hotspotPixelsX / 2.0, 0), pointsSize - 0.1)
-        let hotspotPointsY = min(max(hotspotPixelsY / 2.0, 0), pointsSize - 0.1)
+        let hotspotPointsX = min(max(hotspotPixelsX / 64.0, 0), pointsSize - 0.1)
+        let hotspotPointsY = min(max(hotspotPixelsY / 64.0, 0), pointsSize - 0.1)
 
         return (hotspotPointsX, hotspotPointsY)
     }

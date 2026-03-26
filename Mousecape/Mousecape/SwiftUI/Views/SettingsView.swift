@@ -107,15 +107,14 @@ struct GeneralSettingsView: View {
             Section("Cursor Scale") {
                 VStack(alignment: .leading) {
                     Text("\(String(localized:"Global Scale:")) \(cursorScale, specifier: "%.1f")x")
-                    Slider(value: $cursorScale, in: 0.5...2.0, step: 0.1) {
+                    Slider(value: $cursorScale, in: 0.5...16.0, step: 0.1) {
                     } minimumValueLabel: {
                         Text("0.5x")
                     } maximumValueLabel: {
-                        Text("2.0x")
+                        Text("16.0x")
                     }
                     .onChange(of: cursorScale) { _, newValue in
                         saveCursorScale(newValue)
-                        // Apply the cursor scale immediately using the ObjC function
                         _ = setCursorScale(Float(newValue))
                     }
 

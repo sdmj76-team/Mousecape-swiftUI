@@ -303,6 +303,7 @@ class WindowDelegate: NSObject, NSWindowDelegate {
 /// Hides NSToolbarPlatterView (toolbar background) in macOS 15+
 enum ToolbarHider {
     @MainActor private static var timer: Timer?
+    @MainActor private static var checkCount: Int = 0
 
     @MainActor
     static func startMonitoring() {
@@ -310,9 +311,9 @@ enum ToolbarHider {
         hideToolbarPlatter()
 
         // Monitor for view changes - check frequently at first, then less often
-        var checkCount = 0
+        checkCount = 0
         timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 hideToolbarPlatter()
                 checkCount += 1
 
@@ -320,7 +321,7 @@ enum ToolbarHider {
                 if checkCount >= 20 {
                     timer?.invalidate()
                     timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
-                        DispatchQueue.main.async {
+                        Task { @MainActor in
                             hideToolbarPlatter()
                         }
                     }

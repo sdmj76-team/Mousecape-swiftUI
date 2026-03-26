@@ -622,7 +622,7 @@ struct WindowsCursorParser {
         let actualWidth = bmpWidth > 0 ? bmpWidth : width
 
         // Validate dimensions to prevent OOM from malicious files
-        let maxDimension = CursorImageScaler.maxImportSize  // 512
+        let maxDimension = CursorImageScaler.maxImportSize  // 2048
         guard actualWidth > 0 && actualWidth <= maxDimension &&
               actualHeight > 0 && actualHeight <= maxDimension else {
             throw WindowsCursorParserError.invalidFormat("BMP dimensions \(actualWidth)×\(actualHeight) exceed maximum \(maxDimension)×\(maxDimension)")

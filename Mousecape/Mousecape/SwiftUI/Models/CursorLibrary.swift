@@ -381,7 +381,7 @@ extension CursorLibrary {
     func validate() throws {
         let maxFrameCount = 24  // MCMaxFrameCount
         let maxHotspotValue: CGFloat = 31.99  // MCMaxHotspotValue
-        let maxImportSize = 512  // MCMaxImportSize
+        let maxImportSize = 2048  // MCMaxImportSize
 
         var errors: [ValidationError] = []
 
