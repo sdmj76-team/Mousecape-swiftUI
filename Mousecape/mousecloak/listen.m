@@ -28,7 +28,7 @@ NSString *appliedCapePathForUser(NSString *user) {
         return nil;
     }
 
-    NSString *ident = MCDefaultFor(@"MCAppliedCursor", user, (NSString *)kCFPreferencesCurrentHost);
+    NSString *ident = MCDefault(@"MCAppliedCursor");
 
     // Validate identifier - remove any path traversal attempts
     if (ident && ([ident containsString:@"/"] || [ident containsString:@".."])) {

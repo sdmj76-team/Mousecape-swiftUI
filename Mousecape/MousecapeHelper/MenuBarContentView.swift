@@ -68,11 +68,9 @@ class CursorState: ObservableObject {
 
     func refresh() {
         // Use CFPreferences API (same as main app)
-        let value = CFPreferencesCopyValue(
+        let value = CFPreferencesCopyAppValue(
             "MCAppliedCursor" as CFString,
-            "com.sdmj76.Mousecape" as CFString,
-            kCFPreferencesCurrentUser,
-            kCFPreferencesCurrentHost
+            "com.sdmj76.Mousecape" as CFString
         )
 
         if let capeIdentifier = value as? String {

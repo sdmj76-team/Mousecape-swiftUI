@@ -26,5 +26,5 @@ extern void MCSetDefaultFor(id _Nullable value, NSString *key, NSString *user, N
 
 NS_ASSUME_NONNULL_END
 
-#define MCSetDefault(value, key) MCSetDefaultFor(value, key, (__bridge NSString *)kCFPreferencesCurrentUser, (__bridge NSString *)kCFPreferencesCurrentHost)
+#define MCSetDefault(value, key) MCSetDefaultFor(value, key, (__bridge NSString *)kCFPreferencesCurrentUser, (__bridge NSString *)kCFPreferencesAnyHost)
 #endif

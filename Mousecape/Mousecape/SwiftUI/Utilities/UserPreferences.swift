@@ -29,13 +29,13 @@ final class UserPreferences: @unchecked Sendable {
 
     // MARK: - Read Preferences
 
-    /// Get a preference value for current user and host
+    /// Get a preference value for current user and any host
     func getValue(forKey key: String) -> Any? {
         let value = CFPreferencesCopyValue(
             key as CFString,
             domain,
             kCFPreferencesCurrentUser,
-            kCFPreferencesCurrentHost
+            kCFPreferencesAnyHost
         )
 
         #if DEBUG
@@ -81,7 +81,7 @@ final class UserPreferences: @unchecked Sendable {
 
     // MARK: - Write Preferences
 
-    /// Set a preference value for current user and host
+    /// Set a preference value for current user and any host
     func setValue(_ value: Any?, forKey key: String) {
         #if DEBUG
         if let value = value {
@@ -96,7 +96,7 @@ final class UserPreferences: @unchecked Sendable {
             value as CFPropertyList?,
             domain,
             kCFPreferencesCurrentUser,
-            kCFPreferencesCurrentHost
+            kCFPreferencesAnyHost
         )
     }
 
@@ -105,7 +105,7 @@ final class UserPreferences: @unchecked Sendable {
         return CFPreferencesSynchronize(
             domain,
             kCFPreferencesCurrentUser,
-            kCFPreferencesCurrentHost
+            kCFPreferencesAnyHost
         )
     }
 
@@ -142,7 +142,7 @@ public func SwiftGetPreference(_ key: UnsafePointer<CChar>) -> Unmanaged<AnyObje
         keyString as CFString,
         "com.sdmj76.Mousecape" as CFString,
         kCFPreferencesCurrentUser,
-        kCFPreferencesCurrentHost
+        kCFPreferencesAnyHost
     ) else {
         return nil
     }
@@ -166,7 +166,7 @@ public func SwiftSetPreference(_ value: UnsafeRawPointer?, _ key: UnsafePointer<
         cfValue,
         "com.sdmj76.Mousecape" as CFString,
         kCFPreferencesCurrentUser,
-        kCFPreferencesCurrentHost
+        kCFPreferencesAnyHost
     )
 }
 

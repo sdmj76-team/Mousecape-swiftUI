@@ -429,18 +429,18 @@ final class AppState: @unchecked Sendable {
         // Save identifier for "Apply Last Cape on Launch" feature
         UserDefaults.standard.set(cape.identifier, forKey: "lastAppliedCapeIdentifier")
         // Also write MCAppliedCursor for session monitor (ObjC listen.m)
-        // Uses CFPreferences to write to current user + current host domain
+        // Uses CFPreferences to write to current user + any host domain
         CFPreferencesSetValue(
             "MCAppliedCursor" as CFString,
             cape.identifier as CFString,
             "com.sdmj76.Mousecape" as CFString,
             kCFPreferencesCurrentUser,
-            kCFPreferencesCurrentHost
+            kCFPreferencesAnyHost
         )
         CFPreferencesSynchronize(
             "com.sdmj76.Mousecape" as CFString,
             kCFPreferencesCurrentUser,
-            kCFPreferencesCurrentHost
+            kCFPreferencesAnyHost
         )
     }
 
@@ -461,12 +461,12 @@ final class AppState: @unchecked Sendable {
             nil,
             "com.sdmj76.Mousecape" as CFString,
             kCFPreferencesCurrentUser,
-            kCFPreferencesCurrentHost
+            kCFPreferencesAnyHost
         )
         CFPreferencesSynchronize(
             "com.sdmj76.Mousecape" as CFString,
             kCFPreferencesCurrentUser,
-            kCFPreferencesCurrentHost
+            kCFPreferencesAnyHost
         )
     }
 

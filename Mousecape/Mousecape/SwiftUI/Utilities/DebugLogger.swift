@@ -91,22 +91,18 @@ final class DebugLogger: @unchecked Sendable {
         log("  language: \(defaults.string(forKey: "appLanguage") ?? "system")")
 
         // Read mousecloak preferences from CFPreferences
-        if let appliedCursor = CFPreferencesCopyValue(
+        if let appliedCursor = CFPreferencesCopyAppValue(
             "MCAppliedCursor" as CFString,
-            "com.sdmj76.Mousecape" as CFString,
-            kCFPreferencesCurrentUser,
-            kCFPreferencesCurrentHost
+            "com.sdmj76.Mousecape" as CFString
         ) as? String {
             log("  MCAppliedCursor: \(appliedCursor)")
         } else {
             log("  MCAppliedCursor: (not set)")
         }
 
-        if let cursorScale = CFPreferencesCopyValue(
+        if let cursorScale = CFPreferencesCopyAppValue(
             "MCCursorScale" as CFString,
-            "com.sdmj76.Mousecape" as CFString,
-            kCFPreferencesCurrentUser,
-            kCFPreferencesCurrentHost
+            "com.sdmj76.Mousecape" as CFString
         ) as? Double {
             log("  MCCursorScale: \(cursorScale)")
         } else {
