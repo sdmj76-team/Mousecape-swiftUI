@@ -468,6 +468,16 @@ BOOL applyCape(NSDictionary *dictionary) {
         }
         MMLog("========================================");
 
+        // Force cursor system to re-evaluate all registered cursors.
+        // Without this nudge, cursor type switching (e.g. arrow→resize at window edges)
+        // can break after resetAllCursors + register at non-1.0 scale.
+        float currentScale = cursorScale();
+        if (currentScale > 0.0f) {
+            CGSSetCursorScale(CGSMainConnectionID(), currentScale + 0.3f);
+            CGSSetCursorScale(CGSMainConnectionID(), currentScale);
+            MMLog("Cursor scale nudged for refresh: %.2f", currentScale);
+        }
+
         return YES;
     }
 }
@@ -562,6 +572,16 @@ NSDictionary *applyCapeWithResult(NSDictionary *dictionary) {
         }
 
         MMLog("========================================");
+
+        // Force cursor system to re-evaluate all registered cursors.
+        // Without this nudge, cursor type switching (e.g. arrow→resize at window edges)
+        // can break after resetAllCursors + register at non-1.0 scale.
+        float currentScale = cursorScale();
+        if (currentScale > 0.0f) {
+            CGSSetCursorScale(CGSMainConnectionID(), currentScale + 0.3f);
+            CGSSetCursorScale(CGSMainConnectionID(), currentScale);
+            MMLog("Cursor scale nudged for refresh: %.2f", currentScale);
+        }
 
         // Return detailed result dictionary
         return @{
