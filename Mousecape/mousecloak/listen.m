@@ -85,8 +85,18 @@ static void UserSpaceChanged(SCDynamicStoreRef	store, CFArrayRef changedKeys, vo
         MMLog("No cape configured for user");
     }
 
-    setCursorScale(defaultCursorScale());
-    MMLog("Cursor scale applied");
+    // Restore scale according to the active mode
+    if (customScaleMode()) {
+        float maxScale = [MCDefault(MCPreferencesCursorScaleKey) floatValue];
+        if (maxScale <= 0.0f) maxScale = 1.0f;
+        MMLog("Session monitor: restoring custom scale %.2f", maxScale);
+        setCursorScale(maxScale);
+    } else {
+        float globalScale = [MCDefault(@"MCGlobalCursorScale") floatValue];
+        if (globalScale < 0.5f || globalScale > 16.0f) globalScale = 1.0f;
+        MMLog("Session monitor: restoring global scale %.2f", globalScale);
+        setCursorScale(globalScale);
+    }
 
     CFRelease(currentConsoleUser);
 }
@@ -180,8 +190,16 @@ void listener(void) {
     } else {
         MMLog("No cape configured - running in standby mode");
     }
-    setCursorScale(defaultCursorScale());
-    MMLog("Initial cursor scale applied");
+    // Restore scale according to the active mode
+    if (customScaleMode()) {
+        float maxScale = [MCDefault(MCPreferencesCursorScaleKey) floatValue];
+        if (maxScale <= 0.0f) maxScale = 1.0f;
+        setCursorScale(maxScale);
+    } else {
+        float globalScale = [MCDefault(@"MCGlobalCursorScale") floatValue];
+        if (globalScale < 0.5f || globalScale > 16.0f) globalScale = 1.0f;
+        setCursorScale(globalScale);
+    }
 
     CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
     MMLog("Entering run loop...");
@@ -232,8 +250,18 @@ void startSessionMonitor(void) {
     } else {
         MMLog("No cape configured - running in standby mode");
     }
-    setCursorScale(defaultCursorScale());
-    MMLog("Initial cursor scale applied");
+    // Restore scale according to the active mode
+    if (customScaleMode()) {
+        float maxScale = [MCDefault(MCPreferencesCursorScaleKey) floatValue];
+        if (maxScale <= 0.0f) maxScale = 1.0f;
+        MMLog("Session monitor: restoring custom scale %.2f", maxScale);
+        setCursorScale(maxScale);
+    } else {
+        float globalScale = [MCDefault(@"MCGlobalCursorScale") floatValue];
+        if (globalScale < 0.5f || globalScale > 16.0f) globalScale = 1.0f;
+        MMLog("Session monitor: restoring global scale %.2f", globalScale);
+        setCursorScale(globalScale);
+    }
 
     CFRunLoopAddSource(CFRunLoopGetMain(), rls, kCFRunLoopDefaultMode);
     MMLog("Session monitor attached to main run loop (non-blocking)");

@@ -179,9 +179,17 @@
 }
 
 - (void)applyCape:(MCCursorLibrary *)cape {
-    if (applyCapeAtPath(cape.fileURL.path)) {
+    if (applyCape([cape dictionaryRepresentation])) {
         self.appliedCape = cape;
     }
+}
+
+- (NSDictionary *)applyCapeWithResult:(MCCursorLibrary *)cape {
+    NSDictionary *result = applyCapeWithResult([cape dictionaryRepresentation]);
+    if ([result[@"success"] boolValue]) {
+        self.appliedCape = cape;
+    }
+    return result;
 }
 
 - (void)restoreCape {

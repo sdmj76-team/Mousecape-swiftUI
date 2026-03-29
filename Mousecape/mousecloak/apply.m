@@ -204,9 +204,25 @@ BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL res
         hotSpot.x = size.width - hotSpot.x - 1;
     }
 
-    // Select only the representation with the highest pixel count
+    // Calculate effective scale for representation selection
+    // Pick the representation whose pixel size best matches the target render size
+    float effectiveScale = 1.0f;
+    if (customScaleMode) {
+        NSDictionary *perCursorScales = MCDefault(MCPreferencesPerCursorScalesKey);
+        float desiredScale = [perCursorScales[identifier] floatValue];
+        if (desiredScale > 0.0f) effectiveScale = desiredScale;
+    } else {
+        effectiveScale = cursorScale();
+        if (effectiveScale <= 0.0f) effectiveScale = 1.0f;
+    }
+    NSUInteger targetPixelCount = (NSUInteger)(size.width * effectiveScale) * (NSUInteger)(size.height * effectiveScale);
+    MMLog("  Effective scale: %.2f, target pixel count: %lu", effectiveScale, (unsigned long)targetPixelCount);
+
+    // Select the representation closest to the target pixel size
+    // (instead of always picking the highest resolution)
     NSBitmapImageRep *bestRep = nil;
     NSUInteger bestPixelCount = 0;
+    NSUInteger bestDistance = UINT_MAX;
     for (id object in reps) {
         CFTypeID type = CFGetTypeID((__bridge CFTypeRef)object);
         NSBitmapImageRep *rep;
@@ -218,11 +234,17 @@ BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL res
         rep = rep.retaggedSRGBSpace;
 
         NSUInteger pixelCount = (NSUInteger)rep.pixelsWide * (NSUInteger)rep.pixelsHigh;
-        if (pixelCount > bestPixelCount) {
+        NSUInteger distance = (pixelCount > targetPixelCount) ?
+            (pixelCount - targetPixelCount) : (targetPixelCount - pixelCount);
+        // Prefer closest match; tie-break by higher pixel count
+        if (distance < bestDistance || (distance == bestDistance && pixelCount > bestPixelCount)) {
+            bestDistance = distance;
             bestPixelCount = pixelCount;
             bestRep = rep;
         }
     }
+    MMLog("  Selected representation: %lupx (distance: %lu from target %lupx)",
+          (unsigned long)bestPixelCount, (unsigned long)bestDistance, (unsigned long)targetPixelCount);
 
     if (bestRep) {
         if (!lefty || restore) {
@@ -296,11 +318,12 @@ BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL res
 
         float maxScale = cursorScale(); // Read current system scale directly from CGS
         if (maxScale <= 0.0f) maxScale = 1.0f;
+        float ratio = (maxScale > 0) ? desiredScale / maxScale : 1.0f;
         MMLog("SCALE DEBUG per-cursor %s: desired=%.2f, maxScale=%.2f, ratio=%.3f",
-              identifier.UTF8String, desiredScale, maxScale, (maxScale > 0 ? desiredScale/maxScale : 0));
+              identifier.UTF8String, desiredScale, maxScale, ratio);
 
-        if (desiredScale < maxScale) {
-            float ratio = desiredScale / maxScale;
+        // Scale when ratio differs from 1.0 (handles both down-scaling AND up-scaling)
+        if (ratio < 0.99f || ratio > 1.01f) {
             // Scale the logical size proportionally so the cursor appears at the correct visual size
             size = CGSizeMake(size.width * ratio, size.height * ratio);
             MMLog("Custom scaling %s: desired=%.2f, max=%.2f, ratio=%.3f, newSize=%.1fx%.1f",
@@ -333,6 +356,10 @@ BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL res
             }
             CGColorSpaceRelease(scaleColorSpace);
             images = scaledImages;
+
+            // Scale hotspot proportionally with the image to maintain correct position
+            hotSpot = CGPointMake(hotSpot.x * ratio, hotSpot.y * ratio);
+            MMLog("Hotspot scaled by ratio %.3f: (%.1f, %.1f)", ratio, hotSpot.x, hotSpot.y);
         }
     }
 
@@ -442,6 +469,109 @@ BOOL applyCape(NSDictionary *dictionary) {
         MMLog("========================================");
 
         return YES;
+    }
+}
+
+NSDictionary *applyCapeWithResult(NSDictionary *dictionary) {
+    @autoreleasepool {
+        NSDictionary *cursors = dictionary[MCCursorDictionaryCursorsKey];
+        NSString *name = dictionary[MCCursorDictionaryCapeNameKey];
+        NSNumber *version = dictionary[MCCursorDictionaryCapeVersionKey];
+
+        MMLog("========================================");
+        MMLog("=== APPLYING CAPE WITH RESULT ===");
+        MMLog("========================================");
+        MMLog("Cape name: %s", name.UTF8String);
+        MMLog("Cape identifier: %s", [dictionary[MCCursorDictionaryIdentifierKey] UTF8String]);
+        MMLog("Total cursors: %lu", (unsigned long)cursors.count);
+
+        // Save the current system scale BEFORE resetAllCursors() might reset it
+        float savedScale = cursorScale();
+        MMLog("Saved system scale before reset: %.2f", savedScale);
+
+        MMLog("--- Calling resetAllCursors ---");
+        resetAllCursors();
+        MMLog("--- Calling backupAllCursors ---");
+        backupAllCursors();
+
+        // Read scale mode from direct C variable (not CFPreferences)
+        BOOL isCustomMode = customScaleMode();
+
+        if (isCustomMode) {
+            float maxScale = 1.0f;
+            NSDictionary *perCursorScales = MCDefault(MCPreferencesPerCursorScalesKey);
+            if (perCursorScales) {
+                for (NSNumber *val in perCursorScales.allValues) {
+                    float s = val.floatValue;
+                    if (s > maxScale) maxScale = s;
+                }
+            }
+            MMLog("SCALE DEBUG: custom mode, maxScale=%.2f", maxScale);
+            setCursorScale(maxScale);
+            // Save maxScale as MCCursorScale so listen.m can restore it
+            MCSetDefault(@(maxScale), MCPreferencesCursorScaleKey);
+        } else {
+            MMLog("SCALE DEBUG: global mode, restoring to %.2f", savedScale);
+            if (savedScale >= 0.5f && savedScale <= 16.0f) {
+                setCursorScale(savedScale);
+            } else {
+                setCursorScale(defaultCursorScale());
+            }
+        }
+
+        MMLog("--- Applying cursors ---");
+
+        NSUInteger successCount = 0;
+        NSUInteger skippedCount = 0;
+        NSUInteger failedCount = 0;
+        NSMutableArray *failedIdentifiers = [NSMutableArray array];
+        NSMutableArray *skippedIdentifiers = [NSMutableArray array];
+
+        for (NSString *key in cursors) {
+            NSDictionary *cape = cursors[key];
+            MMLog("Hooking for %s", key.UTF8String);
+
+            // Check if cursor has valid image data before attempting to apply
+            NSArray *reps = cape[MCCursorDictionaryRepresentationsKey];
+            if (!reps || reps.count == 0) {
+                MMLog(YELLOW "  Skipping cursor %s - no image data" RESET, key.UTF8String);
+                skippedCount++;
+                [skippedIdentifiers addObject:key];
+                continue;
+            }
+
+            BOOL success = applyCapeForIdentifier(cape, key, NO, isCustomMode);
+            if (!success) {
+                MMLog(YELLOW "  Failed to apply cursor %s" RESET, key.UTF8String);
+                failedCount++;
+                [failedIdentifiers addObject:key];
+            } else {
+                successCount++;
+            }
+        }
+
+        MMLog("--- Application Summary ---");
+        MMLog("  Total cursors: %lu", (unsigned long)cursors.count);
+        MMLog("  Successfully applied: %lu", (unsigned long)successCount);
+        MMLog("  Skipped (no images): %lu", (unsigned long)skippedCount);
+        MMLog("  Failed: %lu", (unsigned long)failedCount);
+
+        // Only save applied cursor preference if at least one cursor succeeded
+        if (successCount > 0) {
+            MCSetDefault(dictionary[MCCursorDictionaryIdentifierKey], MCPreferencesAppliedCursorKey);
+        }
+
+        MMLog("========================================");
+
+        // Return detailed result dictionary
+        return @{
+            @"success": @(successCount > 0),
+            @"successCount": @(successCount),
+            @"skippedCount": @(skippedCount),
+            @"failedCount": @(failedCount),
+            @"failedIdentifiers": [failedIdentifiers copy],
+            @"skippedIdentifiers": [skippedIdentifiers copy]
+        };
     }
 }
 

@@ -143,15 +143,8 @@ struct GeneralSettingsView: View {
                         .onChange(of: cursorScale) { _, newValue in
                             saveCursorScale(newValue)
                             _ = setCursorScale(Float(newValue))
-                            // Re-apply cape with new scale (debounced)
-                            applyTask?.cancel()
-                            applyTask = Task { @MainActor in
-                                try? await Task.sleep(for: .milliseconds(500))
-                                guard !Task.isCancelled else { return }
-                                if let cape = appState.appliedCape {
-                                    appState.applyCape(cape)
-                                }
-                            }
+                            // In global mode, CGSSetCursorScale already handles scaling
+                            // — no need to re-register all cursors
                         }
 
                         Text("Scale changes are applied immediately.")

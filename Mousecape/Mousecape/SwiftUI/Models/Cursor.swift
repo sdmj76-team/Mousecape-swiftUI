@@ -13,7 +13,7 @@ import ImageIO
 /// Swift wrapper around MCCursor for SwiftUI usage
 @Observable
 final class Cursor: Identifiable, Hashable {
-    let id: UUID
+    let id: ObjectIdentifier
     private let objcCursor: MCCursor
 
     /// Cached image to avoid repeated NSImage allocation from imageWithAllReps
@@ -148,7 +148,7 @@ final class Cursor: Identifiable, Hashable {
     // MARK: - Initialization
 
     init(objcCursor: MCCursor) {
-        self.id = UUID()
+        self.id = ObjectIdentifier(objcCursor)
         self.objcCursor = objcCursor
     }
 

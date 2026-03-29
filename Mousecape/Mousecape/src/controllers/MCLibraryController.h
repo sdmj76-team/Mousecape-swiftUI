@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeCape:(MCCursorLibrary *)cape;
 
 - (void)applyCape:(MCCursorLibrary *)cape;
+- (NSDictionary *)applyCapeWithResult:(MCCursorLibrary *)cape;
 - (void)restoreCape;
 
 - (NSURL *)URLForCape:(MCCursorLibrary *)cape;

@@ -241,16 +241,7 @@ final class AppState: @unchecked Sendable {
     /// Load cursor scale from preferences and apply it
     private func applySavedCursorScale() {
         let preferenceDomain = "com.sdmj76.Mousecape"
-        let scaleModeKey = "MCScaleMode"
         let cursorScaleKey = "MCCursorScale"
-
-        // Sync C global variable from persisted preferences BEFORE reading it
-        if let modeStr = CFPreferencesCopyAppValue(scaleModeKey as CFString, preferenceDomain as CFString) as? String,
-           modeStr == "custom" {
-            setCustomScaleMode(true)
-        } else {
-            setCustomScaleMode(false)
-        }
 
         if customScaleMode() {
             // Custom mode: applyCape() handles per-cursor scaling internally
@@ -451,15 +442,53 @@ final class AppState: @unchecked Sendable {
         debugLog("Cape: \(cape.name) (\(cape.identifier))")
         debugLog("Cursors count: \(cape.cursors.count)")
 
-        libraryController?.applyCape(cape.underlyingLibrary)
-        appliedCape = cape
+        // Use the new method that returns detailed results
+        guard let result = libraryController?.applyCape(withResult: cape.underlyingLibrary) as? [String: Any] else {
+            debugLog("Apply failed - nil result")
+            operationResultMessage = String(localized: "Failed to apply cape.")
+            operationResultIsSuccess = false
+            showOperationResult = true
+            return
+        }
+
+        let success = result["success"] as? Bool ?? false
+        let successCount = result["successCount"] as? UInt ?? 0
+        let failedCount = result["failedCount"] as? UInt ?? 0
+        let skippedCount = result["skippedCount"] as? UInt ?? 0
+        let failedIdentifiers = result["failedIdentifiers"] as? [String] ?? []
+        let skippedIdentifiers = result["skippedIdentifiers"] as? [String] ?? []
+
+        if success {
+            appliedCape = cape
+
+            // Build detailed message
+            var message = "\"\(cape.name)\" "
+            if failedCount == 0 && skippedCount == 0 {
+                message += String(localized: "applied successfully.")
+            } else {
+                message += String(format: String(localized: "applied with warnings (%u succeeded, %u failed, %u skipped)"),
+                                successCount, failedCount, skippedCount)
+            }
+
+            if failedCount > 0 {
+                message += "\n\n" + String(localized: "Failed cursors:") + "\n" + failedIdentifiers.joined(separator: "\n")
+                debugLog("Apply completed with failures: \(failedIdentifiers)")
+            }
+
+            operationResultMessage = message
+            operationResultIsSuccess = (failedCount == 0)
+        } else {
+            operationResultMessage = String(localized: "Failed to apply cape - no cursors were successfully applied.")
+            operationResultIsSuccess = false
+            debugLog("Apply failed - no cursors succeeded")
+        }
+        showOperationResult = true
 
         debugLog("Apply completed, saving preferences...")
 
         // Save identifier for "Apply Last Cape on Launch" feature
         UserDefaults.standard.set(cape.identifier, forKey: "lastAppliedCapeIdentifier")
         // Also write MCAppliedCursor for session monitor (ObjC listen.m)
-        // Uses CFPreferences to write to current user + current host domain
         CFPreferencesSetValue(
             "MCAppliedCursor" as CFString,
             cape.identifier as CFString,

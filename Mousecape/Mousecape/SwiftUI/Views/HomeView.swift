@@ -262,6 +262,15 @@ struct HomeView: View {
         } message: {
             Text(appState.imageImportWarningMessage)
         }
+        // Apply result alert
+        .alert(
+            appState.operationResultIsSuccess ? "Success" : "Apply Error",
+            isPresented: $appState.showOperationResult
+        ) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(appState.operationResultIsSuccess ? "All cursors applied." : "Some cursors failed to apply.")
+        }
         // Add cursor sheet
         .sheet(isPresented: $appState.showAddCursorSheet) {
             if let cape = appState.editingCape {
