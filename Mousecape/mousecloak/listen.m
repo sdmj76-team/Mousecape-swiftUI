@@ -15,6 +15,45 @@
 #import <Cocoa/Cocoa.h>
 #import "scale.h"
 
+#define PERIODIC_NUDGE_INTERVAL_SEC 60.0
+
+// Periodic scale nudge callback — keeps cursor registrations fresh while the Helper runs.
+// Mirrors the nudge pattern in apply.m: bump + 30ms delay + restore with retry.
+static void periodicNudgeCallback(CFRunLoopTimerRef timer, void *info) {
+    float scale = cursorScale();
+    if (scale <= 0.0f) {
+        MMLog("Periodic nudge: skipped — no valid scale (scale=%.2f)", scale);
+        return;
+    }
+
+    MMLog("Periodic nudge: scale=%.2f", scale);
+
+    CGSConnectionID cid = CGSMainConnectionID();
+
+    // Bump scale to force cursor system to re-evaluate registrations
+    CGSSetCursorScale(cid, scale + 0.3f);
+
+    // Small delay for cursor system to process the scale change
+    usleep(30000); // 30ms
+
+    // Restore with retry — the cursor system may not immediately apply the scale
+    float afterRestore = scale;
+    for (int retry = 0; retry < 3; retry++) {
+        CGSSetCursorScale(cid, scale);
+        afterRestore = cursorScale();
+        if (fabsf(afterRestore - scale) < 0.01f) {
+            break;
+        }
+        usleep(20000); // 20ms between retries
+    }
+
+    if (fabsf(afterRestore - scale) >= 0.01f) {
+        MMLog(RED "Periodic nudge FAILED: target=%.2f, final=%.2f" RESET, scale, afterRestore);
+    } else {
+        MMLog("Periodic nudge OK: %.2f", scale);
+    }
+}
+
 NSString *appliedCapePathForUser(NSString *user) {
     // Validate user - must not be empty or contain path separators
     if (!user || user.length == 0 || [user containsString:@"/"] || [user containsString:@".."]) {
@@ -205,6 +244,25 @@ void listener(void) {
         float globalScale = [MCDefault(@"MCGlobalCursorScale") floatValue];
         if (globalScale < 0.5f || globalScale > 16.0f) globalScale = 1.0f;
         setCursorScale(globalScale);
+    }
+
+    // Periodic scale nudge timer — keeps cursor registrations fresh while Helper is running
+    static CFRunLoopTimerRef periodicNudgeTimer = NULL;
+    CFRunLoopTimerContext timerCtx = {0, NULL, NULL, NULL, NULL};
+    periodicNudgeTimer = CFRunLoopTimerCreate(
+        NULL,                                                // allocator
+        CFAbsoluteTimeGetCurrent() + PERIODIC_NUDGE_INTERVAL_SEC,  // first fire (60s from now)
+        PERIODIC_NUDGE_INTERVAL_SEC,                         // interval (every 60s)
+        0,                                                   // flags
+        0,                                                   // order
+        periodicNudgeCallback,                                // callback
+        &timerCtx
+    );
+    if (periodicNudgeTimer) {
+        CFRunLoopAddTimer(CFRunLoopGetCurrent(), periodicNudgeTimer, kCFRunLoopDefaultMode);
+        MMLog(BOLD CYAN "Periodic nudge timer started (interval: %.0f sec)" RESET, PERIODIC_NUDGE_INTERVAL_SEC);
+    } else {
+        MMLog(BOLD RED "Failed to create periodic nudge timer" RESET);
     }
 
     CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
