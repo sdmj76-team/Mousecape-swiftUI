@@ -98,6 +98,8 @@ extern BOOL MCCursorIsPointer(NSString *identifier);
 extern NSArray<NSString *> *MCArrowSynonyms(void);
 // Returns all known names the system may use for the I-beam (text) cursor on this OS version
 extern NSArray<NSString *> *MCIBeamSynonyms(void);
+// Returns resize cursor synonyms for a given resize variant identifier
+extern NSArray<NSString *> *MCResizeSynonyms(NSString *identifier);
 
 /// Enumerate all cursor identifiers: default cursors + Arrow synonyms + IBeam synonyms
 extern void MCEnumerateAllCursorIdentifiers(void (NS_NOESCAPE ^block)(NSString *identifier));

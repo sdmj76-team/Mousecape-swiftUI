@@ -120,12 +120,18 @@ void reconfigurationCallback(CGDirectDisplayID display,
         BOOL success = applyCapeAtPath(capePath);
         MMLog("Apply result: %s", success ? "SUCCESS" : "FAILED");
     }
-    float scale;
-    CGSGetCursorScale(CGSMainConnectionID(), &scale);
-    MMLog("Current cursor scale: %.2f", scale);
-    CGSSetCursorScale(CGSMainConnectionID(), scale + .3);
-    CGSSetCursorScale(CGSMainConnectionID(), scale);
-    MMLog("Cursor scale refreshed");
+    // Restore scale according to the active mode (same logic as UserSpaceChanged)
+    if (customScaleMode()) {
+        float maxScale = [MCDefault(MCPreferencesCursorScaleKey) floatValue];
+        if (maxScale <= 0.0f) maxScale = 1.0f;
+        MMLog("Reconfig: restoring custom scale %.2f", maxScale);
+        setCursorScale(maxScale);
+    } else {
+        float globalScale = [MCDefault(@"MCGlobalCursorScale") floatValue];
+        if (globalScale < 0.5f || globalScale > 16.0f) globalScale = 1.0f;
+        MMLog("Reconfig: restoring global scale %.2f", globalScale);
+        setCursorScale(globalScale);
+    }
 }
 
 

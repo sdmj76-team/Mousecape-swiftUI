@@ -277,6 +277,51 @@ NSArray<NSString *> *MCIBeamSynonyms(void) {
     return result;
 }
 
+// Returns resize cursor synonyms for a given resize variant identifier.
+// Matches the aliasing groups from WindowsINFParser.schemeRegPositionMapping:
+//   Vertical resize:  resizeNS, windowNS, resizeN, resizeS, windowN, windowS
+//   Horizontal resize: resizeWE, windowEW, resizeW, resizeE, windowE, windowW
+//   Diagonal NW-SE:   windowNWSE, windowNW, windowSE
+//   Diagonal NE-SW:   windowNESW, windowNE, windowSW
+NSArray<NSString *> *MCResizeSynonyms(NSString *identifier) {
+    // Vertical resize group
+    NSArray *vertical = @[
+        @"com.apple.cursor.23",   // resizeNS
+        @"com.apple.cursor.32",   // windowNS
+        @"com.apple.cursor.21",   // resizeN
+        @"com.apple.cursor.22",   // resizeS
+        @"com.apple.cursor.31",   // windowN
+        @"com.apple.cursor.36"    // windowS
+    ];
+    // Horizontal resize group
+    NSArray *horizontal = @[
+        @"com.apple.cursor.19",   // resizeWE
+        @"com.apple.cursor.28",   // windowEW
+        @"com.apple.cursor.17",   // resizeW
+        @"com.apple.cursor.18",   // resizeE
+        @"com.apple.cursor.27",   // windowE
+        @"com.apple.cursor.38"    // windowW
+    ];
+    // Diagonal NW-SE group
+    NSArray *diagNWSE = @[
+        @"com.apple.cursor.34",   // windowNWSE
+        @"com.apple.cursor.33",   // windowNW
+        @"com.apple.cursor.35"    // windowSE
+    ];
+    // Diagonal NE-SW group
+    NSArray *diagNESW = @[
+        @"com.apple.cursor.30",   // windowNESW
+        @"com.apple.cursor.29",   // windowNE
+        @"com.apple.cursor.37"    // windowSW
+    ];
+
+    if ([vertical containsObject:identifier]) return vertical;
+    if ([horizontal containsObject:identifier]) return horizontal;
+    if ([diagNWSE containsObject:identifier]) return diagNWSE;
+    if ([diagNESW containsObject:identifier]) return diagNESW;
+    return nil;
+}
+
 CGError MCIsCursorRegistered(CGSConnectionID cid, char *cursorName, bool *registered) {
 //    if (CGSIsCursorRegistered != NULL) {
 //        return CGSIsCursorRegistered(cid, cursorName, registered);

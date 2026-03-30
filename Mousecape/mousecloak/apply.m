@@ -15,6 +15,8 @@
 #import "innerShadow.h"
 #import "outerGlow.h"
 #import "scale.h"
+#import <unistd.h>
+#import <math.h>
 
 static BOOL MCRegisterImagesForCursorName(NSUInteger frameCount, CGFloat frameDuration, CGPoint hotSpot, CGSize size, NSArray *images, NSString *name) {
     char *cursorName = (char *)name.UTF8String;
@@ -156,6 +158,23 @@ BOOL applyCursorForIdentifier(NSUInteger frameCount, CGFloat frameDuration, CGPo
         }
         CGSSetDockCursorOverride(CGSMainConnectionID(), false);
         MMLog("  IBeam registration result: %s", anySuccess ? "SUCCESS" : "FAILED");
+        return anySuccess;
+    }
+
+    // Check if this is a resize cursor that needs synonym expansion
+    NSArray *resizeSynonyms = MCResizeSynonyms(ident);
+    if (resizeSynonyms) {
+        MMLog("  Resize synonyms to register: %lu", (unsigned long)resizeSynonyms.count);
+        for (NSString *syn in resizeSynonyms) {
+            MMLog("    - %s", syn.UTF8String);
+        }
+        BOOL anySuccess = NO;
+        for (NSString *name in resizeSynonyms) {
+            if (MCRegisterImagesForCursorName(frameCount, frameDuration, hotSpot, size, images, name)) {
+                anySuccess = YES;
+            }
+        }
+        MMLog("  Resize registration result: %s", anySuccess ? "SUCCESS" : "FAILED");
         return anySuccess;
     }
 
@@ -473,9 +492,36 @@ BOOL applyCape(NSDictionary *dictionary) {
         // can break after resetAllCursors + register at non-1.0 scale.
         float currentScale = cursorScale();
         if (currentScale > 0.0f) {
-            CGSSetCursorScale(CGSMainConnectionID(), currentScale + 0.3f);
-            CGSSetCursorScale(CGSMainConnectionID(), currentScale);
-            MMLog("Cursor scale nudged for refresh: %.2f", currentScale);
+            MMLog("Starting cursor scale nudge: target=%.2f", currentScale);
+            
+            CGError errBump = CGSSetCursorScale(CGSMainConnectionID(), currentScale + 0.3f);
+            float afterBump = cursorScale();
+            MMLog("Nudge bump: called with %.2f+0.3=%.2f, actual=%.2f, err=%d",
+                  currentScale, currentScale + 0.3f, afterBump, errBump);
+            
+            // Small delay for cursor system to process the scale change
+            usleep(30000); // 30ms
+            
+            // Restore with retry — the cursor system may not immediately apply the scale
+            CGError errRestore = kCGErrorSuccess;
+            float afterRestore = currentScale;
+            for (int retry = 0; retry < 3; retry++) {
+                errRestore = CGSSetCursorScale(CGSMainConnectionID(), currentScale);
+                afterRestore = cursorScale();
+                MMLog("Nudge restore attempt %d: target=%.2f, actual=%.2f, err=%d",
+                      retry + 1, currentScale, afterRestore, errRestore);
+                if (fabsf(afterRestore - currentScale) < 0.01f) {
+                    break;
+                }
+                usleep(20000); // 20ms between retries
+            }
+            
+            if (fabsf(afterRestore - currentScale) >= 0.01f) {
+                MMLog(RED "Cursor scale nudge FAILED after 3 retries: final=%.2f, target=%.2f" RESET,
+                      afterRestore, currentScale);
+            } else {
+                MMLog(GREEN "Cursor scale nudge completed: finalScale=%.2f" RESET, afterRestore);
+            }
         }
 
         return YES;
@@ -578,9 +624,36 @@ NSDictionary *applyCapeWithResult(NSDictionary *dictionary) {
         // can break after resetAllCursors + register at non-1.0 scale.
         float currentScale = cursorScale();
         if (currentScale > 0.0f) {
-            CGSSetCursorScale(CGSMainConnectionID(), currentScale + 0.3f);
-            CGSSetCursorScale(CGSMainConnectionID(), currentScale);
-            MMLog("Cursor scale nudged for refresh: %.2f", currentScale);
+            MMLog("Starting cursor scale nudge: target=%.2f", currentScale);
+            
+            CGError errBump = CGSSetCursorScale(CGSMainConnectionID(), currentScale + 0.3f);
+            float afterBump = cursorScale();
+            MMLog("Nudge bump: called with %.2f+0.3=%.2f, actual=%.2f, err=%d",
+                  currentScale, currentScale + 0.3f, afterBump, errBump);
+            
+            // Small delay for cursor system to process the scale change
+            usleep(30000); // 30ms
+            
+            // Restore with retry — the cursor system may not immediately apply the scale
+            CGError errRestore = kCGErrorSuccess;
+            float afterRestore = currentScale;
+            for (int retry = 0; retry < 3; retry++) {
+                errRestore = CGSSetCursorScale(CGSMainConnectionID(), currentScale);
+                afterRestore = cursorScale();
+                MMLog("Nudge restore attempt %d: target=%.2f, actual=%.2f, err=%d",
+                      retry + 1, currentScale, afterRestore, errRestore);
+                if (fabsf(afterRestore - currentScale) < 0.01f) {
+                    break;
+                }
+                usleep(20000); // 20ms between retries
+            }
+            
+            if (fabsf(afterRestore - currentScale) >= 0.01f) {
+                MMLog(RED "Cursor scale nudge FAILED after 3 retries: final=%.2f, target=%.2f" RESET,
+                      afterRestore, currentScale);
+            } else {
+                MMLog(GREEN "Cursor scale nudge completed: finalScale=%.2f" RESET, afterRestore);
+            }
         }
 
         // Return detailed result dictionary
