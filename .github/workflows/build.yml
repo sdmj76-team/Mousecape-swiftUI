@@ -4,6 +4,9 @@ on:
   # 推送触发
   push:
     branches: [main, develop, feature]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
 
   # PR 触发
   pull_request:
@@ -20,6 +23,8 @@ concurrency:
 jobs:
   build:
     runs-on: macos-26
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     strategy:
       matrix:
         configuration: [Release, Debug]
