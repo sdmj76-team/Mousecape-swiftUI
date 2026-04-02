@@ -1,13 +1,194 @@
-Copyright (c) 2013-2025, Alex Zielenski
-All rights reserved.
+Mousecape Dual-Section License
+Version 1.0
 
-SwiftUI Interface Modifications Copyright (c) 2025, sdmj76
-All rights reserved.
+This repository contains code from two distinct copyright holders. Each section
+below governs the respective contributions. The Software as a whole may only be
+used, modified, or distributed in compliance with BOTH sections simultaneously.
 
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+==============================================================================
+SECTION A — ORIGINAL WORK by Alex Zielenski
+==============================================================================
 
-    * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-    * Any redistribution, use, or modification is done solely for personal benefit and not for any commercial purpose or for monetary gain
+Copyright (c) 2013-2014 Alex Zielenski. All rights reserved.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+Applies to: Objective-C model layer, private API layer (mousecloak/), and all
+original code inherited from https://github.com/alexzielenski/Mousecape.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+    * Any redistribution, use, or modification is done solely for personal
+      benefit and not for any commercial purpose or for monetary gain.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+OF SUCH DAMAGE.
+
+==============================================================================
+SECTION B — SWIFTUI REDESIGN AND ENHANCEMENTS by sdmj76
+==============================================================================
+
+SwiftUI Interface Modifications Copyright (c) 2025-2026 sdmj76. All rights
+reserved.
+
+Applies to: SwiftUI interface layer, CLI rewrite (Swift ArgumentParser), Windows
+cursor conversion (WindowsCursorParser, WindowsCursorConverter, WindowsINFParser),
+MousecapeHelper, localization system, and all other code and documentation written
+by sdmj76.
+
+For the full list of files covered by this section, see the "Code Attribution"
+section at the bottom of this file.
+
+------------------------------------------------------------------------------
+
+1. DEFINITIONS
+
+"Software" means the Mousecape application, source code, assets, documentation,
+and all files contained in this repository.
+
+"Contributor" means any person who has contributed code, documentation, or other
+materials to the Software.
+
+"Derivative Work" means any modification, adaptation, or enhancement of the code
+covered by this Section.
+
+"Redistribution" means any act of distributing, publishing, or making available
+copies of the code covered by this Section or any Derivative Works to third
+parties, including but not limited to: publishing on code hosting platforms,
+distributing compiled binaries, or sharing modified source code outside of the
+Upstream Repository.
+
+"Upstream Repository" means https://github.com/sdmj76/Mousecape-swiftUI
+
+------------------------------------------------------------------------------
+
+2. GRANTED RIGHTS
+
+a) Personal Use: You may download, compile, run, and modify the code covered
+   by this Section solely for your own personal, non-commercial use.
+
+b) Contributions: You may create a fork of the repository on GitHub for the
+   sole purpose of submitting Pull Requests to the Upstream Repository. Any
+   contributions submitted via Pull Requests are subject to the contribution
+   guidelines of the Upstream Repository.
+
+c) Bug Reports and Suggestions: You may submit issues, bug reports, and feature
+   suggestions through the Upstream Repository's issue tracker.
+
+------------------------------------------------------------------------------
+
+3. RESTRICTIONS
+
+a) No Redistribution: You may NOT redistribute, publish, or make available the
+   code covered by this Section or any Derivative Works in any form, including
+   but not limited to source code, compiled binaries, or modified versions,
+   except as expressly permitted in Section 2(b) for contributing back to the
+   Upstream Repository.
+
+b) No Commercial Use: You may NOT use the code covered by this Section or any
+   Derivative Works for any commercial purpose, including but not limited to
+   sale, licensing, or incorporation into commercial products or services.
+
+c) No Removal of Attribution: You may NOT remove, alter, or obscure any
+   copyright notices, contributor attributions, or credit acknowledgments,
+   including but not limited to:
+   - This LICENSE file
+   - The README.md file (including the Acknowledgments / Credits sections)
+   - Any source code header comments containing copyright or attribution
+   - Any documentation files referencing contributors or authors
+
+d) No Misrepresentation: You may NOT represent the code covered by this Section
+   or any Derivative Work as your own creation, or claim credit for work done by
+   the Contributors.
+
+e) No Trademark Use: You may NOT use the names, trademarks, or logos of the
+   Licensor or Contributors to endorse or promote products or services without
+   prior written permission.
+
+------------------------------------------------------------------------------
+
+4. ATTRIBUTION REQUIREMENTS
+
+Any fork or modification of this repository MUST:
+
+a) Retain this LICENSE file in its entirety, without modification.
+
+b) Retain all contributor attributions in README.md, including the
+   Acknowledgments section, without removing or altering any existing entries.
+
+c) Keep the link to the Upstream Repository visible and accessible.
+
+d) Clearly distinguish any new modifications from the original work and must not
+   misrepresent the origin of the Software.
+
+------------------------------------------------------------------------------
+
+5. CONTRIBUTIONS
+
+By submitting a Pull Request to the Upstream Repository, you agree that:
+
+a) Your contribution will be licensed under the same terms as this License.
+
+b) You have the right to submit the contribution, or it is in the public domain.
+
+c) You grant the Licensor a perpetual, non-exclusive, worldwide license to use,
+   modify, and distribute your contribution as part of the Software.
+
+------------------------------------------------------------------------------
+
+6. TERMINATION
+
+This License and the rights granted hereunder will terminate automatically upon
+any breach by you of the terms of this License. Upon termination, you must
+destroy all copies of the Software and Derivative Works in your possession.
+
+------------------------------------------------------------------------------
+
+7. DISCLAIMER OF WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+==============================================================================
+COMBINED WORK NOTICE
+==============================================================================
+
+This repository is a combined work containing code from both Section A and
+Section B. Because the compiled application and any meaningful distribution
+necessarily include code from BOTH sections, redistributing the Software as a
+whole requires compliance with the stricter terms of Section B. Using only the
+Section A code in isolation is governed solely by Section A terms.
+
+==============================================================================
+CODE ATTRIBUTION
+==============================================================================
+
+Section A (Alex Zielenski):
+  - Mousecape/Mousecape/src/models/         (ObjC model layer)
+  - Mousecape/Mousecape/src/controllers/    (ObjC controllers)
+  - Mousecape/mousecloak/                   (private API layer)
+
+Section B (sdmj76):
+  - Mousecape/Mousecape/SwiftUI/            (all SwiftUI interface code)
+  - Mousecape/MousecapeHelper/              (Helper application)
+  - Mousecape/mousecloak/main.swift         (CLI rewrite)
+  - Mousecape/Mousecape/SwiftUI/Utilities/  (Windows cursor conversion,
+    localization, debug logging)
+  - README.md, CLAUDE.md, RELEASE_NOTES.md  (documentation)
+  - .github/                                (CI/CD configuration)

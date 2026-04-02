@@ -274,6 +274,10 @@ This is just a tool, and I've polished its UI. But what matters most is your cur
 
 ---
 
+> **License Notice:** This project uses a dual-section license. Alex Zielenski's original code (ObjC model layer, private API layer) remains under its original BSD-like terms. All SwiftUI interface, CLI rewrite, Windows cursor conversion, and documentation by sdmj76 are covered by the Mousecape Non-Commercial License, which prohibits redistribution and requires attribution. Because the compiled application includes both, redistributing the Software as a whole requires compliance with the stricter terms. See [LICENSE](LICENSE) for full details.
+
+---
+
 <a id="chinese-section"></a>
 
 # 中文
@@ -505,3 +509,7 @@ Mousecape 提供两种编辑模式，可通过工具栏切换：
 ## 作者的话
 
 这只是一个工具，我美化了它的UI。但最重要的还是你的光标内容 :)
+
+---
+
+> **许可证声明：** 本项目采用双段式许可证。Alex Zielenski 的原始代码（ObjC 模型层、私有 API 层）保留其原始 BSD 类条款。sdmj76 的所有 SwiftUI 界面、CLI 重写、Windows 光标转换及文档受 Mousecape 非商业许可证约束，禁止再分发且必须保留署名。由于编译后的应用同时包含两部分代码，再分发整体软件需遵守更严格的条款。详见 [LICENSE](LICENSE)。
