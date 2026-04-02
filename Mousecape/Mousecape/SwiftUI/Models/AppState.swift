@@ -241,13 +241,13 @@ final class AppState: @unchecked Sendable {
     /// Load cursor scale from preferences and apply it
     private func applySavedCursorScale() {
         let preferenceDomain = "com.sdmj76.Mousecape"
-        let cursorScaleKey = "MCCursorScale"
+        let customMaxScaleKey = "MCCustomMaxScale"
 
         if customScaleMode() {
             // Custom mode: applyCape() handles per-cursor scaling internally
             // Just ensure CGSSetCursorScale matches maxScale
             debugLog("Custom scale mode on startup")
-            if let maxScale = CFPreferencesCopyAppValue(cursorScaleKey as CFString, preferenceDomain as CFString) as? Double {
+            if let maxScale = CFPreferencesCopyAppValue(customMaxScaleKey as CFString, preferenceDomain as CFString) as? Double {
                 debugLog("Setting max cursor scale: \(maxScale)")
                 _ = setCursorScale(Float(maxScale))
             }

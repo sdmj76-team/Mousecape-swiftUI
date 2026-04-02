@@ -119,6 +119,8 @@ struct GeneralSettingsView: View {
                 .onChange(of: scaleMode) { _, newValue in
                     saveScaleMode(newValue)
                     if newValue == .global {
+                        // Reload the actual global scale from preferences (may differ from stale UI state)
+                        loadCursorScale()
                         // Restore global scale
                         _ = setCursorScale(Float(cursorScale))
                         saveCursorScale(cursorScale)
@@ -602,7 +604,7 @@ struct CustomScaleView: View {
     @State private var selectedCursorType: CursorType? = nil
     @State private var showSetAllAlert = false
     @State private var setAllValue: Double = 1.0
-    @State private var applyTask: Task<Void, Never>? = nil
+    @State private var hasUnsavedScaleChanges = false
 
     private static let perCursorScalesKey = "MCPerCursorScales"
     private static let cursorScaleKey = "MCCursorScale"
@@ -698,9 +700,12 @@ struct CustomScaleView: View {
         .navigationTitle("Custom Scales")
         .onAppear {
             loadPerCursorScales()
+            hasUnsavedScaleChanges = false
         }
         .onDisappear {
-            applyTask?.cancel()
+            if hasUnsavedScaleChanges, let cape = appState.appliedCape {
+                appState.applyCape(cape)
+            }
         }
         .alert("Set All Scales", isPresented: $showSetAllAlert) {
             Button("Cancel", role: .cancel) { }
@@ -751,23 +756,16 @@ struct CustomScaleView: View {
 
     private func recalculateMaxScaleAndApply() {
         let maxScale = perCursorScales.values.max() ?? 1.0
-        // Save maxScale as MCCursorScale
+        // Save maxScale to MCCustomMaxScale (separate from global scale to prevent cross-contamination)
         CFPreferencesSetAppValue(
-            Self.cursorScaleKey as CFString,
+            "MCCustomMaxScale" as CFString,
             maxScale as CFNumber,
             Self.preferenceDomain as CFString
         )
         CFPreferencesAppSynchronize(Self.preferenceDomain as CFString)
-        // Set system scale immediately for visual feedback
+        // Set system scale immediately for visual feedback (lightweight CGS call)
         _ = setCursorScale(Float(maxScale))
-        // Debounce the full cape re-apply (expensive — re-registers all cursors)
-        applyTask?.cancel()
-        applyTask = Task { @MainActor in
-            try? await Task.sleep(for: .milliseconds(500))
-            guard !Task.isCancelled else { return }
-            if let cape = appState.appliedCape {
-                appState.applyCape(cape)
-            }
-        }
+        // Mark that a full re-apply is needed on screen exit (expensive — re-registers all cursors)
+        hasUnsavedScaleChanges = true
     }
 }

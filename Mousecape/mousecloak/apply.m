@@ -426,8 +426,9 @@ BOOL applyCape(NSDictionary *dictionary) {
             }
             MMLog("SCALE DEBUG: custom mode, maxScale=%.2f", maxScale);
             setCursorScale(maxScale);
-            // Save maxScale as MCCursorScale so listen.m can restore it
-            MCSetDefault(@(maxScale), MCPreferencesCursorScaleKey);
+            // Save maxScale to a separate key so it doesn't overwrite the global scale (MCGlobalCursorScale)
+            // listen.m reads from this key when restoring custom mode scale
+            MCSetDefault(@(maxScale), @"MCCustomMaxScale");
         } else {
             // Global mode: restore the exact scale that was active before reset
             MMLog("SCALE DEBUG: global mode, restoring to %.2f", savedScale);
@@ -564,8 +565,9 @@ NSDictionary *applyCapeWithResult(NSDictionary *dictionary) {
             }
             MMLog("SCALE DEBUG: custom mode, maxScale=%.2f", maxScale);
             setCursorScale(maxScale);
-            // Save maxScale as MCCursorScale so listen.m can restore it
-            MCSetDefault(@(maxScale), MCPreferencesCursorScaleKey);
+            // Save maxScale to a separate key so it doesn't overwrite the global scale (MCGlobalCursorScale)
+            // listen.m reads from this key when restoring custom mode scale
+            MCSetDefault(@(maxScale), @"MCCustomMaxScale");
         } else {
             MMLog("SCALE DEBUG: global mode, restoring to %.2f", savedScale);
             if (savedScale >= 0.5f && savedScale <= 16.0f) {

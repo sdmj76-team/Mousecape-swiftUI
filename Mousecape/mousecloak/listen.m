@@ -126,7 +126,7 @@ static void UserSpaceChanged(SCDynamicStoreRef	store, CFArrayRef changedKeys, vo
 
     // Restore scale according to the active mode
     if (customScaleMode()) {
-        float maxScale = [MCDefault(MCPreferencesCursorScaleKey) floatValue];
+        float maxScale = [MCDefault(@"MCCustomMaxScale") floatValue];
         if (maxScale <= 0.0f) maxScale = 1.0f;
         MMLog("Session monitor: restoring custom scale %.2f", maxScale);
         setCursorScale(maxScale);
@@ -161,7 +161,7 @@ void reconfigurationCallback(CGDirectDisplayID display,
     }
     // Restore scale according to the active mode (same logic as UserSpaceChanged)
     if (customScaleMode()) {
-        float maxScale = [MCDefault(MCPreferencesCursorScaleKey) floatValue];
+        float maxScale = [MCDefault(@"MCCustomMaxScale") floatValue];
         if (maxScale <= 0.0f) maxScale = 1.0f;
         MMLog("Reconfig: restoring custom scale %.2f", maxScale);
         setCursorScale(maxScale);
@@ -237,7 +237,7 @@ void listener(void) {
     }
     // Restore scale according to the active mode
     if (customScaleMode()) {
-        float maxScale = [MCDefault(MCPreferencesCursorScaleKey) floatValue];
+        float maxScale = [MCDefault(@"MCCustomMaxScale") floatValue];
         if (maxScale <= 0.0f) maxScale = 1.0f;
         setCursorScale(maxScale);
     } else {
@@ -316,7 +316,7 @@ void startSessionMonitor(void) {
     }
     // Restore scale according to the active mode
     if (customScaleMode()) {
-        float maxScale = [MCDefault(MCPreferencesCursorScaleKey) floatValue];
+        float maxScale = [MCDefault(@"MCCustomMaxScale") floatValue];
         if (maxScale <= 0.0f) maxScale = 1.0f;
         MMLog("Session monitor: restoring custom scale %.2f", maxScale);
         setCursorScale(maxScale);
