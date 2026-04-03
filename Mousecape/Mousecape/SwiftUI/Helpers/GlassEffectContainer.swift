@@ -96,6 +96,16 @@ extension View {
                 .background(.regularMaterial, in: .circle)
         }
     }
+
+    /// Apply shadow only on macOS 15 (Liquid Glass has its own depth on macOS 26)
+    @ViewBuilder
+    func adaptiveShadow(radius: CGFloat = 20) -> some View {
+        if #available(macOS 26.0, *) {
+            self
+        } else {
+            self.shadow(radius: radius)
+        }
+    }
 }
 
 // MARK: - Adaptive Toolbar Spacer

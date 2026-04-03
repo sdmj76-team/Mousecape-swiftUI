@@ -80,11 +80,8 @@ struct LoadingOverlayView: View {
                     .foregroundStyle(.primary)
             }
             .padding(32)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(.regularMaterial)
-                    .shadow(radius: 20)
-            )
+            .adaptiveGlass(in: RoundedRectangle(cornerRadius: 16))
+            .adaptiveShadow()
         }
     }
 }
