@@ -102,48 +102,17 @@ struct GeneralSettingsView: View {
 
                 Toggle("Show Menu Bar Tool", isOn: $launchHelperWithApp)
                     .onChange(of: launchHelperWithApp) { _, newValue in
-                        let helperBundleID = "com.sdmj76.MousecapeHelper"
-                        if newValue {
-                            // Launch helper
-                            let helperURL = Bundle.main.bundleURL
-                                .appendingPathComponent("Contents")
-                                .appendingPathComponent("Library")
-                                .appendingPathComponent("LoginItems")
-                                .appendingPathComponent("MousecapeHelper.app")
-                            guard FileManager.default.fileExists(atPath: helperURL.path) else {
-                                launchHelperWithApp = false
-                                debugLog("Helper not found")
-                                return
-                            }
-                            let running = NSWorkspace.shared.runningApplications
-                            if running.contains(where: { $0.bundleIdentifier == helperBundleID }) {
-                                debugLog("Helper already running")
-                                return
-                            }
-                            let config = NSWorkspace.OpenConfiguration()
-                            config.activates = false
-                            NSWorkspace.shared.openApplication(at: helperURL, configuration: config) { _, error in
-                                if let error = error {
-                                    debugLog("Failed to launch helper: \(error.localizedDescription)")
-                                } else {
-                                    debugLog("Helper launched from settings")
-                                }
-                            }
-                        } else {
-                            // Terminate helper
-                            let running = NSWorkspace.shared.runningApplications
-                            if let helper = running.first(where: { $0.bundleIdentifier == helperBundleID }) {
-                                helper.terminate()
-                                debugLog("Helper terminated from settings")
-                            }
-                        }
-                    }
+                        // Sync to disk so Helper can read the latest value via CFPreferences
+                        UserDefaults.standard.synchronize()
 
-                if launchAtLogin {
-                    Text("When \"Apply at Login\" is enabled, the menu bar icon will always appear at login.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
+                        // Notify Helper to update menu bar icon visibility in real-time
+                        DistributedNotificationCenter.default().post(
+                            name: NSNotification.Name("com.sdmj76.Mousecape.menuBarVisibilityChanged"),
+                            object: nil
+                        )
+
+                        debugLog("Menu bar icon visibility changed to: \(newValue)")
+                    }
             }
 
             Section("Double-click Action") {

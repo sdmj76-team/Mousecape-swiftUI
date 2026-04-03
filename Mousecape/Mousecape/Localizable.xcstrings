@@ -9836,46 +9836,6 @@
         }
       }
     },
-    "When \"Apply at Login\" is enabled, the menu bar icon will always appear at login." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wenn „Beim Start automatisch anwenden\" aktiviert ist, wird das Menüleisten-Symbol beim Anmelden immer angezeigt."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lorsque « Appliquer automatiquement au démarrage » est activé, l'icône de la barre de menus s'affichera toujours au démarrage."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "「起動時に自動適用」が有効な場合、ログイン時にメニューバーアイコンが常に表示されます。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"시작 시 자동 적용\"이 활성화되어 있으면 로그인 시 메뉴 막대 아이콘이 항상 나타납니다."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "当「开机自动应用」开启时，开机时菜单栏图标会始终显示。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "當「開機自動套用」開啟時，開機時選單列圖示會始終顯示。"
-          }
-        }
-      }
-    },
     "When double-clicking a Cape" : {
       "localizations" : {
         "de" : {
