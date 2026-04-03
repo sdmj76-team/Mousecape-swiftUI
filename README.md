@@ -60,17 +60,13 @@ A free macOS cursor manager that allows you to easily replace Mac system pointer
 - Uses private, non-intrusive CoreGraphics API, safe and reliable
 
 ## Download & Installation
-
-Download the latest version from the [Releases](https://github.com/sdmj76/Mousecape-swiftUI/releases) section of this GitHub page.
-
-If you encounter any problems, we recommend that you first check the [Troubleshooting](#Troubleshooting_en) section.
-
 ### System Requirements
 
 - macOS Sequoia (15) or later
 - Support Architectures: runs on both Intel and Apple Silicon Macs
 
-<br>Download the latest version from the [Releases](https://github.com/sdmj76/Mousecape-swiftUI/releases) section of this GitHub page.
+<br>
+Download the latest version from the [Releases](https://github.com/sdmj76/Mousecape-swiftUI/releases) section of this GitHub page.
 
 If you encounter any problems, we recommend that you first check the [Troubleshooting](#Troubleshooting_en) section.
 
@@ -164,6 +160,12 @@ If you want to revert to the default macOS cursor, you can:
 
 </details>
 
+<a id="Troubleshooting_en"></a>
+
+## Troubleshooting
+
+If you encounter issues, please check the common solutions below first. For more help, please [submit an Issue](https://github.com/sdmj76/Mousecape-swiftUI/issues).
+
 ### Cursor Limitations
 
 Due to macOS system limitations, Mousecape has the following restrictions:
@@ -183,13 +185,6 @@ Due to macOS system limitations, Mousecape has the following restrictions:
 
 **Example:** A 32-frame GIF animation will be downsampled to 24 frames, and the frame duration will be increased to maintain the original animation speed.
 
-<a id="Troubleshooting_en"></a>
-
-## Troubleshooting
-
-If you encounter issues, please check the common solutions below first. For more help, please [submit an Issue](https://github.com/sdmj76/Mousecape-swiftUI/issues).
-
-</details>
 <br>
 <details>
 <summary>Cursor Animation Only Works in Dock Area</summary>
@@ -301,17 +296,13 @@ This is just a tool, and I've polished its UI. But what matters most is your cur
 - 使用私有、非侵入式的 CoreGraphics API，安全可靠
 
 ## 下载安装
-
-在本 GitHub 页面的 [Releases](https://github.com/sdmj76/Mousecape-swiftUI/releases) 部分下载最新版本。
-
-如果遇到问题，建议优先查看[故障排除](#Troubleshooting_cn)章节。
-
 ### 系统要求
 
 - macOS Sequoia (15) 或更高版本
 - 支持架构：同时支持 Intel 和 Apple Silicon Mac
 
-<br>在本 GitHub 页面的 [Releases](https://github.com/sdmj76/Mousecape-swiftUI/releases) 部分下载最新版本。
+<br>
+在本 GitHub 页面的 [Releases](https://github.com/sdmj76/Mousecape-swiftUI/releases) 部分下载最新版本。
 
 如果遇到问题，建议优先查看[故障排除](#Troubleshooting_cn)章节。
 
@@ -407,6 +398,10 @@ Mousecape 提供两种编辑模式，可通过工具栏切换：
 
 <a id="Troubleshooting_cn"></a>
 
+## 故障排除
+
+如果遇到问题，请先查看以下常见解决方案。更多帮助请[提交 Issue](https://github.com/sdmj76/Mousecape-swiftUI/issues)。
+
 ### 光标限制
 
 由于 macOS 系统限制，Mousecape 有以下限制：
@@ -426,13 +421,6 @@ Mousecape 提供两种编辑模式，可通过工具栏切换：
 
 **示例：** 32 帧的 GIF 动画会被降采样到 24 帧，帧时长会增加以保持原始动画速度。
 
-<a id="Troubleshooting_cn"></a>
-
-## 故障排除
-
-如果遇到问题，请先查看以下常见解决方案。更多帮助请[提交 Issue](https://github.com/sdmj76/Mousecape-swiftUI/issues)。
-
-</details>
 <br>
 <details>
 <summary>光标动画仅在 Dock 区域生效</summary>
