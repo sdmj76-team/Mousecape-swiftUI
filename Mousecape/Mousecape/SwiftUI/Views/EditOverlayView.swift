@@ -987,7 +987,7 @@ struct CursorPreviewDropZone: View {
             // Loading indicator overlay
             if isLoadingImage {
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(.ultraThinMaterial)
+                    .fill(.clear)
                 VStack(spacing: 8) {
                     ProgressView()
                         .scaleEffect(0.8)
@@ -1001,10 +1001,7 @@ struct CursorPreviewDropZone: View {
             if isTargeted {
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(Color.accentColor, lineWidth: 3)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.accentColor.opacity(0.1))
-                    )
+                    .adaptiveGlassTinted(color: .accentColor, in: RoundedRectangle(cornerRadius: 16))
             }
         }
         .frame(height: 200)

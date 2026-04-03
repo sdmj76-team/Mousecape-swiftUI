@@ -325,7 +325,8 @@ struct CapeDropOverlayView: View {
                     .foregroundStyle(.white)
             }
             .padding(40)
-            .background(
+            .adaptiveGlassClear(in: RoundedRectangle(cornerRadius: 16))
+            .overlay(
                 RoundedRectangle(cornerRadius: 16)
                     .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [8, 4]))
                     .foregroundStyle(.white.opacity(0.6))

@@ -217,7 +217,7 @@ struct CursorZoomOverlay: View {
             }
             .padding(24)
             .adaptiveGlass(in: RoundedRectangle(cornerRadius: 16))
-            .shadow(radius: 20)
+            .adaptiveShadow()
             .opacity(isVisible ? 1 : 0)
             .scaleEffect(isVisible ? 1 : 0.8)
         }

@@ -193,12 +193,7 @@ private struct GroupRow: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
         .contentShape(Rectangle())
-        .background {
-            if isSelected {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.accentColor.opacity(0.15))
-            }
-        }
+        .adaptiveGlassConditional(isActive: isSelected, in: RoundedRectangle(cornerRadius: 8))
         .onTapGesture {
             onSelect()
         }
@@ -231,12 +226,7 @@ private struct CursorTypeRow: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
         .contentShape(Rectangle())
-        .background {
-            if isSelected {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.accentColor.opacity(0.15))
-            }
-        }
+        .adaptiveGlassConditional(isActive: isSelected, in: RoundedRectangle(cornerRadius: 8))
         .onTapGesture {
             onSelect()
         }

@@ -209,7 +209,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// Launch MousecapeHelper when main app starts
     private func launchHelper() {
-        // Helper is located at: Mousecape.app/Contents/Library/LoginItems/MousecapeHelper.app
+        // Helper is always launched for background session monitoring
+        // Menu bar icon visibility is controlled by "Show Menu Bar Tool" toggle
         let helperURL = Bundle.main.bundleURL
             .appendingPathComponent("Contents")
             .appendingPathComponent("Library")

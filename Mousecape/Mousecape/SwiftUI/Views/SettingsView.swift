@@ -66,6 +66,7 @@ struct SettingsView: View {
 
 struct GeneralSettingsView: View {
     @AppStorage("launchAtLogin") private var launchAtLogin = false
+    @AppStorage("launchHelperWithApp") private var launchHelperWithApp = true
     @AppStorage("doubleClickAction") private var doubleClickAction = 0
     @State private var cursorScale: Double = 1.0
     @State private var isLeftHanded: Bool = false
@@ -97,6 +98,20 @@ struct GeneralSettingsView: View {
                             showLoginError = true
                             debugLog("Failed to update helper status: \(error)")
                         }
+                    }
+
+                Toggle("Show Menu Bar Tool", isOn: $launchHelperWithApp)
+                    .onChange(of: launchHelperWithApp) { _, newValue in
+                        // Sync to disk so Helper can read the latest value via CFPreferences
+                        UserDefaults.standard.synchronize()
+
+                        // Notify Helper to update menu bar icon visibility in real-time
+                        DistributedNotificationCenter.default().post(
+                            name: NSNotification.Name("com.sdmj76.Mousecape.menuBarVisibilityChanged"),
+                            object: nil
+                        )
+
+                        debugLog("Menu bar icon visibility changed to: \(newValue)")
                     }
             }
 

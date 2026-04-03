@@ -17,6 +17,7 @@
 
 **Improvements:**
 
+- Further optimization for macOS 26 Liquid Glass effect — all overlays, loading indicators, drag feedback, zoom preview, and selection highlights now use native glass effects
 - Optimized left-hand mode: diagonal resize cursors now excluded from mirroring for better usability
 - Improved settings synchronization and preference handling
 
@@ -257,6 +258,7 @@ For normal use, download the regular version.
 
 **改进：**
 
+- 进一步适配 macOS 26 液态玻璃效果 — 所有叠加层、加载指示器、拖放反馈、放大预览、选中高亮等均采用原生玻璃效果
 - 优化左手模式：对角线调整光标不再镜像翻转，提升易用性
 - 改进设置同步和偏好设置处理
 
