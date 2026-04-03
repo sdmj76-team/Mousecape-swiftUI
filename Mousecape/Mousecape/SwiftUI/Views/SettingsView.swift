@@ -66,6 +66,7 @@ struct SettingsView: View {
 
 struct GeneralSettingsView: View {
     @AppStorage("launchAtLogin") private var launchAtLogin = false
+    @AppStorage("launchHelperWithApp") private var launchHelperWithApp = true
     @AppStorage("doubleClickAction") private var doubleClickAction = 0
     @State private var cursorScale: Double = 1.0
     @State private var isLeftHanded: Bool = false
@@ -98,6 +99,51 @@ struct GeneralSettingsView: View {
                             debugLog("Failed to update helper status: \(error)")
                         }
                     }
+
+                Toggle("Show Menu Bar Tool", isOn: $launchHelperWithApp)
+                    .onChange(of: launchHelperWithApp) { _, newValue in
+                        let helperBundleID = "com.sdmj76.MousecapeHelper"
+                        if newValue {
+                            // Launch helper
+                            let helperURL = Bundle.main.bundleURL
+                                .appendingPathComponent("Contents")
+                                .appendingPathComponent("Library")
+                                .appendingPathComponent("LoginItems")
+                                .appendingPathComponent("MousecapeHelper.app")
+                            guard FileManager.default.fileExists(atPath: helperURL.path) else {
+                                launchHelperWithApp = false
+                                debugLog("Helper not found")
+                                return
+                            }
+                            let running = NSWorkspace.shared.runningApplications
+                            if running.contains(where: { $0.bundleIdentifier == helperBundleID }) {
+                                debugLog("Helper already running")
+                                return
+                            }
+                            let config = NSWorkspace.OpenConfiguration()
+                            config.activates = false
+                            NSWorkspace.shared.openApplication(at: helperURL, configuration: config) { _, error in
+                                if let error = error {
+                                    debugLog("Failed to launch helper: \(error.localizedDescription)")
+                                } else {
+                                    debugLog("Helper launched from settings")
+                                }
+                            }
+                        } else {
+                            // Terminate helper
+                            let running = NSWorkspace.shared.runningApplications
+                            if let helper = running.first(where: { $0.bundleIdentifier == helperBundleID }) {
+                                helper.terminate()
+                                debugLog("Helper terminated from settings")
+                            }
+                        }
+                    }
+
+                if launchAtLogin {
+                    Text("When \"Apply at Login\" is enabled, the menu bar icon will always appear at login.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
 
             Section("Double-click Action") {

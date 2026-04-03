@@ -33,6 +33,19 @@ class HelperAppDelegate: NSObject, NSApplicationDelegate {
         #endif
         debugLog("MousecapeHelper started")
 
+        // Single instance check — exit if another Helper is already running
+        let myPID = ProcessInfo.processInfo.processIdentifier
+        let myBundleID = Bundle.main.bundleIdentifier ?? "com.sdmj76.MousecapeHelper"
+        let runningApps = NSWorkspace.shared.runningApplications
+        let duplicate = runningApps.contains { app in
+            app.bundleIdentifier == myBundleID && app.processIdentifier != myPID
+        }
+        if duplicate {
+            debugLog("Another Helper instance is already running, exiting")
+            NSApp.terminate(nil)
+            return
+        }
+
         // Start session monitoring to keep cursors persistent
         startSessionMonitor()
         debugLog("Session monitor started")

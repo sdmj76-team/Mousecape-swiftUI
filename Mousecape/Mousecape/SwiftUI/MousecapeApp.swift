@@ -209,6 +209,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// Launch MousecapeHelper when main app starts
     private func launchHelper() {
+        // Check if user wants to launch helper with app (default: true for first launch)
+        if let value = UserDefaults.standard.object(forKey: "launchHelperWithApp") as? Bool, !value {
+            debugLog("Helper launch disabled by user setting")
+            return
+        }
+
         // Helper is located at: Mousecape.app/Contents/Library/LoginItems/MousecapeHelper.app
         let helperURL = Bundle.main.bundleURL
             .appendingPathComponent("Contents")
