@@ -383,7 +383,7 @@ BOOL dumpCursorsToFile(NSString *path, BOOL (^progress)(NSUInteger current, NSUI
     // so captured data reflects clean system cursor state.
     resetAllCursors();
 
-    NSInteger total = 9 + 43;
+    NSInteger total = 11 + 43;
     NSInteger current = 0;
 
     NSMutableDictionary *cursors = [NSMutableDictionary dictionary];

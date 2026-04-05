@@ -18,6 +18,8 @@ NSString *defaultCursors[] = {
     @"com.apple.coregraphics.Copy",
     @"com.apple.coregraphics.Move",
     @"com.apple.coregraphics.ArrowCtx",
+    @"com.apple.coregraphics.ArrowS",
+    @"com.apple.coregraphics.IBeamS",
     @"com.apple.coregraphics.Wait",
     @"com.apple.coregraphics.Empty",
     nil };
