@@ -11,7 +11,7 @@
 #import "MCDefs.h"
 
 NSString *backupStringForIdentifier(NSString *identifier) {
-    return [NSString stringWithFormat:@"com.AppleInc.%@", identifier];
+    return [NSString stringWithFormat:@"com.sdmj76.mousecape.backup.%@", identifier];
 }
 
 void backupCursorForIdentifier(NSString *ident) {

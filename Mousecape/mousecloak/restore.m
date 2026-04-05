@@ -12,7 +12,7 @@
 #import "MCDefs.h"
 
 NSString *restoreStringForIdentifier(NSString *identifier) {
-    NSString *prefix = @"com.AppleInc.";
+    NSString *prefix = @"com.sdmj76.mousecape.backup.";
     if ([identifier hasPrefix:prefix] && identifier.length > prefix.length) {
         return [identifier substringFromIndex:prefix.length];
     }

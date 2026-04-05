@@ -266,6 +266,22 @@ NSDictionary *createCapeFromMightyMouse(NSDictionary *mightyMouse, NSDictionary 
     return totalDict;
 }
 
+// Alias mapping for cursors that share the same image data on newer macOS.
+// When dumping, if a cursor returns nil or a placeholder, use the primary cursor's data.
+static NSDictionary *cursorAliasMap(void) {
+    static NSDictionary *map = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        map = @{
+            @"com.apple.coregraphics.ArrowCtx": @"com.apple.coregraphics.Arrow",
+            @"com.apple.coregraphics.IBeamXOR": @"com.apple.coregraphics.IBeam",
+            @"com.apple.coregraphics.ArrowS":   @"com.apple.coregraphics.Arrow",
+            @"com.apple.coregraphics.IBeamS":   @"com.apple.coregraphics.IBeam",
+        };
+    });
+    return map;
+}
+
 static CGImageRef _Nullable downsampleSpriteSheetImage(CGImageRef spriteSheet, NSUInteger fromCount, NSUInteger toCount) {
     size_t width = CGImageGetWidth(spriteSheet);
     size_t totalHeight = CGImageGetHeight(spriteSheet);
@@ -274,7 +290,7 @@ static CGImageRef _Nullable downsampleSpriteSheetImage(CGImageRef spriteSheet, N
 
     CGContextRef ctx = CGBitmapContextCreate(NULL, width, newTotalHeight,
                                               CGImageGetBitsPerComponent(spriteSheet),
-                                              CGImageGetBitsPerPixel(spriteSheet) / 8 * width,
+                                              0,  // let system calculate optimal row alignment
                                               CGImageGetColorSpace(spriteSheet),
                                               CGImageGetBitmapInfo(spriteSheet));
     if (!ctx) return NULL;
@@ -345,7 +361,7 @@ NSDictionary *processedCapeWithIdentifier(NSString *identifier) {
 
 BOOL dumpCursorsToFile(NSString *path, BOOL (^progress)(NSUInteger current, NSUInteger total)) {
     MMLog("Dumping cursors...");
-        
+
     float originalScale;
     CGSGetCursorScale(CGSMainConnectionID(), &originalScale);
 
@@ -355,6 +371,13 @@ BOOL dumpCursorsToFile(NSString *path, BOOL (^progress)(NSUInteger current, NSUI
     MCSetDefault(@1.0, MCPreferencesCursorScaleKey);
     CGSSetCursorScale(CGSMainConnectionID(), 1.0);
     CGSHideCursor(CGSMainConnectionID());
+
+    // Cleanup block — restores cursor scale and preference on any exit path
+    void (^cleanup)(void) = ^{
+        CGSSetCursorScale(CGSMainConnectionID(), originalScale);
+        CGSShowCursor(CGSMainConnectionID());
+        MCSetDefault(originalScalePref, MCPreferencesCursorScaleKey);
+    };
 
     // Reset all cursors to system defaults at 1.0x scale before dumping,
     // so captured data reflects clean system cursor state.
@@ -371,6 +394,7 @@ BOOL dumpCursorsToFile(NSString *path, BOOL (^progress)(NSUInteger current, NSUI
             current = i;
 
             if (!progress(current, total)) {
+                cleanup();
                 return NO;
             }
         }
@@ -390,13 +414,7 @@ BOOL dumpCursorsToFile(NSString *path, BOOL (^progress)(NSUInteger current, NSUI
             }
         }
         if (!capeData || isPlaceholder) {
-            NSDictionary *aliasMap = @{
-                @"com.apple.coregraphics.ArrowCtx": @"com.apple.coregraphics.Arrow",
-                @"com.apple.coregraphics.IBeamXOR": @"com.apple.coregraphics.IBeam",
-                @"com.apple.coregraphics.ArrowS":   @"com.apple.coregraphics.Arrow",
-                @"com.apple.coregraphics.IBeamS":   @"com.apple.coregraphics.IBeam",
-            };
-            NSString *primary = aliasMap[key];
+            NSString *primary = cursorAliasMap()[key];
             if (primary && cursors[primary]) {
                 if (isPlaceholder) {
                     MMLog("  Replacing placeholder image for %s with %s data", key.UTF8String, primary.UTF8String);
@@ -416,6 +434,7 @@ BOOL dumpCursorsToFile(NSString *path, BOOL (^progress)(NSUInteger current, NSUI
             current = i + x;
 
             if (!progress(current, total)) {
+                cleanup();
                 return NO;
             }
         }
@@ -425,9 +444,9 @@ BOOL dumpCursorsToFile(NSString *path, BOOL (^progress)(NSUInteger current, NSUI
         NSDictionary *cape = processedCapeWithIdentifier(key);
         if (!cape)
             continue;
-        
+
         MMLog("Gathering data for %s", key.UTF8String);
-        
+
         cursors[key] = cape;
     }
 
@@ -442,16 +461,12 @@ BOOL dumpCursorsToFile(NSString *path, BOOL (^progress)(NSUInteger current, NSUI
     cape[MCCursorDictionaryCloudKey] = @NO;
     cape[MCCursorDictionaryCursorsKey] = cursors;
     cape[MCCursorDictionaryHiDPIKey] = @YES;
-    cape[MCCursorDictionaryIdentifierKey] = [NSString stringWithFormat:@"com.AppleInc.dump"];
+    cape[MCCursorDictionaryIdentifierKey] = @"com.sdmj76.mousecape.dump";
     cape[MCCursorDictionaryVersionKey] = @(MCCursorCreatorVersion);
     cape[MCCursorDictionaryMinimumVersionKey] = @(MCCursorParserVersion);
-    
-    CGSSetCursorScale(CGSMainConnectionID(), originalScale);
-    CGSShowCursor(CGSMainConnectionID());
 
-    // Restore original cursor scale preference
-    MCSetDefault(originalScalePref, MCPreferencesCursorScaleKey);
-    
+    cleanup();
+
     return [cape writeToFile:path atomically:NO];
 }
 
