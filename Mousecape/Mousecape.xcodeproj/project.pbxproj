@@ -601,6 +601,11 @@
 			knownRegions = (
 				en,
 				"zh-Hans",
+				"zh-Hant",
+				fr,
+				ja,
+				de,
+				ko,
 			);
 			mainGroup = FAC69F58189D603C00BC829D;
 			packageReferences = (

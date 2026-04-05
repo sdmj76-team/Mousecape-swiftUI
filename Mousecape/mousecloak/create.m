@@ -213,7 +213,7 @@ NSDictionary *createCapeFromMightyMouse(NSDictionary *mightyMouse, NSDictionary 
                                                                           hasAlpha:YES
                                                                           isPlanar:NO
                                                                     colorSpaceName:NSDeviceRGBColorSpace
-                                                                      bitmapFormat:NSBitmapFormatAlphaFirst | kCGBitmapByteOrder32Big
+                                                                      bitmapFormat:NSBitmapFormatAlphaFirst | (NSBitmapFormat)kCGBitmapByteOrder32Big
                                                                        bytesPerRow:bpr.integerValue
                                                                       bitsPerPixel:bpp.integerValue];
         
