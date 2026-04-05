@@ -102,6 +102,10 @@ extern NSArray<NSString *> *MCIBeamSynonyms(void);
 /// Enumerate all cursor identifiers: default cursors + Arrow synonyms + IBeam synonyms
 extern void MCEnumerateAllCursorIdentifiers(void (NS_NOESCAPE ^block)(NSString *identifier));
 
+/// Downsample a sprite sheet image from fromCount frames to toCount frames using uniform sampling.
+/// Returns NULL if the bitmap context cannot be created.
+extern CGImageRef _Nullable MCDownsampleSpriteSheetImage(CGImageRef spriteSheet, NSUInteger fromCount, NSUInteger toCount);
+
 NS_ASSUME_NONNULL_END
 
 #endif

@@ -323,3 +323,37 @@ void MCEnumerateAllCursorIdentifiers(void (NS_NOESCAPE ^block)(NSString *identif
         block(name);
     }
 }
+
+CGImageRef _Nullable MCDownsampleSpriteSheetImage(CGImageRef spriteSheet, NSUInteger fromCount, NSUInteger toCount) {
+    size_t width = CGImageGetWidth(spriteSheet);
+    size_t totalHeight = CGImageGetHeight(spriteSheet);
+    size_t frameHeight = totalHeight / fromCount;
+    size_t newTotalHeight = frameHeight * toCount;
+
+    CGContextRef ctx = CGBitmapContextCreate(NULL, width, newTotalHeight,
+                                              CGImageGetBitsPerComponent(spriteSheet),
+                                              0,  // let system calculate optimal row alignment
+                                              CGImageGetColorSpace(spriteSheet),
+                                              CGImageGetBitmapInfo(spriteSheet));
+    if (!ctx) return NULL;
+
+    // Uniform sampling: keep first and last frames, evenly sample in between
+    double step = (double)(fromCount - 1) / (double)(toCount - 1);
+
+    for (NSUInteger i = 0; i < toCount; i++) {
+        NSUInteger sourceIndex = (NSUInteger)round((double)i * step);
+        if (sourceIndex > fromCount - 1) sourceIndex = fromCount - 1;
+
+        CGRect cropRect = CGRectMake(0, sourceIndex * frameHeight, width, frameHeight);
+        CGImageRef frame = CGImageCreateWithImageInRect(spriteSheet, cropRect);
+        if (frame) {
+            CGRect dstRect = CGRectMake(0, i * frameHeight, width, frameHeight);
+            CGContextDrawImage(ctx, dstRect, frame);
+            CGImageRelease(frame);
+        }
+    }
+
+    CGImageRef result = CGBitmapContextCreateImage(ctx);
+    CGContextRelease(ctx);
+    return result;
+}

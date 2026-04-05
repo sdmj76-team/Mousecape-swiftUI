@@ -54,10 +54,10 @@ A free macOS cursor manager that allows you to easily replace Mac system pointer
 ## Features
 
 - Customize Mac system cursors, supporting both static and animated cursors
-- One-click import of Windows cursor formats (.cur / .ani), mapping 85% of macOS cursor types
-- Left-hand mode: mirror all cursors horizontally for left-handed users
+- One-click conversion of Windows cursor formats (.cur / .ani), mapping 85% of macOS cursor types
+- Extract default system cursors, perfect for users who prefer older system cursors
+- Left-hand mode: mirror cursors horizontally for left-handed users
 - Multi-language support: English, Simplified Chinese, Traditional Chinese, Japanese, Korean, German, French
-- Uses private, non-intrusive CoreGraphics API, safe and reliable
 
 ## Download & Installation
 ### System Requirements
@@ -88,8 +88,7 @@ This cursor set was created by [ArakiCC](https://space.bilibili.com/14913641).
 
 When enabled, Mousecape starts in the background at login and provides a menu bar icon that you can use to:
 - Open the Mousecape app
-- Reset cursor themes
-- Toggle menu bar icon visibility
+- Reset to default system cursor
 
 > **Note:** The Helper always runs in the background for session monitoring. The "Show Menu Bar Tool" toggle only controls the menu bar icon visibility.
 
@@ -98,7 +97,7 @@ When enabled, Mousecape starts in the background at login and provides a menu ba
 <details>
 <summary>Import Windows Format Cursors</summary>
 
-Mousecape supports batch importing Windows cursor themes:
+Mousecape supports one-click conversion of Windows cursor themes:
 
 1. Extract the downloaded Windows cursor package
 2. Click the "+" button and select "Import Windows Cursors"
@@ -147,8 +146,17 @@ The home screen preview also supports Simple/Advanced display modes, configurabl
 
 If you want to revert to the default macOS cursor, you can:
 
-- Click **Settings → Reset System Cursor**
+- Click **macOS menu bar → File → Reset System Cursor**
 - Or use the keyboard shortcut **Cmd+R**
+
+</details>
+<br>
+<details>
+<summary>Extract Current Cursor</summary>
+
+If you want to extract the cursors currently in use, you can:
+
+- Click **macOS menu bar → File → Dump Current Cursor**
 
 </details>
 <br>
@@ -290,10 +298,10 @@ This is just a tool, and I've polished its UI. But what matters most is your cur
 ## 功能特性
 
 - 自定义 Mac 系统光标，支持静态和动画光标
-- 一键导入 Windows 格式指针（.cur / .ani），覆盖 85% 的 macOS 光标类型
-- 左手模式：水平翻转所有光标，适合左手用户
+- 一键转换 Windows 格式指针（.cur / .ani），覆盖 85% 的 macOS 光标类型
+- 提取系统默认光标，适合喜欢旧系统光标的用户
+- 左手模式：水平翻转光标，适合左手用户
 - 多语言支持：简体中文、繁体中文、英语、日语、韩语、德语、法语
-- 使用私有、非侵入式的 CoreGraphics API，安全可靠
 
 ## 下载安装
 ### 系统要求
@@ -324,8 +332,7 @@ This is just a tool, and I've polished its UI. But what matters most is your cur
 
 开启后，Mousecape 会在登录时后台启动，并提供菜单栏图标，你可以通过它：
 - 打开 Mousecape 应用
-- 重置光标主题
-- 切换菜单栏图标显示
+- 重置为系统默认光标
 
 > **注意：** Helper 始终在后台运行以进行会话监控。"显示菜单栏工具"开关仅控制菜单栏图标的可见性。
 
@@ -334,7 +341,7 @@ This is just a tool, and I've polished its UI. But what matters most is your cur
 <details>
 <summary>导入 Windows 格式光标</summary>
 
-Mousecape 支持批量导入 Windows 光标主题：
+Mousecape 支持一键转换 Windows 光标类型：
 
 1. 下载的 Windows 光标包解压
 2. 点击 "+" 按钮，选择"导入 Windows 光标"
@@ -383,18 +390,24 @@ Mousecape 提供两种编辑模式，可通过工具栏切换：
 
 如果你想恢复为 macOS 默认光标，可以：
 
-- 点击 **设置 → 重置为系统光标**
+- 点击 **macOS 菜单栏 → 文件 → 重置为系统光标**
 - 或使用快捷键 **Cmd+R**
 
 </details>
 <br>
 <details>
-<summary>支持的图片格式</summary>
+<summary>提取当前光标</summary>
+
+如果你想提取当前正在使用的光标，可以：
+
+- 点击 **macOS 菜单栏 → 文件 → 提取当前光标**
+
+</details>
+
+### 支持的图片格式
 
 - **常规图片格式**：PNG、JPEG、TIFF、GIF
 - **Windows 光标格式**：.cur（静态）、.ani（动画）
-
-</details>
 
 <a id="Troubleshooting_cn"></a>
 

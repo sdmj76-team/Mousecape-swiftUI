@@ -38,6 +38,40 @@ void backupCursorForIdentifier(NSString *ident) {
     }
 
     NSDictionary *cape = capeWithIdentifier(ident);
+    if (!cape) {
+        MMLog("    Skipped - no cursor data available");
+        return;
+    }
+
+    // System cursors like Wait (beach ball) may have >24 frames,
+    // but CGSRegisterCursorWithImages only accepts up to 24.
+    // Downsample the sprite sheet before registering the backup.
+    NSUInteger frameCount = [cape[MCCursorDictionaryFrameCountKey] unsignedIntegerValue];
+    if (frameCount > MCMaxFrameCount) {
+        MMLog("    Downsampling backup: %lu frames -> %lu frames",
+              (unsigned long)frameCount, (unsigned long)MCMaxFrameCount);
+
+        NSMutableDictionary *processed = cape.mutableCopy;
+        CGFloat frameDuration = [cape[MCCursorDictionaryFrameDuratiomKey] doubleValue];
+        CGFloat adjustedDuration = frameDuration * ((CGFloat)frameCount / (CGFloat)MCMaxFrameCount);
+        processed[MCCursorDictionaryFrameCountKey] = @(MCMaxFrameCount);
+        processed[MCCursorDictionaryFrameDuratiomKey] = @(adjustedDuration);
+
+        NSArray *representations = cape[MCCursorDictionaryRepresentationsKey];
+        NSMutableArray *newReps = [NSMutableArray array];
+        for (id imageObj in representations) {
+            CGImageRef spriteSheet = (__bridge CGImageRef)imageObj;
+            CGImageRef downsampled = MCDownsampleSpriteSheetImage(spriteSheet, frameCount, MCMaxFrameCount);
+            if (downsampled) {
+                [newReps addObject:(__bridge_transfer id)downsampled];
+            } else {
+                [newReps addObject:imageObj];
+            }
+        }
+        processed[MCCursorDictionaryRepresentationsKey] = newReps;
+        cape = processed;
+    }
+
     BOOL success = applyCapeForIdentifier(cape, backupIdent, YES);
     MMLog("    Backup result: %s", success ? "SUCCESS" : "FAILED");
 }

@@ -282,40 +282,6 @@ static NSDictionary *cursorAliasMap(void) {
     return map;
 }
 
-static CGImageRef _Nullable downsampleSpriteSheetImage(CGImageRef spriteSheet, NSUInteger fromCount, NSUInteger toCount) {
-    size_t width = CGImageGetWidth(spriteSheet);
-    size_t totalHeight = CGImageGetHeight(spriteSheet);
-    size_t frameHeight = totalHeight / fromCount;
-    size_t newTotalHeight = frameHeight * toCount;
-
-    CGContextRef ctx = CGBitmapContextCreate(NULL, width, newTotalHeight,
-                                              CGImageGetBitsPerComponent(spriteSheet),
-                                              0,  // let system calculate optimal row alignment
-                                              CGImageGetColorSpace(spriteSheet),
-                                              CGImageGetBitmapInfo(spriteSheet));
-    if (!ctx) return NULL;
-
-    // Uniform sampling: keep first and last frames, evenly sample in between
-    double step = (double)(fromCount - 1) / (double)(toCount - 1);
-
-    for (NSUInteger i = 0; i < toCount; i++) {
-        NSUInteger sourceIndex = (NSUInteger)round((double)i * step);
-        if (sourceIndex > fromCount - 1) sourceIndex = fromCount - 1;
-
-        CGRect cropRect = CGRectMake(0, sourceIndex * frameHeight, width, frameHeight);
-        CGImageRef frame = CGImageCreateWithImageInRect(spriteSheet, cropRect);
-        if (frame) {
-            CGRect dstRect = CGRectMake(0, i * frameHeight, width, frameHeight);
-            CGContextDrawImage(ctx, dstRect, frame);
-            CGImageRelease(frame);
-        }
-    }
-
-    CGImageRef result = CGBitmapContextCreateImage(ctx);
-    CGContextRelease(ctx);
-    return result;
-}
-
 NSDictionary *processedCapeWithIdentifier(NSString *identifier) {
     NSMutableDictionary *dict = capeWithIdentifier(identifier).mutableCopy;
     if (!dict)
@@ -337,7 +303,7 @@ NSDictionary *processedCapeWithIdentifier(NSString *identifier) {
 
         for (id imageObj in representations) {
             CGImageRef spriteSheet = (__bridge CGImageRef)imageObj;
-            CGImageRef downsampled = downsampleSpriteSheetImage(spriteSheet, frameCount, MCMaxFrameCount);
+            CGImageRef downsampled = MCDownsampleSpriteSheetImage(spriteSheet, frameCount, MCMaxFrameCount);
             if (downsampled) {
                 NSBitmapImageRep *rep = [[NSBitmapImageRep alloc] initWithCGImage:downsampled];
                 reps[reps.count] = pngDataForImage(rep.ensuredSRGBSpace);
@@ -360,7 +326,7 @@ NSDictionary *processedCapeWithIdentifier(NSString *identifier) {
 }
 
 BOOL dumpCursorsToFile(NSString *path, BOOL (^progress)(NSUInteger current, NSUInteger total)) {
-    MMLog("Dumping cursors...");
+    MMLog("Dumping current cursors...");
 
     float originalScale;
     CGSGetCursorScale(CGSMainConnectionID(), &originalScale);
@@ -372,16 +338,12 @@ BOOL dumpCursorsToFile(NSString *path, BOOL (^progress)(NSUInteger current, NSUI
     CGSSetCursorScale(CGSMainConnectionID(), 1.0);
     CGSHideCursor(CGSMainConnectionID());
 
-    // Cleanup block — restores cursor scale and preference on any exit path
+    // Cleanup block — restores cursor scale preference and CGS scale
     void (^cleanup)(void) = ^{
         CGSSetCursorScale(CGSMainConnectionID(), originalScale);
         CGSShowCursor(CGSMainConnectionID());
         MCSetDefault(originalScalePref, MCPreferencesCursorScaleKey);
     };
-
-    // Reset all cursors to system defaults at 1.0x scale before dumping,
-    // so captured data reflects clean system cursor state.
-    resetAllCursors();
 
     NSInteger total = 11 + 43;
     NSInteger current = 0;
@@ -456,7 +418,7 @@ BOOL dumpCursorsToFile(NSString *path, BOOL (^progress)(NSUInteger current, NSUI
 
     NSMutableDictionary *cape = [NSMutableDictionary dictionary];
     cape[MCCursorDictionaryAuthorKey] = @"Apple, Inc.";
-    cape[MCCursorDictionaryCapeNameKey] = @"Cursor Dump";
+    cape[MCCursorDictionaryCapeNameKey] = @"Current Cursor Dump";
     cape[MCCursorDictionaryCapeVersionKey] = @1.0;
     cape[MCCursorDictionaryCloudKey] = @NO;
     cape[MCCursorDictionaryCursorsKey] = cursors;

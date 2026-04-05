@@ -103,8 +103,8 @@ BOOL applyCursorForIdentifier(NSUInteger frameCount, CGFloat frameDuration, CGPo
     MMLog("=== applyCursorForIdentifier ===");
     MMLog("  Identifier: %s", ident.UTF8String);
 
-    if (frameCount > 24 || frameCount < 1) {
-        MMLog(BOLD RED "Frame count of %s out of range [1...24]", ident.UTF8String);
+    if (frameCount > MCMaxFrameCount || frameCount < 1) {
+        MMLog(BOLD RED "Frame count of %s out of range [1...%lu]", ident.UTF8String, (unsigned long)MCMaxFrameCount);
         return NO;
     }
 

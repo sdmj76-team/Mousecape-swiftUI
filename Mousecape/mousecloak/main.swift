@@ -133,7 +133,7 @@ extension MousecloakCLI {
 extension MousecloakCLI {
     struct Dump: ParsableCommand {
         static let configuration = CommandConfiguration(
-            abstract: "Dumps the currently applied cursors to a file"
+            abstract: "Dumps the current cursors to a file"
         )
 
         @Argument(help: "Output file path")
