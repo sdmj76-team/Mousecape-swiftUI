@@ -212,7 +212,7 @@ NSDictionary *createCapeFromMightyMouse(NSDictionary *mightyMouse, NSDictionary 
                                                                    samplesPerPixel:spp.integerValue
                                                                           hasAlpha:YES
                                                                           isPlanar:NO
-                                                                    colorSpaceName:NSCalibratedRGBColorSpace
+                                                                    colorSpaceName:NSDeviceRGBColorSpace
                                                                       bitmapFormat:NSBitmapFormatAlphaFirst | kCGBitmapByteOrder32Big
                                                                        bytesPerRow:bpr.integerValue
                                                                       bitsPerPixel:bpp.integerValue];
@@ -306,18 +306,18 @@ NSDictionary *processedCapeWithIdentifier(NSString *identifier) {
             CGImageRef downsampled = MCDownsampleSpriteSheetImage(spriteSheet, frameCount, MCMaxFrameCount);
             if (downsampled) {
                 NSBitmapImageRep *rep = [[NSBitmapImageRep alloc] initWithCGImage:downsampled];
-                reps[reps.count] = pngDataForImage(rep.ensuredSRGBSpace);
+                [reps addObject:tiffDataForImage(rep.ensuredSRGBSpace)];
                 CGImageRelease(downsampled);
             } else {
                 NSBitmapImageRep *rep = [[NSBitmapImageRep alloc] initWithCGImage:spriteSheet];
-                reps[reps.count] = pngDataForImage(rep.ensuredSRGBSpace);
+                [reps addObject:tiffDataForImage(rep.ensuredSRGBSpace)];
             }
         }
     } else {
         for (id imageObj in representations) {
             CGImageRef im = (__bridge CGImageRef)imageObj;
             NSBitmapImageRep *rep = [[NSBitmapImageRep alloc] initWithCGImage:im];
-            reps[reps.count] = pngDataForImage(rep.ensuredSRGBSpace);
+            [reps addObject:tiffDataForImage(rep.ensuredSRGBSpace)];
         }
     }
 

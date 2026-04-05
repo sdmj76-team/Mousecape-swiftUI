@@ -229,11 +229,11 @@ BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL res
         if (!shouldMirror) {
             // special case if array has a type of CGImage already there is no need to convert it
             if (type == CGImageGetTypeID()) {
-                images[images.count] = object;
+                [images addObject:object];
                 continue;
             }
 
-            images[images.count] = (__bridge id)[rep CGImage];
+            [images addObject:(__bridge id)[rep CGImage]];
 
         } else {
             NSBitmapImageRep *newRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
@@ -243,7 +243,7 @@ BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL res
                                                                           samplesPerPixel:4
                                                                                  hasAlpha:YES
                                                                                  isPlanar:NO
-                                                                           colorSpaceName:NSCalibratedRGBColorSpace
+                                                                           colorSpaceName:NSDeviceRGBColorSpace
                                                                               bytesPerRow:4 * rep.pixelsWide
                                                                              bitsPerPixel:32];
             NSGraphicsContext *ctx = [NSGraphicsContext graphicsContextWithBitmapImageRep:newRep];
@@ -261,7 +261,7 @@ BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL res
              respectFlipped:NO
                       hints:nil];
             [NSGraphicsContext restoreGraphicsState];
-            images[images.count] = (__bridge id)[newRep CGImage];
+            [images addObject:(__bridge id)[newRep CGImage]];
         }
     }
     

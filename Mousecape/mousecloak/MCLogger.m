@@ -12,12 +12,14 @@
 
 #include <stdarg.h>
 #include <unistd.h>
+#include <pthread.h>
 #import <AppKit/AppKit.h>
 
 static FILE *logFile = NULL;
 static NSString *logFilePath = nil;
 static NSDateFormatter *timestampFormatter = nil;
 static id workspaceNotificationObserver = nil;
+static pthread_mutex_t logMutex = PTHREAD_MUTEX_INITIALIZER;
 
 // Forward declarations
 static void MCLoggerCleanOldLogs(void);
@@ -114,6 +116,8 @@ void MCLoggerInit(void) {
 void MCLoggerWrite(const char *format, ...) {
     va_list args;
 
+    pthread_mutex_lock(&logMutex);
+
     // Output to stdout
     va_start(args, format);
     vfprintf(stdout, format, args);
@@ -134,6 +138,8 @@ void MCLoggerWrite(const char *format, ...) {
 
         fflush(logFile);  // Ensure immediate write
     }
+
+    pthread_mutex_unlock(&logMutex);
 }
 
 NSString *MCLoggerGetLogPath(void) {

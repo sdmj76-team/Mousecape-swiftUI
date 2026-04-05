@@ -88,7 +88,7 @@ extern NSString *nameForCursorIdentifier(NSString *identifier);
 extern NSString *UUID(void);
 extern NSDictionary * _Nullable capeWithIdentifier(NSString *identifier);
 extern void CGImageWriteToFile(CGImageRef image, CFStringRef path);
-extern NSData * _Nullable pngDataForImage(id image);
+extern NSData * _Nullable tiffDataForImage(id image);
 extern NSString *MMGet(NSString *prompt);
 
 extern CGError MCIsCursorRegistered(CGSConnectionID cid, char *cursorName, bool *registered);
