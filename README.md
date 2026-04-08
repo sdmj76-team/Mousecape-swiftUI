@@ -45,9 +45,12 @@ A free macOS cursor manager that allows you to easily replace Mac system pointer
 
 ## Interface Display
 
-![light](Screenshot/Light_en.gif#gh-light-mode-only)
-![dark](Screenshot/Dark_en.gif#gh-dark-mode-only)
-
+<div align="center" style="display: flex; gap: 20px; justify-content: center; align-items: flex-start;">
+  <img src="Screenshot/Home_en_lg.gif#gh-light-mode-only" width="48%" style="height: auto;" />
+  <img src="Screenshot/Edit_en_lg.gif#gh-light-mode-only" width="48%" style="height: auto;" />
+  <img src="Screenshot/Home_en_dk.gif#gh-dark-mode-only" width="48%" style="height: auto;" />
+  <img src="Screenshot/Edit_en_dk.gif#gh-dark-mode-only" width="48%" style="height: auto;" />
+</div>
 
 > The cursor theme "Kiriko" shown in the screenshots is created by [ArakiCC](https://space.bilibili.com/14913641), available in the example files.
 
@@ -159,14 +162,11 @@ If you want to extract the cursors currently in use, you can:
 - Click **macOS menu bar → File → Dump Current Cursor**
 
 </details>
-<br>
-<details>
-<summary>Supported Image Formats</summary>
+
+### Supported Image Formats
 
 - **Standard image formats**: PNG, JPEG, TIFF, GIF
 - **Windows cursor formats**: .cur (static), .ani (animated)
-
-</details>
 
 <a id="Troubleshooting_en"></a>
 
@@ -174,25 +174,34 @@ If you want to extract the cursors currently in use, you can:
 
 If you encounter issues, please check the common solutions below first. For more help, please [submit an Issue](https://github.com/sdmj76/Mousecape-swiftUI/issues).
 
-### Cursor Limitations
+> **Due to macOS system limitations, Mousecape has the following restrictions:**
+>
+> *Image Size Limit*
+>
+> - Maximum import size: **512×512 pixels** (larger images will be rejected)
+> - All cursor images are automatically scaled to **64×64 pixels** at 1x resolution
+> - If the imported image is larger than 64×64 (up to 512×512), it will be automatically scaled down
+> - If the imported image is smaller than 64×64, it will be scaled up (may result in lower quality)
+>
+> *Animation Frame Limit*
+>
+> - Maximum **24 frames** per animated cursor
+> - Animated cursors with more than 24 frames will be automatically downsampled
+> - The downsampling preserves animation timing by adjusting frame duration
+>
+> *Example:* A 32-frame GIF animation will be downsampled to 24 frames, and the frame duration will be increased to maintain the original animation speed.
 
-Due to macOS system limitations, Mousecape has the following restrictions:
+<br>
+<details>
+<summary>Cursor Not Working in Some Apps</summary>
 
-**Image Size Limit**
+**Symptoms:** Cursor does not take effect inside certain app windows, such as Terminal or Excel.
 
-- Maximum import size: **512×512 pixels** (larger images will be rejected)
-- All cursor images are automatically scaled to **64×64 pixels** at 1x resolution
-- If the imported image is larger than 64×64 (up to 512×512), it will be automatically scaled down
-- If the imported image is smaller than 64×64, it will be scaled up (may result in lower quality)
+**Cause:** Some apps configure their own custom cursors, which override the system cursor settings.
 
-**Animation Frame Limit**
+**Solution:** There is currently no safe workaround. This issue only occurs in certain apps and has limited impact.
 
-- Maximum **24 frames** per animated cursor
-- Animated cursors with more than 24 frames will be automatically downsampled
-- The downsampling preserves animation timing by adjusting frame duration
-
-**Example:** A 32-frame GIF animation will be downsampled to 24 frames, and the frame duration will be increased to maintain the original animation speed.
-
+</details>
 <br>
 <details>
 <summary>Cursor Animation Only Works in Dock Area</summary>
@@ -290,8 +299,12 @@ This is just a tool, and I've polished its UI. But what matters most is your cur
 
 ## 界面展示
 
-![light](Screenshot/Light_zh.gif#gh-light-mode-only)
-![dark](Screenshot/Dark_zh.gif#gh-dark-mode-only)
+<div align="center" style="display: flex; gap: 20px; justify-content: center; align-items: flex-start;">
+  <img src="Screenshot/Home_zh_lg.gif#gh-light-mode-only" width="48%" style="height: auto;" />
+  <img src="Screenshot/Edit_zh_lg.gif#gh-light-mode-only" width="48%" style="height: auto;" />
+  <img src="Screenshot/Home_zh_dk.gif#gh-dark-mode-only" width="48%" style="height: auto;" />
+  <img src="Screenshot/Edit_zh_dk.gif#gh-dark-mode-only" width="48%" style="height: auto;" />
+</div>
 
 > 截图中展示的光标主题 "Kiriko" 由 [ArakiCC](https://space.bilibili.com/14913641) 制作，在示例文件中提供。
 
@@ -415,25 +428,34 @@ Mousecape 提供两种编辑模式，可通过工具栏切换：
 
 如果遇到问题，请先查看以下常见解决方案。更多帮助请[提交 Issue](https://github.com/sdmj76/Mousecape-swiftUI/issues)。
 
-### 光标限制
+> **由于 macOS 系统限制，Mousecape 有以下限制：** 
+>
+> *图像尺寸限制*
+>
+> - 最大导入尺寸：**512×512 像素**（超过此尺寸的图像将被拒绝）
+> - 所有光标图像会自动缩放至 **64×64 像素**（1x 分辨率）
+> - 如果导入的图像大于 64×64（最大 512×512），会自动缩小
+> - 如果导入的图像小于 64×64，会自动放大（可能导致质量下降）
+>
+> *动画帧数限制*
+>
+> - 每个动画光标最多支持 **24 帧**
+> - 超过 24 帧的动画光标会自动降采样
+> - 降采样会通过调整帧时长来保持动画速度一致
+>
+> *示例：* 32 帧的 GIF 动画会被降采样到 24 帧，帧时长会增加以保持原始动画速度。
 
-由于 macOS 系统限制，Mousecape 有以下限制：
+<br>
+<details>
+<summary>光标在部分软件不生效</summary>
 
-**图像尺寸限制**
+**症状**：光标在软件窗口内不生效，如终端、Excel
 
-- 最大导入尺寸：**512×512 像素**（超过此尺寸的图像将被拒绝）
-- 所有光标图像会自动缩放至 **64×64 像素**（1x 分辨率）
-- 如果导入的图像大于 64×64（最大 512×512），会自动缩小
-- 如果导入的图像小于 64×64，会自动放大（可能导致质量下降）
+**原因**：部分软件会配置自定义光标，覆盖系统光标配置
 
-**动画帧数限制**
+**解决方案**：暂无安全解决方案，此问题只会在部分软件出现，影响范围不大。
 
-- 每个动画光标最多支持 **24 帧**
-- 超过 24 帧的动画光标会自动降采样
-- 降采样会通过调整帧时长来保持动画速度一致
-
-**示例：** 32 帧的 GIF 动画会被降采样到 24 帧，帧时长会增加以保持原始动画速度。
-
+</details>
 <br>
 <details>
 <summary>光标动画仅在 Dock 区域生效</summary>
