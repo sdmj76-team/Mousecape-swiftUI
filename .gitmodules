@@ -1,0 +1,3 @@
+[submodule "Mousecape/Mousecape"]
+	path = Mousecape/Mousecape
+	url = git@github.com:sdmj76/Mousecape-Core.git
