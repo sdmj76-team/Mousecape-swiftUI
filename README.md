@@ -68,18 +68,19 @@ A free macOS cursor manager that allows you to easily replace Mac system pointer
 - macOS Sequoia (15) or later
 - Support Architectures: runs on both Intel and Apple Silicon Macs
 
-<br>
 Download the latest version from the [Releases](https://github.com/sdmj76/Mousecape-swiftUI/releases) section of this GitHub page.
 
 If you encounter any problems, we recommend that you first check the [Troubleshooting](#Troubleshooting_en) section.
 
 ## Example Cursors
 
-This repository includes an example Kiriko.cape file, available for [download here](Example/Kiriko.cape).
+Example cursors are located in the `Example/` directory, including the following:
 
-**License:** CC BY-NC-ND 4.0 (Attribution-NonCommercial-NoDerivs 4.0)
+**Kiriko.cape**: Created by [ArakiCC](https://space.bilibili.com/14913641), licensed under CC BY-NC-ND 4.0 (Attribution-NonCommercial-NoDerivs 4.0)
 
-This cursor set was created by [ArakiCC](https://space.bilibili.com/14913641).
+**Default_macOS 15.cape**: Default cursors extracted from macOS 15 system
+
+**Default_macOS 26.cape**: Default cursors extracted from macOS 26 system
 
 ## Getting Started
 
@@ -322,18 +323,19 @@ This is just a tool, and I've polished its UI. But what matters most is your cur
 - macOS Sequoia (15) 或更高版本
 - 支持架构：同时支持 Intel 和 Apple Silicon Mac
 
-<br>
 在本 GitHub 页面的 [Releases](https://github.com/sdmj76/Mousecape-swiftUI/releases) 部分下载最新版本。
 
 如果遇到问题，建议优先查看[故障排除](#Troubleshooting_cn)章节。
 
 ## 示例光标
 
-本仓库包含示例 Kiriko.cape 文件，可在[此处下载](Example/Kiriko.cape)。
+本仓库的示例光标位于 `Example/` 目录下，包含以下光标
 
-**许可证：** CC BY-NC-ND 4.0（署名-非商业性-禁止演绎 4.0）
+**Kiriko.cape**：由 [ArakiCC](https://space.bilibili.com/14913641) 制作，使用 CC BY-NC-ND 4.0（署名-非商业性-禁止演绎 4.0）许可证
 
-此光标由 [ArakiCC](https://space.bilibili.com/14913641) 制作。
+**Default_macOS 15.cape**：由 macOS 15系统提取的默认光标
+
+**Default_macOS 26.cape**：由 macOS 26系统提取的默认光标
 
 ## 快速开始
 

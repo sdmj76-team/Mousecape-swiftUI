@@ -4,6 +4,30 @@
 
 ## English
 
+### v1.1.2 - Stability & Polish
+
+**What's New:**
+
+- **Toast Notifications** — Success messages now appear as elegant toast notifications instead of modal alerts
+  - Apply cursor, reset cursor, import/export operations show quick feedback
+  - Error messages still use alerts to ensure you see them
+  - Matches macOS 26's notification style
+
+**Improvements:**
+
+- **Better Image Quality** — Small cursor images now look sharper when imported
+- **Loading Indicators** — Cape import and export operations now show progress overlays, no more frozen UI
+- **Reorganized Menus** — "Reset to Default" moved to File menu for easier access
+
+**Bug Fixes:**
+
+- Extract Current Cursors should now work properly
+- Fixed cursor extraction capturing scaled versions instead of originals
+- Fixed potential thread safety issues in log file writing
+- Fixed deprecated color space warnings
+
+---
+
 ### v1.1.1 - Language Expansion
 
 **New Features:**
@@ -247,6 +271,30 @@ For normal use, download the regular version.
 <a id="中文"></a>
 
 ## 中文
+
+### v1.1.2 - 稳定性与体验优化
+
+**新功能：**
+
+- **轻量级通知** — 成功操作现在显示为优雅的 Toast通知，不再使用弹窗
+  - 应用光标、重置光标、导入/导出操作显示快速反馈
+  - 错误消息仍使用弹窗确保你能看到
+  - 符合 macOS 26 的通知风格
+
+**改进：**
+
+- **更好的图像质量** — 小尺寸光标图像导入后更清晰
+- **加载指示器** — 导入和导出 cape操作，现在显示进度遮罩，不再卡顿
+- **菜单栏重组** — "重置为默认"移至文件菜单，更方便使用
+
+**Bug 修复：**
+
+- 提取当前光标应该可以正常使用
+- 修复光标提取捕获缩放版本而非原始版本的问题
+- 修复日志文件写入的潜在线程安全问题
+- 修复废弃色彩空间警告
+
+---
 
 ### v1.1.1 - 语言扩展
 
