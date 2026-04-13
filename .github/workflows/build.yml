@@ -30,22 +30,12 @@ jobs:
         configuration: [Release, Debug]
         
     steps:
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
+          token: ${{ secrets.PRIVATE_REPO_TOKEN }}
 
-      - name: Clone submodule via SSH
-        run: |
-          # 清除 actions/checkout 设置的 HTTPS insteadOf，确保使用 SSH
-          git config --unset-all url."https://github.com/".insteadOf || true
-          git submodule update --init --recursive
-          ls -la Mousecape/Mousecape
 
       - name: Cache Xcode DerivedData
         uses: actions/cache@v5
