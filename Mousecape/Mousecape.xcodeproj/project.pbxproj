@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		1B57EC46401E4928B48C5E89 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 86D2A987242A45FBB21AE949 /* ArgumentParser */; };
 		9CB312EE7052700D9F29C682 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5B757C0780EA0A10BF1469 /* main.swift */; };
+		AA1000014000000000000001 /* MousecapeQuickLook.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = AA1000054000000000000001 /* MousecapeQuickLook.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AA1000024000000000000001 /* WindowsCursorParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6B14B32F0512EE00742257 /* WindowsCursorParser.swift */; };
+		AB2000014000000000000001 /* MousecapeQuickLookThumbnail.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = AB2000054000000000000001 /* MousecapeQuickLookThumbnail.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AB2000024000000000000001 /* WindowsCursorParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6B14B32F0512EE00742257 /* WindowsCursorParser.swift */; };
 		DE27927D2F61D93200CCEBD3 /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE27927C2F61D93200CCEBD3 /* UserPreferences.swift */; };
 		DE2C56182F6F075C00DCFED7 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = DE2C56172F6F075C00DCFED7 /* AppIcon.icon */; };
 		DE2C56192F6F075C00DCFED7 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = DE2C56172F6F075C00DCFED7 /* AppIcon.icon */; };
@@ -92,6 +96,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		AA1000034000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FAC69F59189D603C00BC829D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA1000094000000000000001;
+			remoteInfo = MousecapeQuickLook;
+		};
+		AB2000034000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FAC69F59189D603C00BC829D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AB2000094000000000000001;
+			remoteInfo = MousecapeQuickLookThumbnail;
+		};
 		DE2E175F2F5B2D0200055E78 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FAC69F59189D603C00BC829D /* Project object */;
@@ -109,6 +127,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		AA1000044000000000000001 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolder = PlugIns;
+			files = (
+				AA1000014000000000000001 /* MousecapeQuickLook.appex in Embed App Extensions */,
+				AB2000014000000000000001 /* MousecapeQuickLookThumbnail.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+		};
 		DE2E175D2F5B2CCE00055E78 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			dstPath = Contents/Library/LoginItems;
@@ -138,6 +166,8 @@
 
 /* Begin PBXFileReference section */
 		7A5B757C0780EA0A10BF1469 /* main.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		AA1000054000000000000001 /* MousecapeQuickLook.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MousecapeQuickLook.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB2000054000000000000001 /* MousecapeQuickLookThumbnail.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MousecapeQuickLookThumbnail.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF122E4B298E5744EE9F0578 /* mousecloak-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "mousecloak-Bridging-Header.h"; sourceTree = "<group>"; };
 		DE27927C2F61D93200CCEBD3 /* UserPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferences.swift; sourceTree = "<group>"; };
 		DE2C56162F6F074700DCFED7 /* Mousecape-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mousecape-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -235,6 +265,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AA1000064000000000000001 /* Exceptions for "MousecapeQuickLook" folder in "MousecapeQuickLook" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AA1000094000000000000001 /* MousecapeQuickLook */;
+		};
+		AB2000064000000000000001 /* Exceptions for "MousecapeQuickLookThumbnail" folder in "MousecapeQuickLookThumbnail" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AB2000094000000000000001 /* MousecapeQuickLookThumbnail */;
+		};
 		DE2E17702F5B448600055E78 /* Exceptions for "MousecapeHelper" folder in "MousecapeHelper" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -245,6 +289,22 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		AA1000074000000000000001 /* MousecapeQuickLook */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA1000064000000000000001 /* Exceptions for "MousecapeQuickLook" folder in "MousecapeQuickLook" target */,
+			);
+			path = MousecapeQuickLook;
+			sourceTree = "<group>";
+		};
+		AB2000074000000000000001 /* MousecapeQuickLookThumbnail */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AB2000064000000000000001 /* Exceptions for "MousecapeQuickLookThumbnail" folder in "MousecapeQuickLookThumbnail" target */,
+			);
+			path = MousecapeQuickLookThumbnail;
+			sourceTree = "<group>";
+		};
 		DE2E172B2F5B290000055E78 /* MousecapeHelper */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -256,6 +316,16 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AA1000084000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		AB2000084000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
 		DE2E17272F5B290000055E78 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
@@ -359,6 +429,8 @@
 				FAC69F6A189D603C00BC829D /* Mousecape */,
 				FAC69FAF189D608900BC829D /* mousecloak */,
 				DE2E172B2F5B290000055E78 /* MousecapeHelper */,
+				AA1000074000000000000001 /* MousecapeQuickLook */,
+				AB2000074000000000000001 /* MousecapeQuickLookThumbnail */,
 				FAC69F63189D603C00BC829D /* Frameworks */,
 				FAC69F62189D603C00BC829D /* Products */,
 			);
@@ -368,6 +440,8 @@
 			isa = PBXGroup;
 			children = (
 				FAC69F61189D603C00BC829D /* Mousecape.app */,
+				AA1000054000000000000001 /* MousecapeQuickLook.appex */,
+				AB2000054000000000000001 /* MousecapeQuickLookThumbnail.appex */,
 				FAC69FAD189D608900BC829D /* mousecloak */,
 				DE2E172A2F5B290000055E78 /* MousecapeHelper.app */,
 			);
@@ -515,6 +589,42 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		AA1000094000000000000001 /* MousecapeQuickLook */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA10000F4000000000000001 /* Build configuration list for PBXNativeTarget "MousecapeQuickLook" */;
+			buildPhases = (
+				AA10000B4000000000000001 /* Sources */,
+				AA1000084000000000000001 /* Frameworks */,
+				AA10000A4000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				AA1000074000000000000001 /* MousecapeQuickLook */,
+			);
+			name = MousecapeQuickLook;
+			productName = MousecapeQuickLook;
+			productReference = AA1000054000000000000001 /* MousecapeQuickLook.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		AB2000094000000000000001 /* MousecapeQuickLookThumbnail */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB20000F4000000000000001 /* Build configuration list for PBXNativeTarget "MousecapeQuickLookThumbnail" */;
+			buildPhases = (
+				AB20000B4000000000000001 /* Sources */,
+				AB2000084000000000000001 /* Frameworks */,
+				AB20000A4000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				AB2000074000000000000001 /* MousecapeQuickLookThumbnail */,
+			);
+			name = MousecapeQuickLookThumbnail;
+			productName = MousecapeQuickLookThumbnail;
+			productReference = AB2000054000000000000001 /* MousecapeQuickLookThumbnail.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		DE2E17292F5B290000055E78 /* MousecapeHelper */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DE2E17342F5B290100055E78 /* Build configuration list for PBXNativeTarget "MousecapeHelper" */;
@@ -542,10 +652,13 @@
 				FAC69F5E189D603C00BC829D /* Frameworks */,
 				FAE5D57D1952734F007620DE /* Copy Tool */,
 				DE2E175D2F5B2CCE00055E78 /* CopyFiles */,
+				AA1000044000000000000001 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				AA10000C4000000000000001 /* PBXTargetDependency */,
+				AB20000C4000000000000001 /* PBXTargetDependency */,
 				DE2E17602F5B2D0200055E78 /* PBXTargetDependency */,
 				FA359847189DBEB700288163 /* PBXTargetDependency */,
 			);
@@ -584,6 +697,12 @@
 				LastUpgradeCheck = 2610;
 				ORGANIZATIONNAME = Sdmj76;
 				TargetAttributes = {
+					AA1000094000000000000001 = {
+						CreatedOnToolsVersion = 26.1;
+					};
+					AB2000094000000000000001 = {
+						CreatedOnToolsVersion = 26.1;
+					};
 					DE2E17292F5B290000055E78 = {
 						CreatedOnToolsVersion = 26.1;
 					};
@@ -617,6 +736,8 @@
 			projectRoot = "";
 			targets = (
 				FAC69F60189D603C00BC829D /* Mousecape */,
+				AA1000094000000000000001 /* MousecapeQuickLook */,
+				AB2000094000000000000001 /* MousecapeQuickLookThumbnail */,
 				FAC69FAC189D608900BC829D /* mousecloak */,
 				DE2E17292F5B290000055E78 /* MousecapeHelper */,
 			);
@@ -624,6 +745,16 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		AA10000A4000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		AB20000A4000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
 		DE2E17282F5B290000055E78 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
@@ -643,6 +774,18 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		AA10000B4000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				AA1000024000000000000001 /* WindowsCursorParser.swift in Sources */,
+			);
+		};
+		AB20000B4000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				AB2000024000000000000001 /* WindowsCursorParser.swift in Sources */,
+			);
+		};
 		DE2E17262F5B290000055E78 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
@@ -721,6 +864,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		AA10000C4000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA1000094000000000000001 /* MousecapeQuickLook */;
+			targetProxy = AA1000034000000000000001 /* PBXContainerItemProxy */;
+		};
+		AB20000C4000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AB2000094000000000000001 /* MousecapeQuickLookThumbnail */;
+			targetProxy = AB2000034000000000000001 /* PBXContainerItemProxy */;
+		};
 		DE2E17602F5B2D0200055E78 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DE2E17292F5B290000055E78 /* MousecapeHelper */;
@@ -734,6 +887,112 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		AA10000D4000000000000001 /* Debug configuration for PBXNativeTarget "MousecapeQuickLook" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_ENTITLEMENTS = MousecapeQuickLook/MousecapeQuickLook.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LZ4NKVK3NY;
+				ENABLE_APP_SANDBOX = YES;
+				INFOPLIST_FILE = MousecapeQuickLook/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdmj76.Mousecape.QuickLook;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		AA10000E4000000000000001 /* Release configuration for PBXNativeTarget "MousecapeQuickLook" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_ENTITLEMENTS = MousecapeQuickLook/MousecapeQuickLook.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LZ4NKVK3NY;
+				ENABLE_APP_SANDBOX = YES;
+				INFOPLIST_FILE = MousecapeQuickLook/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdmj76.Mousecape.QuickLook;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		AB20000D4000000000000001 /* Debug configuration for PBXNativeTarget "MousecapeQuickLookThumbnail" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_ENTITLEMENTS = MousecapeQuickLookThumbnail/MousecapeQuickLookThumbnail.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LZ4NKVK3NY;
+				ENABLE_APP_SANDBOX = YES;
+				INFOPLIST_FILE = MousecapeQuickLookThumbnail/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdmj76.Mousecape.QuickLookThumbnail;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		AB20000E4000000000000001 /* Release configuration for PBXNativeTarget "MousecapeQuickLookThumbnail" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_ENTITLEMENTS = MousecapeQuickLookThumbnail/MousecapeQuickLookThumbnail.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LZ4NKVK3NY;
+				ENABLE_APP_SANDBOX = YES;
+				INFOPLIST_FILE = MousecapeQuickLookThumbnail/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdmj76.Mousecape.QuickLookThumbnail;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
 		DE2E17322F5B290100055E78 /* Debug configuration for PBXNativeTarget "MousecapeHelper" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1060,10 +1319,10 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = LZ4NKVK3NY;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mousecloak/mousecloak-Prefix.pch";
@@ -1083,6 +1342,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		AA10000F4000000000000001 /* Build configuration list for PBXNativeTarget "MousecapeQuickLook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA10000D4000000000000001 /* Debug configuration for PBXNativeTarget "MousecapeQuickLook" */,
+				AA10000E4000000000000001 /* Release configuration for PBXNativeTarget "MousecapeQuickLook" */,
+			);
+			defaultConfigurationName = Debug;
+		};
+		AB20000F4000000000000001 /* Build configuration list for PBXNativeTarget "MousecapeQuickLookThumbnail" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB20000D4000000000000001 /* Debug configuration for PBXNativeTarget "MousecapeQuickLookThumbnail" */,
+				AB20000E4000000000000001 /* Release configuration for PBXNativeTarget "MousecapeQuickLookThumbnail" */,
+			);
+			defaultConfigurationName = Debug;
+		};
 		DE2E17342F5B290100055E78 /* Build configuration list for PBXNativeTarget "MousecapeHelper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
