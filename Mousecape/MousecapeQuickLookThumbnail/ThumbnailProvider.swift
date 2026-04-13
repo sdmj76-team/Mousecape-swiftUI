@@ -55,20 +55,30 @@ final class ThumbnailProvider: QLThumbnailProvider {
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue
         let data = Data(repeating: 0, count: width * height * 4)
-        let provider = CGDataProvider(data: data as CFData)!
-        return CGImage(
-            width: width,
-            height: height,
-            bitsPerComponent: 8,
-            bitsPerPixel: 32,
-            bytesPerRow: width * 4,
-            space: colorSpace,
-            bitmapInfo: CGBitmapInfo(rawValue: bitmapInfo),
-            provider: provider,
-            decode: nil,
-            shouldInterpolate: false,
-            intent: .defaultIntent
-        )!
+        guard let provider = CGDataProvider(data: data as CFData),
+              let fallback = CGImage(
+                  width: width,
+                  height: height,
+                  bitsPerComponent: 8,
+                  bitsPerPixel: 32,
+                  bytesPerRow: width * 4,
+                  space: colorSpace,
+                  bitmapInfo: CGBitmapInfo(rawValue: bitmapInfo),
+                  provider: provider,
+                  decode: nil,
+                  shouldInterpolate: false,
+                  intent: .defaultIntent
+              ) else {
+            // Last resort: return the parsed image or a 1x1 transparent pixel
+            let pixel = Data([0, 0, 0, 0])
+            let p = CGDataProvider(data: pixel as CFData)!
+            return CGImage(width: 1, height: 1, bitsPerComponent: 8, bitsPerPixel: 32,
+                           bytesPerRow: 4, space: colorSpace,
+                           bitmapInfo: CGBitmapInfo(rawValue: bitmapInfo),
+                           provider: p, decode: nil, shouldInterpolate: false,
+                           intent: .defaultIntent)!
+        }
+        return fallback
     }
 
     private static func aspectFitRect(contentSize: CGSize, in bounds: CGRect) -> CGRect {
@@ -85,6 +95,9 @@ final class ThumbnailProvider: QLThumbnailProvider {
         let width = image.width
         let height = image.height
         guard width > 0, height > 0 else { return nil }
+
+        // Skip trimming for unusually large images to stay within the system time budget.
+        guard width * height <= 512 * 512 else { return nil }
 
         let bytesPerPixel = 4
         let bytesPerRow = width * bytesPerPixel
