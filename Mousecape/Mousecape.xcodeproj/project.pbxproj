@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		1B57EC46401E4928B48C5E89 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 86D2A987242A45FBB21AE949 /* ArgumentParser */; };
 		9CB312EE7052700D9F29C682 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5B757C0780EA0A10BF1469 /* main.swift */; };
-		AA1000014000000000000001 /* MousecapeQuickLook.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = AA1000054000000000000001 /* MousecapeQuickLook.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AA1000014000000000000001 /* MousecapeQuickLook.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA1000054000000000000001 /* MousecapeQuickLook.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AA1000024000000000000001 /* WindowsCursorParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6B14B32F0512EE00742257 /* WindowsCursorParser.swift */; };
-		AB2000014000000000000001 /* MousecapeQuickLookThumbnail.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = AB2000054000000000000001 /* MousecapeQuickLookThumbnail.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AB2000014000000000000001 /* MousecapeQuickLookThumbnail.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AB2000054000000000000001 /* MousecapeQuickLookThumbnail.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AB2000024000000000000001 /* WindowsCursorParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6B14B32F0512EE00742257 /* WindowsCursorParser.swift */; };
 		DE27927D2F61D93200CCEBD3 /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE27927C2F61D93200CCEBD3 /* UserPreferences.swift */; };
 		DE2C56182F6F075C00DCFED7 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = DE2C56172F6F075C00DCFED7 /* AppIcon.icon */; };
@@ -127,15 +127,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		AA1000044000000000000001 /* Embed App Extensions */ = {
+		AA1000044000000000000001 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			dstPath = "";
 			dstSubfolder = PlugIns;
 			files = (
-				AA1000014000000000000001 /* MousecapeQuickLook.appex in Embed App Extensions */,
-				AB2000014000000000000001 /* MousecapeQuickLookThumbnail.appex in Embed App Extensions */,
+				AA1000014000000000000001 /* MousecapeQuickLook.appex in Embed Foundation Extensions */,
+				AB2000014000000000000001 /* MousecapeQuickLookThumbnail.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 		};
 		DE2E175D2F5B2CCE00055E78 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -652,7 +652,7 @@
 				FAC69F5E189D603C00BC829D /* Frameworks */,
 				FAE5D57D1952734F007620DE /* Copy Tool */,
 				DE2E175D2F5B2CCE00055E78 /* CopyFiles */,
-				AA1000044000000000000001 /* Embed App Extensions */,
+				AA1000044000000000000001 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -694,7 +694,7 @@
 				BuildIndependentTargetsInParallel = YES;
 				CLASSPREFIX = MC;
 				LastSwiftUpdateCheck = 2610;
-				LastUpgradeCheck = 2610;
+				LastUpgradeCheck = 2640;
 				ORGANIZATIONNAME = Sdmj76;
 				TargetAttributes = {
 					AA1000094000000000000001 = {
@@ -725,6 +725,13 @@
 				ja,
 				de,
 				ko,
+				"de 2",
+				"en 2",
+				"fr 2",
+				"ja 2",
+				"ko 2",
+				"zh-Hans 2",
+				"zh-Hant 2",
 			);
 			mainGroup = FAC69F58189D603C00BC829D;
 			packageReferences = (
@@ -898,6 +905,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = MousecapeQuickLook/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -925,6 +933,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = MousecapeQuickLook/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -951,6 +960,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = MousecapeQuickLookThumbnail/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -978,6 +988,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = MousecapeQuickLookThumbnail/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1221,6 +1232,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
@@ -1256,6 +1268,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
