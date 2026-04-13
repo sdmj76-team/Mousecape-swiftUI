@@ -37,5 +37,51 @@
 		<key>NSExtensionPrincipalClass</key>
 		<string>$(PRODUCT_MODULE_NAME).ThumbnailProvider</string>
 	</dict>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.image</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Windows Cursor</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.sdmj76.mousecape.windows-cur</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cur</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>image/x-win-bitmap</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Windows Animated Cursor</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.sdmj76.mousecape.windows-ani</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ani</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/x-navi-animation</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

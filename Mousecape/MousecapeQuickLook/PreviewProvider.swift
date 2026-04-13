@@ -4,6 +4,11 @@ import Foundation
 import QuickLookUI
 import OSLog
 
+private struct UncheckedSendableWrapper<T>: @unchecked Sendable {
+    let value: T
+    init(_ value: T) { self.value = value }
+}
+
 @MainActor
 final class PreviewViewController: NSViewController, @preconcurrency QLPreviewingController {
     private struct PreviewPayload {
@@ -20,7 +25,10 @@ final class PreviewViewController: NSViewController, @preconcurrency QLPreviewin
     private var currentFrameIndex = 0
 
     private func trace(_ message: String) {
+        #if DEBUG
         NSLog("[MousecapeQuickLook] \(message)")
+        #endif
+        logger.debug("\(message, privacy: .public)")
     }
 
     override func loadView() {
@@ -55,12 +63,13 @@ final class PreviewViewController: NSViewController, @preconcurrency QLPreviewin
         animationFrames = []
         currentFrameIndex = 0
 
-        DispatchQueue.global(qos: .userInitiated).async {
+        let sendableHandler = UncheckedSendableWrapper(handler)
+        Task.detached(priority: .userInitiated) {
             let payload = Self.decodePreviewPayload(for: url)
 
-            DispatchQueue.main.async { [weak self] in
+            await MainActor.run { [weak self] in
                 guard let self else {
-                    handler(nil)
+                    sendableHandler.value(nil)
                     return
                 }
 
@@ -82,13 +91,18 @@ final class PreviewViewController: NSViewController, @preconcurrency QLPreviewin
                 }
 
                 self.trace("preview image assigned")
-                handler(nil)
+                sendableHandler.value(nil)
             }
         }
     }
 
-    private static func decodePreviewPayload(for fileURL: URL) -> PreviewPayload? {
-        guard let parsed = try? WindowsCursorParser.parse(fileURL: fileURL) else {
+    private nonisolated static func decodePreviewPayload(for fileURL: URL) -> PreviewPayload? {
+        let parsed: WindowsCursorParseResult
+        do {
+            parsed = try WindowsCursorParser.parse(fileURL: fileURL)
+        } catch {
+            let logger = Logger(subsystem: "com.sdmj76.Mousecape.QuickLook", category: "PreviewProvider")
+            logger.error("Cursor parse failed: \(error.localizedDescription, privacy: .public)")
             return nil
         }
 
@@ -105,7 +119,7 @@ final class PreviewViewController: NSViewController, @preconcurrency QLPreviewin
         )
     }
 
-    private static func extractFrames(from parsed: WindowsCursorParseResult) -> [CGImage] {
+    private nonisolated static func extractFrames(from parsed: WindowsCursorParseResult) -> [CGImage] {
         if parsed.frameCount <= 1 {
             return [parsed.image]
         }
@@ -130,14 +144,15 @@ final class PreviewViewController: NSViewController, @preconcurrency QLPreviewin
         guard animationFrames.count > 1 else { return }
         stopAnimation()
         let interval = max(frameDuration, 1.0 / 60.0)
-        animationTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
-            guard let self else { return }
-            self.currentFrameIndex = (self.currentFrameIndex + 1) % self.animationFrames.count
-            self.imageView.image = self.animationFrames[self.currentFrameIndex]
+        let timer = Timer(timeInterval: interval, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                guard let self else { return }
+                self.currentFrameIndex = (self.currentFrameIndex + 1) % self.animationFrames.count
+                self.imageView.image = self.animationFrames[self.currentFrameIndex]
+            }
         }
-        if let animationTimer {
-            RunLoop.main.add(animationTimer, forMode: .common)
-        }
+        RunLoop.main.add(timer, forMode: .common)
+        animationTimer = timer
     }
 
     private func stopAnimation() {
@@ -166,19 +181,18 @@ final class PreviewViewController: NSViewController, @preconcurrency QLPreviewin
             bitmapInfo: bitmapInfo
         ) else {
             logger.fault("Failed to create fallback CGContext")
-            return icon.cgImage(forProposedRect: nil, context: nil, hints: nil) ?? CGImage(
-                width: 1,
-                height: 1,
-                bitsPerComponent: 8,
-                bitsPerPixel: 32,
-                bytesPerRow: 4,
-                space: colorSpace,
-                bitmapInfo: CGBitmapInfo(rawValue: bitmapInfo),
-                provider: CGDataProvider(data: Data([200, 200, 200, 255]) as CFData)!,
-                decode: nil,
-                shouldInterpolate: false,
-                intent: .defaultIntent
-            )!
+            // Return a minimal 1x1 transparent image as absolute last resort
+            let pixel = Data([0, 0, 0, 0])
+            guard let p = CGDataProvider(data: pixel as CFData),
+                  let img = CGImage(width: 1, height: 1, bitsPerComponent: 8, bitsPerPixel: 32,
+                                    bytesPerRow: 4, space: colorSpace,
+                                    bitmapInfo: CGBitmapInfo(rawValue: bitmapInfo),
+                                    provider: p, decode: nil, shouldInterpolate: false,
+                                    intent: .defaultIntent) else {
+                // Truly impossible to fail with valid constant data, but satisfy the compiler
+                fatalError("Cannot create 1x1 fallback CGImage")
+            }
+            return img
         }
 
         context.setFillColor(CGColor(gray: 0.85, alpha: 1.0))
@@ -186,6 +200,16 @@ final class PreviewViewController: NSViewController, @preconcurrency QLPreviewin
         context.setStrokeColor(CGColor(gray: 0.65, alpha: 1.0))
         context.setLineWidth(4)
         context.stroke(CGRect(x: 8, y: 8, width: width - 16, height: height - 16))
-        return context.makeImage()!
+        guard let result = context.makeImage() else {
+            logger.fault("Failed to create fallback image from CGContext")
+            let pixel = Data([200, 200, 200, 255])
+            let p = CGDataProvider(data: pixel as CFData)!
+            return CGImage(width: 1, height: 1, bitsPerComponent: 8, bitsPerPixel: 32,
+                           bytesPerRow: 4, space: colorSpace,
+                           bitmapInfo: CGBitmapInfo(rawValue: bitmapInfo),
+                           provider: p, decode: nil, shouldInterpolate: false,
+                           intent: .defaultIntent)!
+        }
+        return result
     }
 }
