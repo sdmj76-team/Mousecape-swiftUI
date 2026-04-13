@@ -76,7 +76,7 @@ static void UserSpaceChanged(SCDynamicStoreRef	store, CFArrayRef changedKeys, vo
 
     // Only attempt to apply if there's a valid cape path
     if (appliedPath) {
-        BOOL success = applyCapeAtPath(appliedPath);
+        BOOL success = applyCapeAtPathReapply(appliedPath);
         MMLog("Apply result: %s", success ? "SUCCESS" : "FAILED");
         if (!success) {
             MMLog(BOLD RED "Application of cape failed" RESET);
@@ -107,7 +107,7 @@ void reconfigurationCallback(CGDirectDisplayID display,
     NSString *capePath = appliedCapePathForUser(NSUserName());
     MMLog("Cape path: %s", capePath ? capePath.UTF8String : "(none)");
     if (capePath) {
-        BOOL success = applyCapeAtPath(capePath);
+        BOOL success = applyCapeAtPathReapply(capePath);
         MMLog("Apply result: %s", success ? "SUCCESS" : "FAILED");
     }
     float scale;
@@ -227,7 +227,7 @@ void startSessionMonitor(void) {
     // Apply the cape for the user on load (if configured)
     NSString *initialCapePath = appliedCapePathForUser(NSUserName());
     if (initialCapePath) {
-        BOOL applySuccess = applyCapeAtPath(initialCapePath);
+        BOOL applySuccess = applyCapeAtPathReapply(initialCapePath);
         MMLog("Initial apply result: %s", applySuccess ? "SUCCESS" : "FAILED");
     } else {
         MMLog("No cape configured - running in standby mode");

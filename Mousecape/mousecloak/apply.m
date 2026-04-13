@@ -268,14 +268,18 @@ BOOL applyCapeForIdentifier(NSDictionary *cursor, NSString *identifier, BOOL res
     return applyCursorForIdentifier(frameCount.unsignedIntegerValue, frameDuration.doubleValue, hotSpot, size, images, identifier, 0);
 }
 
-BOOL applyCape(NSDictionary *dictionary) {
+// Internal implementation with reapply mode support.
+// When isReapply is YES, skip resetAllCursors() + backupAllCursors() to avoid
+// the visible flash when re-applying the same cape (e.g. Helper startup, session change).
+// CGSRegisterCursorWithImages() can directly overwrite already-registered cursors.
+static BOOL applyCapeInternal(NSDictionary *dictionary, BOOL isReapply) {
     @autoreleasepool {
         NSDictionary *cursors = dictionary[MCCursorDictionaryCursorsKey];
         NSString *name = dictionary[MCCursorDictionaryCapeNameKey];
         NSNumber *version = dictionary[MCCursorDictionaryCapeVersionKey];
 
         MMLog("========================================");
-        MMLog("=== APPLYING CAPE ===");
+        MMLog("=== APPLYING CAPE (%s) ===", isReapply ? "REAPPLY" : "FRESH");
         MMLog("========================================");
         MMLog("Cape name: %s", name.UTF8String);
         MMLog("Cape identifier: %s", [dictionary[MCCursorDictionaryIdentifierKey] UTF8String]);
@@ -286,10 +290,14 @@ BOOL applyCape(NSDictionary *dictionary) {
             MMLog("  - %s", key.UTF8String);
         }
 
-        MMLog("--- Calling resetAllCursors ---");
-        resetAllCursors();
-        MMLog("--- Calling backupAllCursors ---");
-        backupAllCursors();
+        if (!isReapply) {
+            MMLog("--- Calling resetAllCursors ---");
+            resetAllCursors();
+            MMLog("--- Calling backupAllCursors ---");
+            backupAllCursors();
+        } else {
+            MMLog("--- Skipping reset/backup (reapply mode) ---");
+        }
 
         MMLog("--- Applying cursors ---");
 
@@ -344,6 +352,14 @@ BOOL applyCape(NSDictionary *dictionary) {
     }
 }
 
+BOOL applyCape(NSDictionary *dictionary) {
+    return applyCapeInternal(dictionary, NO);
+}
+
+BOOL applyCapeReapply(NSDictionary *dictionary) {
+    return applyCapeInternal(dictionary, YES);
+}
+
 BOOL applyCapeAtPath(NSString *path) {
     MMLog("========================================");
     MMLog("=== applyCapeAtPath ===");
@@ -382,6 +398,49 @@ BOOL applyCapeAtPath(NSString *path) {
     if (cape) {
         MMLog("Cape file loaded successfully, applying...");
         return applyCape(cape);
+    }
+    MMLog(BOLD RED "Could not parse valid cape file" RESET);
+    return NO;
+}
+
+BOOL applyCapeAtPathReapply(NSString *path) {
+    MMLog("========================================");
+    MMLog("=== applyCapeAtPathReapply ===");
+    MMLog("========================================");
+    MMLog("Input path: %s", path ? path.UTF8String : "(null)");
+
+    // Validate path
+    if (!path || path.length == 0) {
+        MMLog(BOLD RED "Invalid path" RESET);
+        return NO;
+    }
+
+    // Resolve symlinks and check for path traversal
+    NSString *realPath = [path stringByResolvingSymlinksInPath];
+    NSString *standardPath = [realPath stringByStandardizingPath];
+
+    MMLog("Real path: %s", realPath.UTF8String);
+    MMLog("Standard path: %s", standardPath.UTF8String);
+    MMLog("File exists: %s", [[NSFileManager defaultManager] fileExistsAtPath:standardPath] ? "YES" : "NO");
+    MMLog("File readable: %s", [[NSFileManager defaultManager] isReadableFileAtPath:standardPath] ? "YES" : "NO");
+
+    // Validate file extension
+    if (![[standardPath pathExtension] isEqualToString:@"cape"]) {
+        MMLog(BOLD RED "Invalid file extension - must be .cape" RESET);
+        return NO;
+    }
+
+    // Check file exists and is readable
+    if (![[NSFileManager defaultManager] isReadableFileAtPath:standardPath]) {
+        MMLog(BOLD RED "File not readable at path" RESET);
+        return NO;
+    }
+
+    MMLog("Loading cape file...");
+    NSDictionary *cape = [NSDictionary dictionaryWithContentsOfFile:standardPath];
+    if (cape) {
+        MMLog("Cape file loaded successfully, applying in reapply mode...");
+        return applyCapeReapply(cape);
     }
     MMLog(BOLD RED "Could not parse valid cape file" RESET);
     return NO;
