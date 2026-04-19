@@ -53,6 +53,7 @@
 		DE525A832EFE93C200A315A3 /* OrderedSetSortedInsert.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE525A7E2EFE93C200A315A3 /* OrderedSetSortedInsert.swift */; };
 		DE525A852EFE93C200A315A3 /* DirectoryLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE525A7D2EFE93C200A315A3 /* DirectoryLocations.swift */; };
 		DE53D4032F3B398800011C1F /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = DE53D4022F3B398800011C1F /* Localizable.xcstrings */; };
+		DE5FE67D2F955211005877AD /* PageNavigationToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5FE67C2F955211005877AD /* PageNavigationToolbarItem.swift */; };
 		DE654C422F0A6DB40025E5A0 /* WindowsINFParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE654C412F0A6DB40025E5A0 /* WindowsINFParser.swift */; };
 		DE6B14B42F0512EE00742257 /* WindowsCursorParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6B14B32F0512EE00742257 /* WindowsCursorParser.swift */; };
 		DEAB0D642F39ADB000DB9EB0 /* CursorImageScaler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEAB0D632F39ADB000DB9EB0 /* CursorImageScaler.swift */; };
@@ -191,6 +192,7 @@
 		DE525A7E2EFE93C200A315A3 /* OrderedSetSortedInsert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderedSetSortedInsert.swift; sourceTree = "<group>"; };
 		DE525A7F2EFE93C200A315A3 /* WindowsCursorConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowsCursorConverter.swift; sourceTree = "<group>"; };
 		DE53D4022F3B398800011C1F /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		DE5FE67C2F955211005877AD /* PageNavigationToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageNavigationToolbarItem.swift; sourceTree = "<group>"; };
 		DE654C412F0A6DB40025E5A0 /* WindowsINFParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowsINFParser.swift; sourceTree = "<group>"; };
 		DE6B14B32F0512EE00742257 /* WindowsCursorParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowsCursorParser.swift; sourceTree = "<group>"; };
 		DEAB0D632F39ADB000DB9EB0 /* CursorImageScaler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorImageScaler.swift; sourceTree = "<group>"; };
@@ -361,6 +363,7 @@
 		DE3661EA2EFAAAB600D94521 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				DE5FE67C2F955211005877AD /* PageNavigationToolbarItem.swift */,
 				DEF629632F82F6FE00371CDF /* ToastView.swift */,
 				DE3661E82EFAAAB600D94521 /* AnimatingCursorView.swift */,
 				DE3661E92EFAAAB600D94521 /* GlassEffectContainer.swift */,
@@ -725,13 +728,6 @@
 				ja,
 				de,
 				ko,
-				"de 2",
-				"en 2",
-				"fr 2",
-				"ja 2",
-				"ko 2",
-				"zh-Hans 2",
-				"zh-Hant 2",
 			);
 			mainGroup = FAC69F58189D603C00BC829D;
 			packageReferences = (
@@ -828,6 +824,7 @@
 				FAAEF950189EFC9800145DF8 /* apply.m in Sources */,
 				DE6B14B42F0512EE00742257 /* WindowsCursorParser.swift in Sources */,
 				FAEE653218A047E8003AA182 /* MCCursor.m in Sources */,
+				DE5FE67D2F955211005877AD /* PageNavigationToolbarItem.swift in Sources */,
 				FAAEF958189F4F8200145DF8 /* scale.m in Sources */,
 				DE3661FD2EFAAAB600D94521 /* MainView.swift in Sources */,
 				DE3661FE2EFAAAB600D94521 /* EditOverlayView.swift in Sources */,
