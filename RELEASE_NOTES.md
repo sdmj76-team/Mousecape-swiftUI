@@ -1,8 +1,27 @@
-**[English](#english) | [中文](#中文)**
+### v1.1.3 - New Navigation & Quick Look
 
-<a id="english"></a>
+**What's New:**
 
-## English
+- **Quick Look Support** — Preview `.cape` cursor files directly in Finder
+  - Press Space to preview any cape file without opening the app
+  - File thumbnails show cursor previews in Finder icon view
+- **New Tab Navigation** — Redesigned navigation with Home, Edit, and Settings tabs
+  - Edit tab appears automatically when a cape is selected
+  - Cleaner layout with less clutter
+- **Unified Display Mode** — "Modern" and "Classic" modes now controlled from one place in Settings > Appearance
+  - Replaces the old "Simple/Advanced" naming
+  - One setting controls both the edit page and home preview
+
+**Improvements:**
+
+- Smoother cursor reapply — switching users or waking from sleep no longer causes a brief cursor flash
+- Auto-selects the currently applied cape on app startup
+
+**Bug Fixes:**
+
+- Fixed cursor selection being lost when switching display modes
+
+---
 
 ### v1.1.2 - Stability & Polish
 
@@ -267,279 +286,3 @@ Due to macOS system limitations, Mousecape has the following restrictions:
 
 The Debug version has no functional differences from the regular version, it only includes logging for error tracking.
 For normal use, download the regular version.
-
-<a id="中文"></a>
-
-## 中文
-
-### v1.1.2 - 稳定性与体验优化
-
-**新功能：**
-
-- **轻量级通知** — 成功操作现在显示为优雅的 Toast通知，不再使用弹窗
-  - 应用光标、重置光标、导入/导出操作显示快速反馈
-  - 错误消息仍使用弹窗确保你能看到
-  - 符合 macOS 26 的通知风格
-
-**改进：**
-
-- **更好的图像质量** — 小尺寸光标图像导入后更清晰
-- **加载指示器** — 导入和导出 cape操作，现在显示进度遮罩，不再卡顿
-- **菜单栏重组** — "重置为默认"移至文件菜单，更方便使用
-
-**Bug 修复：**
-
-- 提取当前光标应该可以正常使用
-- 修复光标提取捕获缩放版本而非原始版本的问题
-- 修复日志文件写入的潜在线程安全问题
-- 修复废弃色彩空间警告
-
----
-
-### v1.1.1 - 语言扩展
-
-**新功能：**
-
-- **多语言支持** — 新增 4 种语言，由 AI 辅助翻译
-  - 日语（日本語）
-  - 韩语（한국어）
-  - 德语（Deutsch）
-  - 法语（Français）
-  - 所有翻译均经过准确性和自然度审核
-
-**改进：**
-
-- **菜单栏图标显示与 Helper 生命周期解耦** — Helper (MousecapeHelper) 现在始终在后台运行以进行会话监控。"显示菜单栏工具"开关现在仅控制菜单栏图标的可见性，不再启动或停止 Helper 进程
-  - 菜单栏图标可见性通过 `CFPreferences` + `DistributedNotificationCenter` 跨进程通信实时同步
-  - 新增 `MenuBarState` 可观察类，实现图标可见性的响应式控制
-- 进一步适配 macOS 26 液态玻璃效果 — 所有叠加层、加载指示器、拖放反馈、放大预览、选中高亮等均采用原生玻璃效果
-- 优化左手模式：对角线调整光标不再镜像翻转，提升易用性
-- 改进设置同步和偏好设置处理
-
-**Bug 修复：**
-
-- 修复重复的偏好设置读取方法
-- 修复 CFPreferences 同步警告
-
----
-
-### v1.1.0 - 架构更新
-
-**改进开机启动、文件体积更小、编辑更方便、界面更精致的一次重大更新。**
-
-**新功能：**
-
-- **全新应用图标** — 采用液态玻璃效果重新设计，完美契合 macOS 26 设计语言
-
-- **菜单栏快速访问** — 在设置中开启"开机自动应用"后，会显示菜单栏图标
-  - 一眼看到当前使用的光标主题
-  - 快速操作：应用光标、重置光标、打开 Mousecape
-  - 启动更可靠
-
-- **更好的 Windows 光标支持** — 导入 Windows 光标主题更准确
-  - 现在支持 85% 的 macOS 光标类型（之前只有 40%）
-  - 导入后大部分光标都能正常工作
-
-- **简易/高级编辑模式** — 选择适合你的编辑方式
-  - **简易模式：** 按分组编辑（像 Windows 一样），自动应用到相关光标
-  - **高级模式：** 单独精细调整每个光标
-  - **预览模式：** 选择首页显示多少光标
-  - 随时通过工具栏切换
-
-- **双击打开** — 在访达中双击任何 `.cape` 文件即可打开
-
-- **文件体积更小** — 光标文件现在体积减少了 60%
-
-- **导出系统光标** — 备份你的 Mac 原始光标
-  - 在 设置 > 高级 > 重置 中找到，或在文件菜单中
-
-- **更好的导入/导出提示** — 显示问题并让你选择继续或取消
-
-- **左手模式** — 在 设置 > 通用 中切换光标方向
-  - 所有光标水平翻转，适合左手用户
-  - 预览和系统光标切换后立即生效
-
-**改进：**
-
-- 性能更快，运行更稳定
-- 光标应用更可靠
-- 兼容未来的 macOS 版本
-
-**Bug 修复：**
-
-- 修复 Windows 光标透明度渲染问题，细线和边缘现在显示清晰锐利
-- 修复某些光标缺失时无法应用的问题
-- 修复菜单栏助手的稳定性问题
-- 修复多个界面显示问题
-- 更新文档链接到正确的项目仓库
-
-**注意：** 旧版 Mousecape 可能无法打开 v1.1.0 保存的文件，建议更新到最新版本。
-
-透明窗口切换功能已移除，以简化代码库。
-
----
-
-### v1.0.4 - 功能更新 & 重大修复
-
-**新功能：**
-
-- 拖拽排序 — 在侧边栏拖动即可调整光标主题的顺序
-- 拖拽导入 — 直接将 `.cape` 文件拖到窗口即可导入
-- 设置页新增"重置为系统光标"按钮（也可通过 Cmd+R 快捷键使用）
-- 语言现在自动跟随系统设置，无需手动切换
-- 重新整理了菜单栏布局，更加清晰
-- 导入时自动重命名重复的 Cape 名称
-- 导入和导出操作完成后会显示成功通知
-
-**优化：**
-
-- 光标放大预览动画更流畅
-- Windows 光标转换速度提升约 2 倍
-- 启动时自动应用已保存的光标缩放比例
-
-**重大修复：**
-
-- **修复动画光标导入后帧画面互相渗透的问题** — 如果你之前导入的 Windows 动画光标出现画面错乱，就是这个问题。**建议更新后重新导入受影响的光标！！！**
-
-**其他 Bug 修复：**
-
-- 提升了对更多 Windows 动画光标（.ani）文件的兼容性
-- 修复 GIF 动画导入后播放速度不正确的问题
-- 修复动画光标帧渲染错误
-- 修复启动时无法检测到已应用的光标主题
-- 修复多个界面导航和动画问题
-- 内部代码质量改进，提升稳定性和未来 macOS 版本兼容性
-
-**移除：**
-
-- Windows 光标导入现在必须包含 INF 文件（移除了基于文件名的猜测匹配，提高准确性）
-
-**PS：本项目不会提供对 `任何不符合规范的第三方光标` 提供支持，如有以上问题，麻烦联系光标作者解决**
-
----
-
-### v1.0.3 - Bug 修复
-
-**本次更新修复了 Windows 动画光标导入问题，并改进了编码支持。**
-
-**Bug 修复：**
-
-- 修复了动画光标 (.ani) 文件因尺寸验证错误而被拒绝的问题
-- 修复了多帧动画光标（94、140、206 帧）无法正确导入的问题
-- 修复了中文 Windows 光标主题的 GBK 编码检测问题
-
-**改进：**
-
-- 自动降采样现在对所有超过 24 帧的动画光标都能正常工作
-- INF 文件多编码支持：UTF-8、UTF-16 LE/BE、GBK、GB18030、Big5、Shift_JIS、EUC-KR、ISO-8859-1
-- 代码更简洁：移除了没有实际作用的冗余验证
-
-**PS：本项目不会提供对 `任何不符合规范的第三方光标` 提供支持，如有以上问题，麻烦联系光标作者解决**
-
----
-
-### v1.0.2 - Bug 修复
-
-**本次更新主要修复了若干 bug 并提升稳定性。**
-
-**Bug 修复：**
-
-- 修复了 GIF 动画导入无法正常工作的问题
-- 修复导入的 Windows 光标无法正确应用的问题
-- 修复导入某些光标文件时可能崩溃的问题
-- 修复更新应用后辅助工具可能失效的问题
-- 修复导入 GIF 或 ANI 文件时动画播放速度不正确的问题
-- 热点验证导入，确保光标位置准确
-
-**改进：**
-
-- 改进与 Windows 光标主题的兼容性
-- 添加内存保护，防止导入大型光标文件时崩溃（最大 4096×4096 像素）
-- 加快 CI 构建速度
-- （Debug版）优化日志文件清理，总大小限制 100MB
-
----
-
-### v1.0.1 - 原生 Windows 光标转换
-
-**重大更新：Windows 光标转换从 Python 重写为原生 Swift**
-
-- 使用纯 Swift 实现替代外挂 Python 脚本
-- 不再需要内置 Python 环境，统一为单一版本（此前 Premium 版本内置 Python）
-- 大幅减小应用体积（从约 50MB 降至约 5MB）
-- 优化性能，转换速度更快
-- 提升 .cur 和 .ani 格式的解析可靠性
-
-**新功能：**
-
-- 添加 Windows install.inf 解析器，自动识别光标类型映射
-- 支持旧版 Windows 光标格式（16 位 RGB555/RGB565、8/4/1 位索引色、RLE 压缩）
-- 在外观设置中添加透明窗口开关
-- 添加 GitHub Actions CI 工作流，实现自动化构建
-
-**改进：**
-
-- 向下兼容 macOS 15 Sequoia，支持自适应样式（macOS 26 使用液态玻璃，macOS 15 使用 Material）
-- 将 mousecloak 辅助程序转换为 ARC（自动引用计数），改善内存管理
-- 修复深色模式下透明窗口背景
-
-**Bug 修复：**
-
-- 修复解析某些光标文件时的内存对齐崩溃问题
-- 修复导入光标保存时的 cape 重命名错误
-- 修复深色模式透明窗口显示颜色失真问题
-
----
-
-### v1.0.0 - SwiftUI 重构，适配 macOS Tahoe
-
-> **重要提示：** 此版本需要 **macOS Tahoe (26)** 或更高版本。
-
-**界面：**
-
-- 使用 SwiftUI 完全重写界面，全面适配全新的液态玻璃设计语言
-- 主页新增放大光标预览功能，预览更清晰
-- 使用分页式导航替代 TabView，优化工具栏布局
-- 完整支持深色模式，自动跟随系统外观切换
-- 新增本地化支持，支持中文界面
-
-**功能：**
-
-- Windows 光标导入（仅限 Premium 版本）：一键从 Windows 光标文件导入
-  - 支持 `.cur`（静态）和 `.ani`（动态）格式
-  - 自动识别帧数并导入热点信息
-- 光标尺寸统一为 64px × 64px，保持一致性
-- 更新 CoreGraphics API 以支持 macOS Tahoe
-- 改进守护进程，优化会话变化处理
-
-**其他：**
-
-- 移除 Sparkle 更新框架（现通过 GitHub Releases 更新）
-- 清理遗留的 Objective-C 代码和未使用的资源
-- 修复多个界面显示和预览问题
-- 修复编辑功能稳定性问题
-- 安全漏洞修复
-
----
-
-### 已知限制
-
-由于 macOS 系统限制，Mousecape 有以下限制：
-
-- **图像尺寸：** 最大导入尺寸为 512×512 像素。所有图像会自动缩放到 64×64 像素。
-- **动画帧数：** 每个动画光标最多 24 帧。超过此帧数的动画会自动降采样。
-
----
-
-### 版本选择建议
-
-Debug版本与普通版本无功能上的差异，只是加入了日志记录功能用于记录错误。
-正常使用时，下载普通版本即可。
-
----
-
-## Credits | 致谢
-
-- **Original Author | 原作者:** @AlexZielenski (2013-2025)
-- **SwiftUI Redesign | SwiftUI 重构:** @sdmj76 (2025)
-- **Coding Assistant | 编程协助:** Claude Code (Opus)
