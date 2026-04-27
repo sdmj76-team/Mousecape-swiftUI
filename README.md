@@ -56,6 +56,7 @@ English | [中文](README_zh.md)
 
 - Customize Mac system cursors, supporting both static and animated cursors
 - One-click conversion of Windows cursor formats (.cur / .ani), mapping 85% of macOS cursor types
+- Quickly preview Windows format pointers and support quick preview for macOS.
 - Extract default system cursors, perfect for users who prefer older system cursors
 - Left-hand mode: mirror cursors horizontally for left-handed users
 - Multi-language support: English, Simplified Chinese, Traditional Chinese, Japanese, Korean, German, French
@@ -74,7 +75,7 @@ If you encounter any problems, we recommend that you first check the [Troublesho
 
 ## Example Cursors
 
-Example cursors are located in the `Example/` directory, including the following:
+Example cursors are located in the [Example](Example/) directory, including the following:
 
 **Kiriko.cape**: Created by [ArakiCC](https://space.bilibili.com/14913641), licensed under CC BY-NC-ND 4.0 (Attribution-NonCommercial-NoDerivs 4.0)
 
@@ -82,13 +83,15 @@ Example cursors are located in the `Example/` directory, including the following
 
 **Default_macOS 26.cape**: Default cursors extracted from macOS 26 system
 
+[Windows](Example/Windows/): Windows version that stores sample cursors
+
 ## Getting Started
 
 <details>
 <summary>Set Up Launch at Login</summary>
 
 1. Download and open the Mousecape app
-2. Go to **Settings → General** and enable **Launch at Login**
+2. Go to **Settings > General** and enable **Launch at Login**
 
 When enabled, Mousecape starts in the background at login and provides a menu bar icon that you can use to:
 - Open the Mousecape app
@@ -120,14 +123,12 @@ If the folder contains an `*.inf` file, Mousecape will automatically parse it to
 4. Adjust hotspot position and other parameters for each cursor
 5. Save and apply your theme
 
-**Simple / Advanced Mode**
+**Modern / Classic Mode**
 
-Mousecape offers two editing modes, switchable via the toolbar:
+Mousecape offers two `display / editing` modes, switchable via Settings > Appearance > Display Mode:
 
-- **Simple Mode**: Displays cursors in 15 Windows cursor groups. Editing one cursor automatically applies changes to all related macOS cursor types in the same group.
-- **Advanced Mode**: Edit each of the 52 macOS cursor types individually for full control.
-
-The home screen preview also supports Simple/Advanced display modes, configurable in **Settings → Appearance → Preview Panel**.
+- **Modern Mode**: Displays cursors in 15 Windows cursor groups. Editing one cursor automatically applies changes to all related macOS cursor types in the same group.
+- **Classic Mode**: Edit each of the 52 macOS cursor types individually for full control.
 
 </details>
 <br>
@@ -150,7 +151,7 @@ The home screen preview also supports Simple/Advanced display modes, configurabl
 
 If you want to revert to the default macOS cursor, you can:
 
-- Click **macOS menu bar → File → Reset System Cursor**
+- Click **macOS menu bar > File > Reset System Cursor**
 - Or use the keyboard shortcut **Cmd+R**
 
 </details>
@@ -160,7 +161,7 @@ If you want to revert to the default macOS cursor, you can:
 
 If you want to extract the cursors currently in use, you can:
 
-- Click **macOS menu bar → File → Dump Current Cursor**
+- Click **macOS menu bar > File > Dump Current Cursor**
 
 </details>
 
@@ -211,7 +212,7 @@ If you encounter issues, please check the common solutions below first. For more
 
 **Solution:** Reset the system pointer color to the default setting:
 
-1. Open **System Settings** → **Accessibility** → **Display**
+1. Open **System Settings** > **Accessibility** > **Display**
 2. Find the **Pointer** section
 3. Click the **Reset Color** button
 4. Re-apply your cursor theme in Mousecape
@@ -261,12 +262,17 @@ The pointer must use the default color scheme (white outline, black fill) for Mo
 - Images larger than 512×512 will be rejected with an error message
 
 </details>
+<br>
+
+**MacBook Neo specific**
+
+Custom pointers on this model may currently be malfunctioning due to macOS power-saving policies. There are no plans to fix this issue at this time due to a lack of testing devices; we await an official update from Apple. [Related discussions](https://www.reddit.com/r/macbook/comments/1rvde0d/strange_laggy_cursor_issue_with_neo/)
 
 ## Donate
 
-If you like my UI remake, you can buy me an afternoon tea :)
+If you like my UI remake, you can support me on [Ko-fi](https://ko-fi.com/sdmj76) :)
 
-![Donate](Screenshot/Donate.png)
+
 
 ## Acknowledgments
 
